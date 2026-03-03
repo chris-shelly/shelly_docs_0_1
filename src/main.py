@@ -9,7 +9,7 @@ from textual.message import Message
 from textual.reactive import reactive
 
 from be.config import get_config
-
+from be.crud import get_items
 
 class ShellyDocsHeader(Header):
   pass
@@ -85,6 +85,8 @@ class KnowledgeBasePath(Static):
 class KnowledgeBaseConfig(Pretty):
   """Use Pretty to show the JSON representation of the `shellydocs.yaml` config"""
 
+class KnowledgeBaseItems(Pretty):
+  """Use Pretty to show the JSON representation of the KnowledgeBase Items"""
 
 class KnowledgeBase(Widget):
   def __init__(self, path: str):
@@ -95,6 +97,10 @@ class KnowledgeBase(Widget):
     yield Static(f"path: {self.path}")
     kb_config = get_config(self.path)
     yield KnowledgeBaseConfig(kb_config)
+    # get the Items
+    items = get_items(self.path, kb_config)
+    yield KnowledgeBaseItems(items)
+
 
   
 class KnowledgeBaseScreen(Screen):
