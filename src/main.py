@@ -4,7 +4,7 @@ from textual.app import App, ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
 from textual.widgets import Header, Static, Input, Label, Button
-from textual.color import Color
+from textual.screen import Screen
 from textual.message import Message
 from textual.reactive import reactive
 class ShellyDocsHeader(Header):
@@ -76,20 +76,37 @@ class KnowledgeBasePath(Static):
   def render(self) -> str:
     return self.path
 
+
+class KnowledgeBase(Widget):
+  def __init__(self, path: str):
+    self.path = path
+    super().__init__()
+  def compose(self) -> ComposeResult:
+    yield Static(self.path)
+    
+  
+class KnowledgeBaseScreen(Screen):
+  def __init__(self, path: str):
+    self.path = path
+    super().__init__()
+
+  def compose(self) -> ComposeResult:
+    yield KnowledgeBase(self.path)
+
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
-  
+  SCREENS = {"kb": KnowledgeBaseScreen}
+  kb_path = reactive("n/a")
   def compose(self) -> ComposeResult:
     yield ShellyDocsHeader()
     yield Home()
-    yield KnowledgeBasePath()
     
   def on_mount(self) -> None:
     self.title = "Shelly Docs"
 
   def on_home_path_provided(self, path: Home.PathProvided) -> None:
-    kb_path = self.query_one("KnowledgeBasePath",KnowledgeBasePath)
-    kb_path.path = path.path
+    self.kb_path = path.path
+    self.push_screen(KnowledgeBaseScreen(self.kb_path))
 
 
 if __name__ == "__main__":
