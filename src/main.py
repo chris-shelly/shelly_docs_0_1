@@ -3,10 +3,14 @@
 from textual.app import App, ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
-from textual.widgets import Header, Static, Input, Label, Button
+from textual.widgets import Header, Static, Input, Label, Button, Pretty
 from textual.screen import Screen
 from textual.message import Message
 from textual.reactive import reactive
+
+from be.config import get_config
+
+
 class ShellyDocsHeader(Header):
   pass
 
@@ -77,13 +81,21 @@ class KnowledgeBasePath(Static):
     return self.path
 
 
+
+class KnowledgeBaseConfig(Pretty):
+  """Use Pretty to show the JSON representation of the `shellydocs.yaml` config"""
+
+
 class KnowledgeBase(Widget):
   def __init__(self, path: str):
     self.path = path
     super().__init__()
   def compose(self) -> ComposeResult:
-    yield Static(self.path)
-    
+    # use the path to read the config and read the items
+    yield Static(f"path: {self.path}")
+    kb_config = get_config(self.path)
+    yield KnowledgeBaseConfig(kb_config)
+
   
 class KnowledgeBaseScreen(Screen):
   def __init__(self, path: str):
