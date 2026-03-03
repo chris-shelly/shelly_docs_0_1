@@ -9,18 +9,18 @@ from pathlib import Path
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 
-md_doc_text = Path("simple_md.md").read_text()
-md_doc_tree = Document(md_doc_text)
-with ASTRenderer() as renderer:
-  rendered = renderer.render(md_doc_tree)
 
-rendered = json.loads(rendered)
-print("--- AST of 'simple_md.md'")
-pprint(rendered)
+def parse_md_doc(path: str):
+  md_doc_text = Path(path).read_text()
+  md_doc_tree = Document(md_doc_text)
+  with ASTRenderer() as renderer:
+    rendered = renderer.render(md_doc_tree)
 
-# given some item tags, take the AST and detect content
+  rendered = json.loads(rendered)
+  print("--- AST of 'simple_md.md'")
+  pprint(rendered)
+  return rendered
 
-item_tags = ["YO"]
 
 
 def read_items_in_doc(doc: dict, item_tags: list[str]) -> list[dict]:
@@ -32,7 +32,7 @@ def read_items_in_doc(doc: dict, item_tags: list[str]) -> list[dict]:
     item_tag_pattern = re.compile(item_tag_base.replace('ABC', item_tag))
     # go through the document and find all headings matching this pattern
     print("item_tag_pattern", item_tag_pattern)
-    items = items  + traverse_for_items(doc, item_tag_pattern)
+    items = items  + traverse_for_items(doc, item_tag_pattern, [])
     print("items", items)
   return items
 
@@ -64,6 +64,13 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, items: list =[])
       for child in value:
         traverse_for_items(child, item_tag_pattern, items = items)
   return items
-items = read_items_in_doc(rendered, item_tags)
+
+doc = parse_md_doc("simple_md.md")
+# given some item tags, take the AST and detect content
+
+item_tags = ["YO"]
+
+
+items = read_items_in_doc(doc, item_tags)
 print(items)
 

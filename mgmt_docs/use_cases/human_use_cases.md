@@ -7,14 +7,17 @@ status: in_progress
 Human uses the TUI to view a specific Item in the Knowledge Base.
 
 # USECASE-3 Human sets the Knowledge Base Config
+Human opens a project in the TUI by specifying the directory for the Knowledge Base.
+
 Human sets the configuration for the Knowledge base using a `shellydocs.yaml` file.
 ```yaml
-docs_path: ./data # where to read docs from
 item_tags: # tags to recognize as items
   - INPUT
   - DESIGN
   - REQ
 ```
+Item Tags are used to detect items.
+
 # USECASE-4 Human adds a new Item
 Human uses the TUI to create a new Item
 
