@@ -1,0 +1,5 @@
+docs_path: ./data # where to read docs from
+item_tags: # tags to recognize as items
+  - USECASE
+  - DESIGN
+  - ACTOR

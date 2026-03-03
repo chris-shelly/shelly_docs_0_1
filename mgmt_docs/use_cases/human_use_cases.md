@@ -1,6 +1,8 @@
 # USECASE-1 Human gets list of Items
 Human uses the TUI to view the Items in their Knowledge Base.
-
+```yaml (metadata.yaml)
+status: in_progress
+```
 # USECASE-2 Human reads an Item
 Human uses the TUI to view a specific Item in the Knowledge Base.
 

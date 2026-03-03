@@ -71,6 +71,7 @@ class Home(Widget):
     
 
 class KnowledgeBasePath(Static):
+  """Used to open up a page for the Knowledge Base"""
   path = reactive("n/a")
   def render(self) -> str:
     return self.path
