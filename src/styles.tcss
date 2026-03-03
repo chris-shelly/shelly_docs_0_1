@@ -1,0 +1,15 @@
+Home {
+  content-align: center middle;
+  border: solid white;
+  padding: 1;
+}
+
+KnowledgeBasePath {
+  content-align: center middle;
+  border: solid white;
+  padding: 1;
+}
+
+#init-project {
+  content-align: center middle;
+}
