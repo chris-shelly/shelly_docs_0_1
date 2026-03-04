@@ -7,7 +7,7 @@ Shelly Docs scans markdown documents within that directory to read, update, crea
 An `Item` is a piece of markdown documentation content within a [Knowledge Base](#design-1-knowledge-base).
 
 An `Item` is defined as a markdown heading with content under it.
-
+## DESIGN-2-1 `Item` Example
 For example,
 ```md
 <!-- Item starts with the Heading-->

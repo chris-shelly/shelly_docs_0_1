@@ -32,3 +32,7 @@ In `crud.py`, update the `get_items()` function to parse documentation Items. A 
 "parent_title": "" #empty because there is no parent `Item`
 }
 ```
+## ``Claude Plan``
+- Recursive traversal should be replaced with a linear scan approach
+- Add a `node_to_markdown` helper
+- Cleaning up debug prints
