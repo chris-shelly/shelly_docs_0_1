@@ -36,8 +36,83 @@ def get_item(path: str, item_key: str):
   state = get_state(path)
   return state["items"][item_key]
 
-def update_item(path: str, item_key: str, item: dict):
-  """Update the Item in the Markdown document"""
+def put_item(path: str, item_key: str, item: dict, config: dict):
+  """Add or update an Item in the Markdown document.
+
+  Args:
+    path: KB directory path
+    item_key: e.g. "USECASE-4"
+    item: dict with 'title', 'content', 'path' (target .md file)
+    config: config dict containing 'item_tags'
+
+  Raises:
+    ValueError: if item_key tag prefix not in config item_tags
+    ValueError: if item_key already exists in a different file
+  """
+  # Validate item type
+  parts = item_key.rsplit('-', 1)
+  if len(parts) != 2 or not parts[1].isdigit():
+    raise ValueError(f"Invalid item_key format: {item_key}")
+  tag_prefix = parts[0]
+  if tag_prefix not in config['item_tags']:
+    raise ValueError(f"Tag '{tag_prefix}' not in configured item_tags: {config['item_tags']}")
+
+  # Validate key uniqueness across files
+  existing_items = get_items(path, config)
+  for existing in existing_items:
+    existing_key = existing['title'].split(' ')[0]
+    if existing_key == item_key and existing['path'] != item['path']:
+      raise ValueError(
+        f"Item '{item_key}' already exists in a different file: {existing['path']}"
+      )
+
+  # Build the new heading + content block
+  target_path = Path(item['path'])
+  heading_line = f"## {item['title']}"
+  new_block = f"{heading_line}\n{item['content']}\n"
+
+  if not target_path.exists():
+    target_path.write_text(new_block)
+    return
+
+  lines = target_path.read_text().splitlines(keepends=True)
+
+  # Look for existing heading matching the item_key
+  heading_pattern = re.compile(rf'^(#+)\s+{re.escape(item_key)}\b')
+  heading_idx = None
+  heading_level = None
+  for i, line in enumerate(lines):
+    m = heading_pattern.match(line)
+    if m:
+      heading_idx = i
+      heading_level = len(m.group(1))
+      break
+
+  if heading_idx is not None:
+    # Update: find end boundary (next heading at same or higher level, or EOF)
+    end_idx = len(lines)
+    for i in range(heading_idx + 1, len(lines)):
+      m = re.match(r'^(#+)\s', lines[i])
+      if m and len(m.group(1)) <= heading_level:
+        end_idx = i
+        break
+
+    # Replace the heading + content block
+    new_lines = [f"{'#' * heading_level} {item['title']}\n", f"{item['content']}\n"]
+    # Ensure a blank line before next section if not at EOF
+    if end_idx < len(lines) and not new_lines[-1].endswith('\n\n'):
+      new_lines.append('\n')
+    lines[heading_idx:end_idx] = new_lines
+    target_path.write_text(''.join(lines))
+  else:
+    # Add: append to end of file
+    text = target_path.read_text()
+    if text and not text.endswith('\n'):
+      text += '\n'
+    text += f"\n{new_block}"
+    target_path.write_text(text)
+
+def delete_item(path: str, item_key: str):
   pass
 
 def get_md_docs_in_dir(dir: Path) -> list[Path]:
@@ -211,7 +286,9 @@ if __name__ == "__main__":
   item = get_item(path, "ACTOR-2")
   
   print(item)
-  # update the content field in the item so we can test update
-  item['content'] += "\nMay consider adding an SDK in the future"
-  update_item(path, "ACTOR-2",item)
-  write_items_to_state(path,items)
+  # update the content field in the item so we can test put_item
+  #item['content'] += "\nMay consider adding an SDK in the future."
+  #config = {"item_tags": ['ACTOR', 'USECASE', 'DESIGN']}
+  #put_item(path, "ACTOR-2", item, config)
+  #write_items_to_state(path, items)
+  

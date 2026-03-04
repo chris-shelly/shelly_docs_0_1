@@ -41,7 +41,8 @@ items:
     path: ..\..\mgmt_docs\use_cases\actors.md
   ACTOR-2:
     title: ACTOR-2 `Agent`
-    content: An AI Agent. Primarily expected to use the CLI.
+    content: An AI Agent. Primarily expected to use the CLI.May consider adding 
+      an SDK in the future
     parent_title: ''
     path: ..\..\mgmt_docs\use_cases\actors.md
   USECASE-1:

@@ -2,3 +2,5 @@
 A Human user. Primarily expected to use the TUI, but can also use CLI commands.
 # ACTOR-2 `Agent`
 An AI Agent. Primarily expected to use the CLI.
+# ACTOR-3 Delete this
+will delete this.

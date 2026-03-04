@@ -46,6 +46,15 @@ In `crud.py`, we want an `put_item()` function to idempotently add/update an ite
 Add logic that ensures:
 - the item key is unique
 - the item type is one of the valid types defined in `shellydocs.yaml` config
+## `Summary of Claude's Plan`
+- replace `update_item()` stub with `put_item()`
+- add validation logic
+  - type
+  - key uniqueness
+- write to markdown file, have to use raw text
 
 # PROMPT-3 Update `Item.path` so that it represents the path to the `Item`
-TBD
+## `Role`
+You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
+## `Goal`
+Update the generation of `Item.path` so that it presents a path directly to the markdown (includes the anchors, ex. [Link to DESIGN-2 Item](../design/item.md#design-2-item'))
