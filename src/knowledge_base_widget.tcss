@@ -1,0 +1,25 @@
+KnowledgeBase {
+  layout: grid;
+  grid-size: 3;
+  grid-columns: 2fr 3fr 3fr; 
+}
+
+KnowledgeBaseItems {
+  row-span: 3;
+}
+
+Item {
+  column-span: 2;
+  row-span: 2;
+}
+
+KnowledgeBaseConfig {
+  column-span: 2;
+  row-span: 1;
+}
+
+.box {
+  border: solid white;
+  height: 100%;
+
+}

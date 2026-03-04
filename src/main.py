@@ -11,6 +11,8 @@ from textual.reactive import reactive
 from be.config import get_config
 from be.crud import get_items
 
+from pathlib import Path
+
 class ShellyDocsHeader(Header):
   pass
 
@@ -89,17 +91,24 @@ class KnowledgeBaseItems(Pretty):
   """Use Pretty to show the JSON representation of the KnowledgeBase Items"""
 
 class KnowledgeBase(Widget):
+  DEFAULT_CSS = Path("knowledge_base_widget.tcss").read_text()
   def __init__(self, path: str):
     self.path = path
     super().__init__()
   def compose(self) -> ComposeResult:
-    # use the path to read the config and read the items
-    yield Static(f"path: {self.path}")
     kb_config = get_config(self.path)
-    yield KnowledgeBaseConfig(kb_config)
+
     # get the Items
     items = get_items(self.path, kb_config)
-    yield KnowledgeBaseItems(items)
+    yield KnowledgeBaseItems(items, classes="box")
+
+    # get a specific item, by default, just get the first one
+    item = items[0]
+    yield Item(item, classes="box")
+
+    
+    yield KnowledgeBaseConfig(kb_config, classes="box")
+    
 
 
   
@@ -110,6 +119,10 @@ class KnowledgeBaseScreen(Screen):
 
   def compose(self) -> ComposeResult:
     yield KnowledgeBase(self.path)
+
+
+class Item(Pretty):
+  """Use Pretty to show a JSON representation of an item"""
 
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"

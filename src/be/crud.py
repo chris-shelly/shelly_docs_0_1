@@ -2,7 +2,6 @@ from pathlib import Path
 import re
 import json
 from ruamel.yaml import YAML
-from pprint import pprint
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
