@@ -61,7 +61,8 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   existing_items = get_items(path, config)
   for existing in existing_items:
     existing_key = existing['title'].split(' ')[0]
-    if existing_key == item_key and existing['path'] != item['path']:
+    existing_file = existing['path'].split('#')[0]
+    if existing_key == item_key and existing_file != item['path']:
       raise ValueError(
         f"Item '{item_key}' already exists in a different file: {existing['path']}"
       )
@@ -113,7 +114,58 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
     target_path.write_text(text)
 
 def delete_item(path: str, item_key: str):
-  pass
+  """Remove an Item from its Markdown document.
+
+  Args:
+    path: KB directory path
+    item_key: e.g. "USECASE-4"
+
+  Raises:
+    KeyError: if item_key not found in state
+    FileNotFoundError: if the document file doesn't exist
+    ValueError: if the heading is not found in the document
+  """
+  state = get_state(path)
+  if item_key not in state["items"]:
+    raise KeyError(f"Item '{item_key}' not found in state")
+
+  item = state["items"][item_key]
+  doc_path = Path(item['path'].split('#')[0])
+
+  if not doc_path.exists():
+    raise FileNotFoundError(f"Document not found: {doc_path}")
+
+  lines = doc_path.read_text().splitlines(keepends=True)
+
+  heading_pattern = re.compile(rf'^(#+)\s+{re.escape(item_key)}\b')
+  heading_idx = None
+  heading_level = None
+  for i, line in enumerate(lines):
+    m = heading_pattern.match(line)
+    if m:
+      heading_idx = i
+      heading_level = len(m.group(1))
+      break
+
+  if heading_idx is None:
+    raise ValueError(f"Heading for '{item_key}' not found in {doc_path}")
+
+  # Find end boundary: next heading at same or higher level, or EOF
+  end_idx = len(lines)
+  for i in range(heading_idx + 1, len(lines)):
+    m = re.match(r'^(#+)\s', lines[i])
+    if m and len(m.group(1)) <= heading_level:
+      end_idx = i
+      break
+
+  del lines[heading_idx:end_idx]
+  doc_path.write_text(''.join(lines))
+
+def heading_to_anchor(title: str) -> str:
+  anchor = title.lower()
+  anchor = re.sub(r'[^\w\s-]', '', anchor)
+  anchor = re.sub(r'\s+', '-', anchor.strip())
+  return anchor
 
 def get_md_docs_in_dir(dir: Path) -> list[Path]:
   docs = []
@@ -219,11 +271,12 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, doc_path: Path, 
         # Determine parent_title from the stack
         parent_title = parent_stack[-1][1] if parent_stack else ""
 
+        anchor = heading_to_anchor(item_match[0])
         current_item = {
           "title": item_match[0],
           "content": "",
           "parent_title": parent_title,
-          "path": str(doc_path),
+          "path": f"{doc_path}#{anchor}",
         }
 
         # Push this item onto the parent stack for potential children
@@ -291,4 +344,6 @@ if __name__ == "__main__":
   #config = {"item_tags": ['ACTOR', 'USECASE', 'DESIGN']}
   #put_item(path, "ACTOR-2", item, config)
   #write_items_to_state(path, items)
+  delete_item(path,"ACTOR-3")
+  write_items_to_state(path, items)
   
