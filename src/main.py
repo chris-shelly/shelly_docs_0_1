@@ -3,11 +3,12 @@
 from textual.app import App, ComposeResult
 from textual.containers import Vertical
 from textual.widget import Widget
-from textual.widgets import Header, Static, Input, Label, Button, Pretty
+from textual.widgets import Header, Static, Input, Label, Button, Pretty, OptionList, Markdown
 from textual.screen import Screen
 from textual.message import Message
 from textual.reactive import reactive
 
+from rich.markdown import Markdown as RichMD
 from be.config import get_config
 from be.crud import get_items
 
@@ -86,29 +87,36 @@ class KnowledgeBasePath(Static):
 
 class KnowledgeBaseConfig(Pretty):
   """Use Pretty to show the JSON representation of the `shellydocs.yaml` config"""
+  def on_mount(self):
+    self.border_title = "Config"
+    self.styles.border_title_align = "left"
 
-class KnowledgeBaseItems(Pretty):
-  """Use Pretty to show the JSON representation of the KnowledgeBase Items"""
+class KnowledgeBaseItems(OptionList):
+  """Use an OptionList to show the Items"""
 
 class KnowledgeBase(Widget):
   DEFAULT_CSS = Path("knowledge_base_widget.tcss").read_text()
+  item = reactive({}, recompose=True)
   def __init__(self, path: str):
     self.path = path
-    super().__init__()
-  def compose(self) -> ComposeResult:
-    kb_config = get_config(self.path)
-
+    self.items = []
+    self.kb_config = get_config(self.path)
     # get the Items
-    items = get_items(self.path, kb_config)
-    yield KnowledgeBaseItems(items, classes="box")
-
+    self.items = get_items(self.path, self.kb_config)
+    super().__init__() # call before setting reactives (in this case, 'self.item')
     # get a specific item, by default, just get the first one
-    item = items[0]
-    yield Item(item, classes="box")
+    self.item = self.items[0]
+    
+  def compose(self) -> ComposeResult:    
+    # pass the items as a list of strings to yield an Options List of the KB Items
+    yield KnowledgeBaseItems(*[RichMD(item['title']) for item in self.items], classes="box")
+    # render markdown content of a single item
+    yield Item(self.item['content'], item_title=self.item['title'])
+    # pretty print the JSON representation of the Config
+    yield KnowledgeBaseConfig(self.kb_config, classes="box")
 
-    
-    yield KnowledgeBaseConfig(kb_config, classes="box")
-    
+  def on_option_list_option_selected(self, message: OptionList.OptionSelected):
+    self.item = self.items[message.option_index]
 
 
   
@@ -118,11 +126,24 @@ class KnowledgeBaseScreen(Screen):
     super().__init__()
 
   def compose(self) -> ComposeResult:
+    yield ShellyDocsHeader()
     yield KnowledgeBase(self.path)
 
 
-class Item(Pretty):
-  """Use Pretty to show a JSON representation of an item"""
+class Item(Widget):
+  """Show the Item as Markdown, takes a Markdown string as input."""
+  def __init__(self, markdown: str, item_title: str):
+    self.markdown = markdown
+    self.item_title = item_title
+    super().__init__()
+
+  def compose(self) -> ComposeResult:
+    yield Markdown(self.markdown)
+
+  def on_mount(self) -> None:
+    self.classes = "box"
+    self.border_title = self.item_title
+    self.styles.border_title_align = "left"
 
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
