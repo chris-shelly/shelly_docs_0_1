@@ -37,12 +37,15 @@ In `crud.py`, update the `get_items()` function to parse documentation Items. A 
 - Add a `node_to_markdown` helper
 - Cleaning up debug prints
 
-# PROMPT-2 Updating Items
+# PROMPT-2 Put Items
 ## `Role`
 You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
 ## `Goal`
-In `crud.py`, we want an `update_item()` function to make updates to the item's content in the markdown document.
+In `crud.py`, we want an `put_item()` function to idempotently add/update an item's content in the markdown document.
 
+Add logic that ensures:
+- the item key is unique
+- the item type is one of the valid types defined in `shellydocs.yaml` config
 
 # PROMPT-3 Update `Item.path` so that it represents the path to the `Item`
 TBD
