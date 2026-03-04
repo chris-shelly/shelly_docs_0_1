@@ -1,11 +1,12 @@
 from pathlib import Path
 import re
 import json
+from ruamel.yaml import YAML
 from pprint import pprint
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
-
+yaml = YAML()
 def get_items(path: str, config: dict) -> list[dict]:
   dir = Path(path)
   items = []
@@ -14,11 +15,29 @@ def get_items(path: str, config: dict) -> list[dict]:
 
   for doc in docs:
     parsed_doc = parse_md_doc(doc)
-    items = items + read_items_in_doc(parsed_doc, config['item_tags'])
+    items = items + read_items_in_doc(parsed_doc, config['item_tags'], doc_path=doc)
   return items
 
-def get_item(path):
-  # given an ID, get a specific item
+def write_items_to_state(path: str, items: list[dict]):
+  state = {"items":{}}
+  state_path = Path(f"{path}/state.yaml")
+  # given an array of items, write them to state
+  for item in items:
+    item_key = item['title'].split(' ')[0]
+    state["items"][item_key] = item
+  yaml.dump(state, state_path)
+
+def get_state(path: str) -> dict:
+  state_path = Path(f"{path}/state.yaml")
+  state = yaml.load(state_path.read_text())
+  return state
+def get_item(path: str, item_key: str):
+  # given an Item Key (the first part of the Title), get a specific item
+  state = get_state(path)
+  return state["items"][item_key]
+
+def update_item(path: str, item_key: str, item: dict):
+  """Update the Item in the Markdown document"""
   pass
 
 def get_md_docs_in_dir(dir: Path) -> list[Path]:
@@ -30,12 +49,12 @@ def get_md_docs_in_dir(dir: Path) -> list[Path]:
       docs = docs + get_md_docs_in_dir(child)
   return docs
 
-def read_items_in_doc(doc: dict, item_tags: list[str]) -> list[dict]:
+def read_items_in_doc(doc: dict, item_tags: list[str], doc_path: Path) -> list[dict]:
   item_tag_base = '^(ABC-\\d+.*)\\s*$'
   items = []
   for item_tag in item_tags:
     item_tag_pattern = re.compile(item_tag_base.replace('ABC', item_tag))
-    new_items = traverse_for_items(doc, item_tag_pattern, [])
+    new_items = traverse_for_items(doc, item_tag_pattern, doc_path, [])
     items = items + new_items
   return items
 
@@ -100,7 +119,7 @@ def node_to_markdown(node: dict) -> str:
       return get_text_from_children(node) + '\n\n'
     return ''
 
-def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, items: list = []):
+def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, doc_path: Path, items: list = []):
   children = doc.get('children', [])
   current_item = None
   # Stack of (level, title) for tracking parent headings
@@ -129,6 +148,7 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, items: list = []
           "title": item_match[0],
           "content": "",
           "parent_title": parent_title,
+          "path": str(doc_path),
         }
 
         # Push this item onto the parent stack for potential children
@@ -177,12 +197,21 @@ def parse_md_doc(path: Path):
   return rendered
 
 if __name__ == "__main__":
-  items = get_items("../../mgmt_docs", {"item_tags": ['ACTOR', 'USECASE', 'DESIGN']})
-  for item in items:
-    print(f"\n--- {item['title']} ---")
-    if item['parent_title']:
-      print(f"  parent: {item['parent_title']}")
-    if item['content']:
-      print(f"  content: {item['content'][:120]}...")
-    else:
-      print("  content: (empty)")
+  path = "../../mgmt_docs"
+  items = get_items(path, {"item_tags": ['ACTOR', 'USECASE', 'DESIGN']})
+  #for item in items:
+  #  print(f"\n--- {item['title']} ---")
+  #  if item['parent_title']:
+  #    print(f"  parent: {item['parent_title']}")
+  #  if item['content']:
+  #    print(f"  content: {item['content'][:120]}...")
+  #  else:
+  #    print("  content: (empty)")
+  write_items_to_state(path,items)
+  item = get_item(path, "ACTOR-2")
+  
+  print(item)
+  # update the content field in the item so we can test update
+  item['content'] += "\nMay consider adding an SDK in the future"
+  update_item(path, "ACTOR-2",item)
+  write_items_to_state(path,items)

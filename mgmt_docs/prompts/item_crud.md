@@ -36,3 +36,13 @@ In `crud.py`, update the `get_items()` function to parse documentation Items. A 
 - Recursive traversal should be replaced with a linear scan approach
 - Add a `node_to_markdown` helper
 - Cleaning up debug prints
+
+# PROMPT-2 Updating Items
+## `Role`
+You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
+## `Goal`
+In `crud.py`, we want an `update_item()` function to make updates to the item's content in the markdown document.
+
+
+# PROMPT-3 Update `Item.path` so that it represents the path to the `Item`
+TBD

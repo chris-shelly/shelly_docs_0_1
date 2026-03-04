@@ -3,6 +3,19 @@ The Knowledge Base is the directory in which Shelly Docs is initialized.
 
 Shelly Docs scans markdown documents within that directory to read, update, create and delete [`Item`s](#design-2-item).
 
+## DESIGN-1-1 Knowledge Base `state.yaml`
+Within the KnowledgeBase is a `state.yaml` file that stores the data on the `Items` like a very simplistic kind of database collection.
+```yaml
+items:
+  ABC-32:
+    title: "ABC-32 Retrieve Data",
+    content: "Retrieve data so we can display it to the user",
+    parent_title: "" #empty if there is no parent item
+  ABC-33:
+    title: "ABC-33 Display Data"
+    # ...
+```
+
 # DESIGN-2 `Item`
 An `Item` is a piece of markdown documentation content within a [Knowledge Base](#design-1-knowledge-base).
 

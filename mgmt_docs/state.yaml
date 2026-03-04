@@ -1,0 +1,80 @@
+items:
+  DESIGN-1:
+    title: DESIGN-1 Knowledge Base
+    content: "The Knowledge Base is the directory in which Shelly Docs is initialized.\n\
+      \nShelly Docs scans markdown documents within that directory to read, update,
+      create and delete ."
+    parent_title: ''
+    path: ..\..\mgmt_docs\design\item.md
+  DESIGN-1-1:
+    title: DESIGN-1-1 Knowledge Base `state.yaml`
+    content: "Within the KnowledgeBase is a `state.yaml` file that stores the data
+      on the `Items` like a very simplistic kind of database collection.\n\n```yaml\n\
+      items:\n  ABC-32:\n    title: \"ABC-32 Retrieve Data\",\n    content: \"Retrieve
+      data so we can display it to the user\",\n    parent_title: \"\" #empty if there
+      is no parent item\n  ABC-33:\n    title: \"ABC-33 Display Data\"\n    # ...\n\
+      ```"
+    parent_title: DESIGN-1 Knowledge Base
+    path: ..\..\mgmt_docs\design\item.md
+  DESIGN-2:
+    title: DESIGN-2 `Item`
+    content: "An `Item` is a piece of markdown documentation content within a .\n\n\
+      An `Item` is defined as a markdown heading with content under it."
+    parent_title: ''
+    path: ..\..\mgmt_docs\design\item.md
+  DESIGN-2-1:
+    title: DESIGN-2-1 `Item` Example
+    content: "For example,\n\n```md\n<!-- Item starts with the Heading-->\n## ABC-32
+      Retrieve Data\nRetrieve data so we can display itto the user\n<!-- Item ends
+      either with end of the document or another Heading with the same or higher level
+      -->\n<!--New Item, separate from ABC-32-->\n## ABC-33 Display Data\nDisplay
+      the data to the user\n...\n```\n\nAside from headings of the same or higher
+      level (which would indicate another `Item`), any sort of content can be within
+      a given `Item`, including paragraphs, code blocks, images, etc."
+    parent_title: DESIGN-2 `Item`
+    path: ..\..\mgmt_docs\design\item.md
+  ACTOR-1:
+    title: ACTOR-1 `Human`
+    content: A Human user. Primarily expected to use the TUI, but can also use 
+      CLI commands.
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\actors.md
+  ACTOR-2:
+    title: ACTOR-2 `Agent`
+    content: An AI Agent. Primarily expected to use the CLI.
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\actors.md
+  USECASE-1:
+    title: USECASE-1 Human gets list of Items
+    content: "Human uses the TUI to view the Items in their Knowledge Base.\n\n```yaml\n\
+      status: in_progress\n```"
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\human_use_cases.md
+  USECASE-2:
+    title: USECASE-2 Human reads an Item
+    content: Human uses the TUI to view a specific Item in the Knowledge Base.
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\human_use_cases.md
+  USECASE-3:
+    title: USECASE-3 Human sets the Knowledge Base Config
+    content: "Human opens a project in the TUI by specifying the directory for the
+      Knowledge Base.\n\nHuman sets the configuration for the Knowledge base using
+      a `shellydocs.yaml` file.\n\n```yaml\nitem_tags: # tags to recognize as items\n\
+      \  - INPUT\n  - DESIGN\n  - REQ\n```\n\nItem Tags are used to detect items."
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\human_use_cases.md
+  USECASE-4:
+    title: USECASE-4 Human adds a new Item
+    content: Human uses the TUI to create a new Item
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\human_use_cases.md
+  USECASE-5:
+    title: USECASE-5 Human updates an Item
+    content: Human uses the TUI to update an existing Item
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\human_use_cases.md
+  USECASE-6:
+    title: USECASE-6 Human deletes an Item
+    content: Human uses TUI to delete an Item
+    parent_title: ''
+    path: ..\..\mgmt_docs\use_cases\human_use_cases.md
