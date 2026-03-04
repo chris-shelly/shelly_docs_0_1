@@ -58,3 +58,9 @@ Add logic that ensures:
 You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
 ## `Goal`
 Update the generation of `Item.path` so that it presents a path directly to the markdown (includes the anchors, ex. [Link to DESIGN-2 Item](../design/item.md#design-2-item'))
+
+# PROMPT-4 Delete Item
+## `Role`
+You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
+## `Goal`
+Add a `delete_item()` method that removes an Item from a Markdown Document.
