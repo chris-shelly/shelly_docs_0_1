@@ -18,8 +18,8 @@ def get_items(path: str, config: dict) -> list[dict]:
   for doc in docs:
     # parse the doc to an AST so we can read the items
     parsed_doc = parse_md_doc(doc)
-    #print("---get_items()::parsed_doc--")
-    #pprint(parsed_doc)
+    print("---get_items()::parsed_doc--")
+    pprint(parsed_doc)
     # read the items
     items = items + read_items_in_doc(parsed_doc, config['item_tags'])
     print("-- loop items--")
@@ -27,6 +27,10 @@ def get_items(path: str, config: dict) -> list[dict]:
   print("---get_items()::items---")
   pprint(items)
   return items
+
+def get_item(path):
+  # given an ID, get a specific item
+  pass
 
 def get_md_docs_in_dir(dir: Path) -> list[Path]:
   docs = []
@@ -82,6 +86,7 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, items: list =[])
     if item_match:
       #print("-- item match found", item_match[0])
       items.append({"title": item_match[0]})
+  # after finding an item, we want to get all the content until the next item.
   for key, value in doc.items():
     #print(key, value)
     if key == "children":
@@ -101,4 +106,4 @@ def parse_md_doc(path: Path):
 
 if __name__ == "__main__":
   #get_items("../../experiment_code",{"item_tags": ["YO"]})
-  get_items("../../mgmt_docs",{"item_tags": ['ACTOR', 'DESIGN', 'USECASE']})
+  get_items("../../mgmt_docs",{"item_tags": ['ACTOR']})
