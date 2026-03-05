@@ -54,19 +54,20 @@ shelly_docs item get "item_key"
 status: ready
 ```
 ```bash
-shelly_docs config set --path "path"
+shelly_docs kb init "path_to_kb_directory" # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base config
 ```
 # USECASE-10 Add/Update an Item via CLI
 ```yaml (metadata)
-status: drafting
+status: ready
 ```
-Need to determine how tp provide the YAML content via CLI.
-- realistically, it would be most efficient to let a User write markdown directly to a file in the directory.
-- if it's an agent though, we could perhaps let them write it using a JSON object. 
+Generally, we'd expect an agent to write Items by using markdown, but we should also allow a way to update items using json. 
 ```bash
-shelly_docs item put "item_key"
+shelly_docs item put "path_to_json" # put an item to the KB using JSON
 ```
 # USECASE-11 Delete an Item Via CLI
+```yaml (metadata)
+status: ready
+```
 ```bash
 shelly_docs item delete "item_key"
 ```
@@ -79,8 +80,19 @@ status: drafting
 ```yaml (metadata)
 status: drafting
 ```
+Search for Items based on the Metadata
 
 # USECASE-14 Semantic Search for Items
 ```yaml (metadata)
 status: future
+```
+Search for Items based on semantic similarity to a question. (effectively do RAG)
+
+# USECASE-15 Refresh Knowledge Base State
+```yaml (metadata)
+status: ready
+```
+Read all the Items in the Knowledge Base.
+```bash
+shelly_docs kb update
 ```
