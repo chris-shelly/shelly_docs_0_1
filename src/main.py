@@ -1,7 +1,7 @@
 # TUI Entry point
 
 from textual.app import App, ComposeResult
-from textual.containers import Vertical
+from textual.containers import Vertical, Horizontal
 from textual.widget import Widget
 from textual.widgets import Header, Static, Input, Label, Button, Pretty, OptionList, Markdown
 from textual.screen import Screen
@@ -93,13 +93,17 @@ class KnowledgeBaseConfig(Pretty):
 
 class KnowledgeBaseMenu(Widget):
   """Widget holding the `KnowledgeBaseItems` and the Options Bar, which allows for creating new `Item`s"""
-  def __init__(self, items: list[dict], item_index: int):
+  def __init__(self, items: list[dict], item_index: int, kb_path: str):
     self.items = items
     self.item_index = item_index
+    self.kb_path = kb_path
     super().__init__()
 
   def compose(self) -> ComposeResult:
     # pass the items as a list of strings to yield an Options List of the KB Items
+    with Horizontal(id="kb-menu-options"):
+      yield Static(f"{self.kb_path}/", classes="kb-menu-option")
+      yield Button("New Item", compact=True, classes="kb-menu-option") # set to 'compact=True' so it fits at the top of the menu
     yield KnowledgeBaseItems([RichMD(item['title']) for item in self.items], self.item_index)
 
 class KnowledgeBaseItems(Widget):
@@ -128,7 +132,7 @@ class KnowledgeBase(Widget):
     
   def compose(self) -> ComposeResult:    
     # pass the items as a list of strings to yield an Options List of the KB Items
-    yield KnowledgeBaseMenu(self.items, self.item_index)
+    yield KnowledgeBaseMenu(self.items, self.item_index, self.path)
     # render markdown content of a single item
     yield Item(self.item['content'], item_title=self.item['title'], document_path=self.item['path'])
     # pretty print the JSON representation of the Config

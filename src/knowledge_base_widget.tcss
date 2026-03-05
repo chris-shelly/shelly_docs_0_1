@@ -23,3 +23,22 @@ KnowledgeBaseConfig {
   height: 100%;
 
 }
+
+KnowledgeBaseMenu {
+  layout: grid;
+  grid-size: 1 2;
+  grid-rows: 2fr 6fr;
+}
+
+#kb-menu-options {
+  border: solid white;
+}
+
+#kb-menu-options .kb-menu-option {
+  content-align: center middle;
+}
+
+.kb-menu-option {
+  width: 1fr;
+  height: 100%;
+}
