@@ -3,7 +3,7 @@
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
 from textual.widget import Widget
-from textual.widgets import Header, Static, Input, Label, Button, Pretty, OptionList, Markdown
+from textual.widgets import Header, Static, Input, Label, Button, Pretty, OptionList, Markdown, TextArea
 from textual.screen import Screen
 from textual.message import Message
 from textual.reactive import reactive
@@ -47,6 +47,34 @@ class InputWithLabel(Widget):
     else:
       yield Input(id="path-input")
 
+
+class TextAreaWithLabel(Widget):
+  def __init__(self, input_label: str, placeholder: str="") -> None:
+    self.input_label = input_label
+    self.placeholder = placeholder
+    super().__init__()
+
+  def compose(self) -> ComposeResult:
+    yield Label(self.input_label, id="new-item-id-label")
+    if self.placeholder:
+      text_area = TextArea(id="new-item-md")
+      text_area.language = "markdown"
+      text_area.placeholder = self.placeholder
+      yield text_area
+    else:
+      text_area = TextArea(id="new-item-md")
+      text_area.language = "markdown"
+      text_area.text = "# ABC-1 Title Is Here\n"
+
+class NewItemMd(TextAreaWithLabel):
+  """TextArea input for user to enter the markdown for creating a new item."""
+
+class NewItemPath(InputWithLabel):
+  """
+  Input for user to enter the filepath for a new item, relative to the config path
+
+  Assumes a user can only drill down, not up
+  """
 
 class ConfigPath(InputWithLabel):
   """Input used to let the user point the app to the location for the shellydocs.yaml folder"""
@@ -186,8 +214,23 @@ class CreateNewItemScreen(Screen):
   """Screen for creating new items"""
   def compose(self) -> ComposeResult:
     yield ShellyDocsHeader()
-    yield Static("Create New Item Screen")
+    yield Static("Create New Item")
+    # accept a file input using `InputWithLabel`
+    yield NewItemPath("filepath")
+    # accept a Markdown TextArea input using `TextAreaWithLabel`
+    yield NewItemMd("Markdown","# ABC-1 New Item Title")
+    # button to dismiss the window, triggering the creation
+    yield Button("Create")
 
+  def on_button_pressed(self, event: Button.Pressed) -> None:
+    # query content of the filepath
+    filepath = self.query_one("#path-input", Input).value
+    # query content of the markdown text area
+    md_text = self.query_one("#new-item-md", TextArea).text
+    # condense into a dict
+    new_item_md = {"filepath": filepath, "markdown": md_text}
+    # pass the dict up
+    self.dismiss(new_item_md)
 
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
@@ -204,7 +247,9 @@ class ShellyDocs(App):
     self.kb_path = path.path
     self.push_screen(KnowledgeBaseScreen(self.kb_path))
   def on_knowledge_base_menu_create_new_item(self, msg: KnowledgeBaseMenu.CreateNewItem) -> None:
-    self.push_screen(CreateNewItemScreen())
+    def create_new_item(item_md_obj: dict):
+      print(item_md_obj)
+    self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen 
 
 
 if __name__ == "__main__":
