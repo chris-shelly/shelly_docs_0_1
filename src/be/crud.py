@@ -126,6 +126,11 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
     text += f"\n{new_block}"
     target_path.write_text(text)
 
+  state = get_state(path)
+  state['items'][item_key] = item
+  state_path = Path(f"{path}/state.yaml")
+  yaml.dump(state,state_path)
+
 def delete_item(path: str, item_key: str):
   """Remove an Item from its Markdown document.
 
@@ -173,6 +178,11 @@ def delete_item(path: str, item_key: str):
 
   del lines[heading_idx:end_idx]
   doc_path.write_text(''.join(lines))
+  
+  # update the state with the delete
+  del state['items'][item_key]
+  state_path = Path(f"{path}/state.yaml")
+  yaml.dump(state,state_path)
 
 def heading_to_anchor(title: str) -> str:
   anchor = title.lower()

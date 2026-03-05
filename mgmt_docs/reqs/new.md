@@ -2,7 +2,4 @@
 This is a new item created in the TUI.
 
 ### USECASE-77-1 Child Item being added
-This is a child item being edited via TUI.
-
-### USECASE-77-2 WHYSTHISDEALLER
-Takin the piss
+This is a child item being edited via TUI. baby

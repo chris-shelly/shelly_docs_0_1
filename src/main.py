@@ -364,7 +364,7 @@ class ShellyDocs(App):
     def handle_delete(confirmed: bool):
       if confirmed:
         delete_item(self.kb_path, item_key)
-        self.pop_screen()
+        # calling the function automatically pops the screen, no need to pop again
     self.push_screen(DeleteItemScreen(item_title), handle_delete)
 
   def on_knowledge_base_menu_update_item(self, msg: KnowledgeBaseMenu.UpdateItem) -> None:
@@ -377,7 +377,7 @@ class ShellyDocs(App):
       updated_item = convert_new_item_md(raw_item_md)
       item_key = updated_item['title'].split(' ')[0]
       put_item(self.kb_path, item_key, updated_item, get_config(self.kb_path))
-      self.pop_screen()
+      # calling the function automatically pops the screen, no need to pop again
     self.push_screen(UpdateItemScreen(item, self.kb_path), handle_update)
 
 
