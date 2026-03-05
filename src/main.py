@@ -111,7 +111,7 @@ class KnowledgeBase(Widget):
     # pass the items as a list of strings to yield an Options List of the KB Items
     yield KnowledgeBaseItems(*[RichMD(item['title']) for item in self.items], classes="box")
     # render markdown content of a single item
-    yield Item(self.item['content'], item_title=self.item['title'])
+    yield Item(self.item['content'], item_title=self.item['title'], document_path=self.item['path'])
     # pretty print the JSON representation of the Config
     yield KnowledgeBaseConfig(self.kb_config, classes="box")
 
@@ -132,9 +132,10 @@ class KnowledgeBaseScreen(Screen):
 
 class Item(Widget):
   """Show the Item as Markdown, takes a Markdown string as input."""
-  def __init__(self, markdown: str, item_title: str):
+  def __init__(self, markdown: str, item_title: str, document_path: str = ""):
     self.markdown = markdown
     self.item_title = item_title
+    self.document_path = document_path
     super().__init__()
 
   def compose(self) -> ComposeResult:
@@ -144,6 +145,10 @@ class Item(Widget):
     self.classes = "box"
     self.border_title = self.item_title
     self.styles.border_title_align = "left"
+    if self.document_path:
+      self.border_subtitle = self.document_path
+      self.styles.border_subtitle_align = "right"
+
 
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
