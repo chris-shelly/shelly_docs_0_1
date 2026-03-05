@@ -3,13 +3,13 @@
 from textual.app import App, ComposeResult
 from textual.containers import Vertical, Horizontal
 from textual.widget import Widget
-from textual.widgets import Header, Static, Input, Label, Button, Pretty, OptionList, Markdown, TextArea
+from textual.widgets import Header, Static, Input, Label, Button, Pretty, OptionList, Markdown, TextArea, Footer
 from textual.screen import Screen
 from textual.message import Message
 from textual.reactive import reactive
 
 from rich.markdown import Markdown as RichMD
-from be.config import get_config
+from be.shelly_docs_config.config import get_config
 from be.crud import get_items, convert_new_item_md, put_item, delete_item, write_items_to_state
 
 from pathlib import Path
@@ -57,14 +57,22 @@ class TextAreaWithLabel(Widget):
   def compose(self) -> ComposeResult:
     yield Label(self.input_label, id="new-item-id-label")
     if self.placeholder:
-      text_area = TextArea(id="new-item-md")
+      text_area = TextArea.code_editor(id="new-item-md")
+      text_area.can_focus=True
       text_area.language = "markdown"
       text_area.placeholder = self.placeholder
       yield text_area
     else:
-      text_area = TextArea(id="new-item-md")
+      text_area = TextArea.code_editor(id="new-item-md")
+      text_area.can_focus=True
       text_area.language = "markdown"
       text_area.text = "# ABC-1 Title Is Here\n"
+      yield text_area
+  def key_space(self):
+    # access the text area by dom query
+    text_area = self.query_one("#new-item-md", TextArea)
+    # insert a space at the current cursor position/selection
+    text_area.insert(" ")
 
 class NewItemMd(TextAreaWithLabel):
   """TextArea input for user to enter the markdown for creating a new item."""
@@ -134,20 +142,19 @@ class KnowledgeBaseMenu(Widget):
     pass
 
   def __init__(self, items: list[dict], item_index: int, kb_path: str):
-    self.items = items
+    super().__init__()
     self.item_index = item_index
     self.kb_path = kb_path
-    super().__init__()
+    self.items = items
 
   def compose(self) -> ComposeResult:
     # pass the items as a list of strings to yield an Options List of the KB Items
     with Horizontal(id="kb-menu-options"):
-      yield Static(f"{self.kb_path}/", classes="kb-menu-option")
       yield Button("New Item", id="new-item-btn", compact=True, classes="kb-menu-option")
-      yield Button("Delete Item", id="delete-item-btn", compact=True, classes="kb-menu-option")
       yield Button("Update Item", id="update-item-btn", compact=True, classes="kb-menu-option")
-    yield KnowledgeBaseItems([RichMD(item['title']) for item in self.items], self.item_index)
-
+      yield Button("Delete Item", id="delete-item-btn", compact=True, classes="kb-menu-option")
+    yield KnowledgeBaseItems(self.items, self.item_index)
+  
   def on_button_pressed(self, event: Button.Pressed) -> None:
     if event.button.id == "new-item-btn":
       self.post_message(self.CreateNewItem())
@@ -159,40 +166,56 @@ class KnowledgeBaseMenu(Widget):
 class KnowledgeBaseItems(Widget):
   """Use an OptionList to show the Items"""
   def __init__(self, items: list[dict], item_index: int):
-    self.items = items
     self.item_index = item_index
     super().__init__()
+    self.items = items
+    self.item_options = [RichMD(item['title']) for item in self.items]
   def compose(self) -> ComposeResult:
-    options = OptionList(*self.items, classes="box")
+    options = OptionList(*self.item_options, classes="box", id="options")
     options.highlighted = self.item_index
     yield options
+
 class KnowledgeBase(Widget):
   DEFAULT_CSS = Path("knowledge_base_widget.tcss").read_text()
-  item = reactive({}, recompose=True)
+  item = reactive({})
+  items = reactive([])
   item_index = reactive(0)
   def __init__(self, path: str):
     self.path = path
-    self.items = []
     self.kb_config = get_config(self.path)
+    super().__init__() # call before setting reactives
+    
+  def compose(self) -> ComposeResult:
+    # pass the items as a list of dicts to yield an Options List of the KB Items
     # get the Items
     self.items = get_items(self.path, self.kb_config)
-    write_items_to_state(self.path,self.items)
-    super().__init__() # call before setting reactives (in this case, 'self.item')
+    write_items_to_state(self.path)
     # get a specific item, by default, just get the first one
     self.item = self.items[0]
-    
-  def compose(self) -> ComposeResult:    
-    # pass the items as a list of strings to yield an Options List of the KB Items
     yield KnowledgeBaseMenu(self.items, self.item_index, self.path)
     # render markdown content of a single item
     yield Item(self.item['content'], item_title=self.item['title'], document_path=self.item['path'])
     # pretty print the JSON representation of the Config
     yield KnowledgeBaseConfig(self.kb_config, classes="box")
-
+  
+  def update_items(self) -> None:
+    self.items = get_items(self.path, self.kb_config)
+    kb_menu = self.query_one("KnowledgeBaseMenu", KnowledgeBaseMenu)
+    kb_menu.items = self.items
+    kb_items = kb_menu.query_one("KnowledgeBaseItems", KnowledgeBaseItems)
+    kb_items.items = kb_menu.items
+    kb_items.item_options = [RichMD(item['title']) for item in kb_items.items]
+    optionlist = kb_items.query_one("OptionList",OptionList)
+    optionlist = optionlist.set_options(kb_items.item_options)
   def on_option_list_option_selected(self, message: OptionList.OptionSelected):
     self.item_index = message.option_index
     self.item = self.items[message.option_index]
-    
+    item_display = self.query_one("Item", Item)
+    # update item content, border title, and subtitle
+    item_display.border_title = self.item['title']
+    item_display.border_subtitle = self.item['path']
+    markdown = item_display.query_one("Markdown", Markdown)
+    markdown.update(self.item['content'])
 
 
   
@@ -204,6 +227,11 @@ class KnowledgeBaseScreen(Screen):
   def compose(self) -> ComposeResult:
     yield ShellyDocsHeader()
     yield KnowledgeBase(self.path)
+
+  def on_screen_resume(self) -> None:
+    kb = self.query_one("KnowledgeBase", KnowledgeBase)
+    write_items_to_state(self.path)
+    kb.update_items()
 
 
 class Item(Widget):
@@ -337,7 +365,6 @@ class ShellyDocs(App):
       if confirmed:
         delete_item(self.kb_path, item_key)
         self.pop_screen()
-        self.push_screen(KnowledgeBaseScreen(self.kb_path))
     self.push_screen(DeleteItemScreen(item_title), handle_delete)
 
   def on_knowledge_base_menu_update_item(self, msg: KnowledgeBaseMenu.UpdateItem) -> None:
@@ -351,7 +378,6 @@ class ShellyDocs(App):
       item_key = updated_item['title'].split(' ')[0]
       put_item(self.kb_path, item_key, updated_item, get_config(self.kb_path))
       self.pop_screen()
-      self.push_screen(KnowledgeBaseScreen(self.kb_path))
     self.push_screen(UpdateItemScreen(item, self.kb_path), handle_update)
 
 

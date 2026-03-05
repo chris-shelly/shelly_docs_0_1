@@ -1,6 +1,5 @@
 # given a directory path, read all the markdown docs, returning a list of objects representing information about those docs
 from pathlib import Path
-import re
 from ruamel.yaml import YAML
 
 yaml = YAML()

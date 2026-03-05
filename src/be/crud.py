@@ -5,8 +5,11 @@ from ruamel.yaml import YAML
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
+import be.shelly_docs_config.config as config
+
 yaml = YAML()
 def get_items(path: str, config: dict) -> list[dict]:
+  """Check the directory for items"""
   dir = Path(path)
   items = []
   if dir.is_dir():
@@ -17,9 +20,16 @@ def get_items(path: str, config: dict) -> list[dict]:
     items = items + read_items_in_doc(parsed_doc, config['item_tags'], doc_path=doc)
   return items
 
-def write_items_to_state(path: str, items: list[dict]):
+def write_items_to_state(path: str) -> None:
+  """
+  Checks the updated items and then updates the state.
+  Write `items` to the `state.yaml`
+
+  
+  """
   state = {"items":{}}
   state_path = Path(f"{path}/state.yaml")
+  items = get_items(path, config.get_config(path))
   # given an array of items, write them to state
   for item in items:
     item_key = item['title'].split(' ')[0]

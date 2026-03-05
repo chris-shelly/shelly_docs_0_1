@@ -1,0 +1,67 @@
+items:
+  SPEC-1:
+    title: SPEC-1 stuff here
+    content: There is some content here probably but who knows. lets get it.
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\new.md#spec-1-stuff-here
+    level: 1
+  SPEC-1-1:
+    title: SPEC-1-1 Child Item
+    content: This is a new child item bro.
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\new.md#spec-1-1-child-item
+    level: 1
+  SPEC-2:
+    title: SPEC-2 YURR
+    content: YEE YEE YEE
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\new.md#spec-2-yurr
+    level: 1
+  SPEC-3:
+    title: SPEC-3 jojo
+    content: jolyne
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\new.md#spec-3-jojo
+    level: 1
+  SPEC-4:
+    title: SPEC-4 dio
+    content: Kono dio da
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\new.md#spec-4-dio
+    level: 1
+  SPEC-5:
+    title: SPEC-5 JoBro
+    content: Hermes
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\new.md#spec-5-jobro
+    level: 1
+  YO-99:
+    title: YO-99 Carl beat Michael
+    content: cry about it
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\newnew.md#yo-99-carl-beat-michael
+    level: 1
+  YO-100:
+    title: YO-100 fukumean
+    content: i done 100 fuck is you splurged
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\newnew.md#yo-100-fukumean
+    level: 1
+  YO-100-1:
+    title: YO-100-1 i came to goon
+    content: for 10, the bih get loose, she tryna win
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\newnew.md#yo-100-1-i-came-to-goon
+    level: 1
+  YO-1:
+    title: YO-1 What's Poppin'
+    content: Whats good baby
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\simple_md.md#yo-1-whats-poppin
+    level: 1
+  YO-2:
+    title: YO-2 there's an `object`
+    content: look out
+    parent_title: ''
+    path: ..\experiment_code\md_parsing\simple_md.md#yo-2-theres-an-object
+    level: 1
