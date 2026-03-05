@@ -10,7 +10,7 @@ from textual.reactive import reactive
 
 from rich.markdown import Markdown as RichMD
 from be.config import get_config
-from be.crud import get_items
+from be.crud import get_items, convert_new_item_md, put_item
 
 from pathlib import Path
 
@@ -247,10 +247,12 @@ class ShellyDocs(App):
     self.kb_path = path.path
     self.push_screen(KnowledgeBaseScreen(self.kb_path))
   def on_knowledge_base_menu_create_new_item(self, msg: KnowledgeBaseMenu.CreateNewItem) -> None:
-    def create_new_item(item_md_obj: dict):
+    def create_new_item(raw_item: dict):
       # add the knowledge base path
-      item_md_obj['kb_path'] = self.kb_path
-      print(item_md_obj)
+      raw_item['kb_path'] = self.kb_path
+      new_item = convert_new_item_md(raw_item)
+      item_key = new_item['title'].split(' ')[0]
+      put_item(self.kb_path,item_key, new_item, get_config(self.kb_path))
     self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen 
 
 

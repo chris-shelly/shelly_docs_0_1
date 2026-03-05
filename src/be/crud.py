@@ -48,13 +48,14 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
     ValueError: if item_key tag prefix not in config item_tags
     ValueError: if item_key already exists in a different file
   """
-  # Validate item type
-  parts = item_key.rsplit('-', 1)
-  if len(parts) != 2 or not parts[1].isdigit():
-    raise ValueError(f"Invalid item_key format: {item_key}")
-  tag_prefix = parts[0]
-  if tag_prefix not in config['item_tags']:
-    raise ValueError(f"Tag '{tag_prefix}' not in configured item_tags: {config['item_tags']}")
+  # Validate item type — match the longest configured tag that the key starts with
+  tag_prefix = None
+  for tag in config['item_tags']:
+    if item_key.startswith(tag + '-'):
+      if tag_prefix is None or len(tag) > len(tag_prefix):
+        tag_prefix = tag
+  if tag_prefix is None:
+    raise ValueError(f"Item key '{item_key}' does not match any configured item_tags: {config['item_tags']}")
 
   # Validate key uniqueness across files
   existing_items = get_items(path, config)
@@ -72,6 +73,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   new_block = f"{heading_line}\n{item['content']}\n"
 
   if not target_path.exists():
+    target_path.parent.mkdir(exist_ok=True)
     target_path.write_text(new_block)
     return
 
@@ -314,6 +316,66 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, doc_path: Path, 
     items.append(current_item)
 
   return items
+
+def convert_new_item_md(new_item_md: dict) -> dict:
+  """Convert a new_item_md object into an item dict for put_item().
+
+  Args:
+    new_item_md: dict with 'kb_path', 'filepath', and 'markdown' keys
+
+  Returns:
+    dict with 'path', 'title', 'content', and 'parent_title' keys
+  """
+  kb_path = new_item_md['kb_path'].rstrip('/')
+  filepath = new_item_md['filepath'].lstrip('/')
+  full_path = f"{kb_path}/{filepath}"
+
+  md_text = new_item_md['markdown']
+  parsed = parse_md_text(md_text)
+  children = parsed.get('children', [])
+
+  title = ""
+  content = ""
+  parent_title = ""
+  item_heading_found = False
+
+  for node in children:
+    if not item_heading_found and node['type'] == 'Heading':
+      title = get_text_from_children(node)
+      item_heading_found = True
+    elif item_heading_found:
+      content += node_to_markdown(node)
+
+  content = content.strip()
+
+  # Detect parent: if the target file exists, find the nearest parent heading
+  target_path = Path(full_path)
+  if target_path.exists():
+    existing_parsed = parse_md_doc(target_path)
+    existing_children = existing_parsed.get('children', [])
+    parent_stack = []
+    for node in existing_children:
+      if node['type'] == 'Heading':
+        level = node.get('level', 1)
+        while parent_stack and parent_stack[-1][0] >= level:
+          parent_stack.pop()
+        parent_stack.append((level, get_text_from_children(node)))
+    # The new item will be appended, so the last heading at a higher level is the parent
+    if parent_stack:
+      parent_title = parent_stack[-1][1]
+
+  return {
+    "path": full_path,
+    "title": title,
+    "content": content,
+    "parent_title": parent_title,
+  }
+
+def parse_md_text(md_text: str) -> dict:
+  md_doc_tree = Document(md_text)
+  with ASTRenderer() as renderer:
+    rendered = renderer.render(md_doc_tree)
+  return json.loads(rendered)
 
 def parse_md_doc(path: Path):
   md_doc_text = path.read_text()
