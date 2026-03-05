@@ -91,12 +91,31 @@ class KnowledgeBaseConfig(Pretty):
     self.border_title = "Config"
     self.styles.border_title_align = "left"
 
-class KnowledgeBaseItems(OptionList):
-  """Use an OptionList to show the Items"""
+class KnowledgeBaseMenu(Widget):
+  """Widget holding the `KnowledgeBaseItems` and the Options Bar, which allows for creating new `Item`s"""
+  def __init__(self, items: list[dict], item_index: int):
+    self.items = items
+    self.item_index = item_index
+    super().__init__()
 
+  def compose(self) -> ComposeResult:
+    # pass the items as a list of strings to yield an Options List of the KB Items
+    yield KnowledgeBaseItems([RichMD(item['title']) for item in self.items], self.item_index)
+
+class KnowledgeBaseItems(Widget):
+  """Use an OptionList to show the Items"""
+  def __init__(self, items: list[dict], item_index: int):
+    self.items = items
+    self.item_index = item_index
+    super().__init__()
+  def compose(self) -> ComposeResult:
+    options = OptionList(*self.items, classes="box")
+    options.highlighted = self.item_index
+    yield options
 class KnowledgeBase(Widget):
   DEFAULT_CSS = Path("knowledge_base_widget.tcss").read_text()
   item = reactive({}, recompose=True)
+  item_index = reactive(0)
   def __init__(self, path: str):
     self.path = path
     self.items = []
@@ -109,14 +128,16 @@ class KnowledgeBase(Widget):
     
   def compose(self) -> ComposeResult:    
     # pass the items as a list of strings to yield an Options List of the KB Items
-    yield KnowledgeBaseItems(*[RichMD(item['title']) for item in self.items], classes="box")
+    yield KnowledgeBaseMenu(self.items, self.item_index)
     # render markdown content of a single item
     yield Item(self.item['content'], item_title=self.item['title'], document_path=self.item['path'])
     # pretty print the JSON representation of the Config
     yield KnowledgeBaseConfig(self.kb_config, classes="box")
 
   def on_option_list_option_selected(self, message: OptionList.OptionSelected):
+    self.item_index = message.option_index
     self.item = self.items[message.option_index]
+    
 
 
   

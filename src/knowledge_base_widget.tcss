@@ -4,7 +4,7 @@ KnowledgeBase {
   grid-columns: 2fr 3fr 3fr; 
 }
 
-KnowledgeBaseItems {
+KnowledgeBaseMenu {
   row-span: 3;
 }
 
