@@ -59,10 +59,11 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
 
   # Validate key uniqueness across files
   existing_items = get_items(path, config)
+  item_path_resolved = Path(item['path']).resolve()
   for existing in existing_items:
     existing_key = existing['title'].split(' ')[0]
-    existing_file = existing['path'].split('#')[0]
-    if existing_key == item_key and existing_file != item['path']:
+    existing_file_resolved = Path(existing['path'].split('#')[0]).resolve()
+    if existing_key == item_key and existing_file_resolved != item_path_resolved:
       raise ValueError(
         f"Item '{item_key}' already exists in a different file: {existing['path']}"
       )

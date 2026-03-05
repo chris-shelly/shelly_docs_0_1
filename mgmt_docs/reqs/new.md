@@ -2,5 +2,4 @@
 This is a new item created in the TUI.
 
 ### USECASE-77-1 Child Item being added
-This is a child item being added via TUI.
-
+This is a child item being edited via TUI.

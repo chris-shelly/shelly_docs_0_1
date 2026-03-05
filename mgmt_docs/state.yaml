@@ -45,7 +45,7 @@ items:
     level: 2
   USECASE-77-1:
     title: USECASE-77-1 Child Item being added
-    content: This is a child item being added via TUI.
+    content: This is a child item being edited via TUI.
     parent_title: USECASE-77 Yo this is a new item from the TUI
     path: ..\mgmt_docs\reqs\new.md#usecase-77-1-child-item-being-added
     level: 3

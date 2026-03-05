@@ -129,6 +129,10 @@ class KnowledgeBaseMenu(Widget):
     """Delete an Item"""
     pass
 
+  class UpdateItem(Message):
+    """Update an Item"""
+    pass
+
   def __init__(self, items: list[dict], item_index: int, kb_path: str):
     self.items = items
     self.item_index = item_index
@@ -141,6 +145,7 @@ class KnowledgeBaseMenu(Widget):
       yield Static(f"{self.kb_path}/", classes="kb-menu-option")
       yield Button("New Item", id="new-item-btn", compact=True, classes="kb-menu-option")
       yield Button("Delete Item", id="delete-item-btn", compact=True, classes="kb-menu-option")
+      yield Button("Update Item", id="update-item-btn", compact=True, classes="kb-menu-option")
     yield KnowledgeBaseItems([RichMD(item['title']) for item in self.items], self.item_index)
 
   def on_button_pressed(self, event: Button.Pressed) -> None:
@@ -148,6 +153,8 @@ class KnowledgeBaseMenu(Widget):
       self.post_message(self.CreateNewItem())
     elif event.button.id == "delete-item-btn":
       self.post_message(self.DeleteItem())
+    elif event.button.id == "update-item-btn":
+      self.post_message(self.UpdateItem())
 
 class KnowledgeBaseItems(Widget):
   """Use an OptionList to show the Items"""
@@ -260,6 +267,38 @@ class DeleteItemScreen(Screen):
       self.dismiss(False)
 
 
+class UpdateItemMd(TextAreaWithLabel):
+  """TextArea input for user to edit the markdown of an existing item."""
+
+class UpdateItemScreen(Screen):
+  """Screen for updating an existing Item"""
+  def __init__(self, item: dict, kb_path: str):
+    self.item = item
+    self.kb_path = kb_path
+    super().__init__()
+
+  def compose(self) -> ComposeResult:
+    yield ShellyDocsHeader()
+    yield Static("Update Item")
+    # rebuild the full markdown from the item's heading + content
+    level = self.item.get('level', 2)
+    heading = f"{'#' * level} {self.item['title']}"
+    existing_md = f"{heading}\n{self.item['content']}\n"
+    yield UpdateItemMd("Markdown", existing_md)
+    yield Button("Update")
+
+  def on_mount(self) -> None:
+    text_area = self.query_one("#new-item-md", TextArea)
+    text_area.text = f"{'#' * self.item.get('level', 2)} {self.item['title']}\n{self.item['content']}\n"
+
+  def on_button_pressed(self, event: Button.Pressed) -> None:
+    md_text = self.query_one("#new-item-md", TextArea).text
+    full_filepath = self.item['path'].split('#')[0]
+    filepath = str(Path(full_filepath).relative_to(self.kb_path))
+    raw_item_md = {"filepath": filepath, "markdown": md_text}
+    self.dismiss(raw_item_md)
+
+
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
   SCREENS = {"kb": KnowledgeBaseScreen}
@@ -300,6 +339,20 @@ class ShellyDocs(App):
         self.pop_screen()
         self.push_screen(KnowledgeBaseScreen(self.kb_path))
     self.push_screen(DeleteItemScreen(item_title), handle_delete)
+
+  def on_knowledge_base_menu_update_item(self, msg: KnowledgeBaseMenu.UpdateItem) -> None:
+    kb_widget = self.kb_screen.query_one("KnowledgeBase", KnowledgeBase)
+    item = kb_widget.item
+    def handle_update(raw_item_md: dict):
+      if raw_item_md is None:
+        return
+      raw_item_md['kb_path'] = self.kb_path
+      updated_item = convert_new_item_md(raw_item_md)
+      item_key = updated_item['title'].split(' ')[0]
+      put_item(self.kb_path, item_key, updated_item, get_config(self.kb_path))
+      self.pop_screen()
+      self.push_screen(KnowledgeBaseScreen(self.kb_path))
+    self.push_screen(UpdateItemScreen(item, self.kb_path), handle_update)
 
 
 if __name__ == "__main__":

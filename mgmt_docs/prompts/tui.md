@@ -28,3 +28,21 @@ Add a Screen that lets the user write to a Markdown TextArea (similar to the one
 - loads the TextArea with the existing content.
 - loads the item using it's existing filepath.
 After making an update, convert yields a `raw_item_md` that can be converted to an `item` dict taht can be passed to `put_item()`, similarly to how the the `CreateNewItemScreen()` handles new items. 
+
+## PROMPT-9-1 Follow-up, Path not calculating correctly
+After attempting to edit `USECASE-77-1`, `put_item()` raised a ValueError for it already existing in a different file.
+
+```
+ValueError: Item 'USECASE-77-1' already exists in a different file: ..\mgmt_docs\reqs\new.md#usecase-77-1-child-item-being-added
+```
+
+IT seems that the path being collected for us to make the updates isn't correct. as it shows as `'path': '../mgmt_docs/..\\mgmt_docs\\reqs\\new.md',`.
+
+Please fix the issue so the Path calculates correctly.
+
+## PROMPT-9-2 Path still broken
+Path still broken, need a better check of the paths. seems like the paths aren't matching due to the anchors.
+
+```
+ValueError: Item 'USECASE-77-1' already exists in a different file: ..\mgmt_docs\reqs\new.md#usecase-77-1-child-item-being-added
+```
