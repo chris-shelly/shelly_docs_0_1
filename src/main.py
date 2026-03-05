@@ -93,6 +93,11 @@ class KnowledgeBaseConfig(Pretty):
 
 class KnowledgeBaseMenu(Widget):
   """Widget holding the `KnowledgeBaseItems` and the Options Bar, which allows for creating new `Item`s"""
+  class CreateNewItem(Message):
+    """Create a New Message"""
+    pass
+
+
   def __init__(self, items: list[dict], item_index: int, kb_path: str):
     self.items = items
     self.item_index = item_index
@@ -105,6 +110,9 @@ class KnowledgeBaseMenu(Widget):
       yield Static(f"{self.kb_path}/", classes="kb-menu-option")
       yield Button("New Item", compact=True, classes="kb-menu-option") # set to 'compact=True' so it fits at the top of the menu
     yield KnowledgeBaseItems([RichMD(item['title']) for item in self.items], self.item_index)
+
+  def on_button_pressed(self) -> None:
+    self.post_message(self.CreateNewItem())
 
 class KnowledgeBaseItems(Widget):
   """Use an OptionList to show the Items"""
@@ -174,6 +182,12 @@ class Item(Widget):
       self.border_subtitle = self.document_path
       self.styles.border_subtitle_align = "right"
 
+class CreateNewItemScreen(Screen):
+  """Screen for creating new items"""
+  def compose(self) -> ComposeResult:
+    yield ShellyDocsHeader()
+    yield Static("Create New Item Screen")
+
 
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
@@ -189,6 +203,8 @@ class ShellyDocs(App):
   def on_home_path_provided(self, path: Home.PathProvided) -> None:
     self.kb_path = path.path
     self.push_screen(KnowledgeBaseScreen(self.kb_path))
+  def on_knowledge_base_menu_create_new_item(self, msg: KnowledgeBaseMenu.CreateNewItem) -> None:
+    self.push_screen(CreateNewItemScreen())
 
 
 if __name__ == "__main__":
