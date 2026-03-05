@@ -69,7 +69,8 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
 
   # Build the new heading + content block
   target_path = Path(item['path'])
-  heading_line = f"## {item['title']}"
+  level = item.get('level', 2)
+  heading_line = f"{'#' * level} {item['title']}"
   new_block = f"{heading_line}\n{item['content']}\n"
 
   if not target_path.exists():
@@ -278,6 +279,7 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, doc_path: Path, 
           "content": "",
           "parent_title": parent_title,
           "path": f"{doc_path}#{anchor}",
+          "level": level,
         }
 
         # Push this item onto the parent stack for potential children
@@ -337,11 +339,13 @@ def convert_new_item_md(new_item_md: dict) -> dict:
   title = ""
   content = ""
   parent_title = ""
+  level = 2
   item_heading_found = False
 
   for node in children:
     if not item_heading_found and node['type'] == 'Heading':
       title = get_text_from_children(node)
+      level = node.get('level', 2)
       item_heading_found = True
     elif item_heading_found:
       content += node_to_markdown(node)
@@ -369,6 +373,7 @@ def convert_new_item_md(new_item_md: dict) -> dict:
     "title": title,
     "content": content,
     "parent_title": parent_title,
+    "level": level,
   }
 
 def parse_md_text(md_text: str) -> dict:
