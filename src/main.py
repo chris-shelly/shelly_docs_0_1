@@ -10,7 +10,7 @@ from textual.reactive import reactive
 
 from rich.markdown import Markdown as RichMD
 from be.config import get_config
-from be.crud import get_items, convert_new_item_md, put_item
+from be.crud import get_items, convert_new_item_md, put_item, delete_item, write_items_to_state
 
 from pathlib import Path
 
@@ -125,6 +125,9 @@ class KnowledgeBaseMenu(Widget):
     """Create a New Message"""
     pass
 
+  class DeleteItem(Message):
+    """Delete an Item"""
+    pass
 
   def __init__(self, items: list[dict], item_index: int, kb_path: str):
     self.items = items
@@ -136,11 +139,15 @@ class KnowledgeBaseMenu(Widget):
     # pass the items as a list of strings to yield an Options List of the KB Items
     with Horizontal(id="kb-menu-options"):
       yield Static(f"{self.kb_path}/", classes="kb-menu-option")
-      yield Button("New Item", compact=True, classes="kb-menu-option") # set to 'compact=True' so it fits at the top of the menu
+      yield Button("New Item", id="new-item-btn", compact=True, classes="kb-menu-option")
+      yield Button("Delete Item", id="delete-item-btn", compact=True, classes="kb-menu-option")
     yield KnowledgeBaseItems([RichMD(item['title']) for item in self.items], self.item_index)
 
-  def on_button_pressed(self) -> None:
-    self.post_message(self.CreateNewItem())
+  def on_button_pressed(self, event: Button.Pressed) -> None:
+    if event.button.id == "new-item-btn":
+      self.post_message(self.CreateNewItem())
+    elif event.button.id == "delete-item-btn":
+      self.post_message(self.DeleteItem())
 
 class KnowledgeBaseItems(Widget):
   """Use an OptionList to show the Items"""
@@ -162,6 +169,7 @@ class KnowledgeBase(Widget):
     self.kb_config = get_config(self.path)
     # get the Items
     self.items = get_items(self.path, self.kb_config)
+    write_items_to_state(self.path,self.items)
     super().__init__() # call before setting reactives (in this case, 'self.item')
     # get a specific item, by default, just get the first one
     self.item = self.items[0]
@@ -234,22 +242,44 @@ class CreateNewItemScreen(Screen):
 
 class DeleteItemScreen(Screen):
   """Screen for Deleting an Item"""
-  
+  def __init__(self, item_title: str):
+    self.item_title = item_title
+    super().__init__()
+
+  def compose(self) -> ComposeResult:
+    yield ShellyDocsHeader()
+    yield Static(f"Are you sure you want to delete this item?\n\n{self.item_title}")
+    with Horizontal(id="delete-confirm-buttons"):
+      yield Button("Delete", id="confirm-delete-btn", variant="error")
+      yield Button("Cancel", id="cancel-delete-btn")
+
+  def on_button_pressed(self, event: Button.Pressed) -> None:
+    if event.button.id == "confirm-delete-btn":
+      self.dismiss(True)
+    elif event.button.id == "cancel-delete-btn":
+      self.dismiss(False)
+
 
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
   SCREENS = {"kb": KnowledgeBaseScreen}
   kb_path = reactive("n/a")
+  def __init__(self):
+    super().__init__()
+    self.kb_screen = None
   def compose(self) -> ComposeResult:
     yield ShellyDocsHeader()
     yield Home()
     
   def on_mount(self) -> None:
     self.title = "Shelly Docs"
+    
+
 
   def on_home_path_provided(self, path: Home.PathProvided) -> None:
     self.kb_path = path.path
-    self.push_screen(KnowledgeBaseScreen(self.kb_path))
+    self.kb_screen = KnowledgeBaseScreen(self.kb_path)
+    self.push_screen(self.kb_screen)
   def on_knowledge_base_menu_create_new_item(self, msg: KnowledgeBaseMenu.CreateNewItem) -> None:
     def create_new_item(raw_item: dict):
       # add the knowledge base path
@@ -257,7 +287,19 @@ class ShellyDocs(App):
       new_item = convert_new_item_md(raw_item)
       item_key = new_item['title'].split(' ')[0]
       put_item(self.kb_path,item_key, new_item, get_config(self.kb_path))
-    self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen 
+    self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen
+
+  def on_knowledge_base_menu_delete_item(self, msg: KnowledgeBaseMenu.DeleteItem) -> None:
+    kb_widget = self.kb_screen.query_one("KnowledgeBase",KnowledgeBase)
+    item = kb_widget.item
+    item_title = item['title']
+    item_key = item_title.split(' ')[0]
+    def handle_delete(confirmed: bool):
+      if confirmed:
+        delete_item(self.kb_path, item_key)
+        self.pop_screen()
+        self.push_screen(KnowledgeBaseScreen(self.kb_path))
+    self.push_screen(DeleteItemScreen(item_title), handle_delete)
 
 
 if __name__ == "__main__":

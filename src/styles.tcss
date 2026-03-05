@@ -13,3 +13,12 @@ KnowledgeBasePath {
 #init-project {
   content-align: center middle;
 }
+
+#delete-confirm-buttons {
+  height: auto;
+  padding: 1 0;
+}
+
+#delete-confirm-buttons Button {
+  margin: 0 1;
+}
