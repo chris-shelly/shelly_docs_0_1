@@ -64,3 +64,30 @@ Update the generation of `Item.path` so that it presents a path directly to the 
 You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
 ## `Goal`
 Add a `delete_item()` method that removes an Item from a Markdown Document.
+
+# PROMPT-5 Convert `new_item_md` objects into `item`
+## `Role`
+You are a Senior Python Developer with extensive experience parsing and extending markdown. You are familiar with the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.
+## `Goal
+Create a function in `be/crud.py` that reads/parses a `new_item_md` object to convert it into our typical `item` object, so that we can use pass it to the `put_item()` function to actually write the `Item`.
+
+We will use this so that Humans can create Items via the TUI.
+## `Design`
+### example `new_item_md` dict object
+```python
+{
+  "kb_path": "../mgmt_docs"
+  "filepath": "reqs/reqs.md",
+  "markdown": "# REQ-2 Verify Data\n I have some content here."
+}
+```
+### expected output `item` dict object from above example
+```python
+{
+  "path": "../mgmt_docs/reqs/reqs.md",
+  "title": "# REQ-2 Verify Data",
+  "content": "I have some content here.",
+  "parent_title": "" # detect parent if applicable
+}
+```
+
