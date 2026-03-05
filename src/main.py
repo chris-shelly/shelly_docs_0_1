@@ -232,6 +232,10 @@ class CreateNewItemScreen(Screen):
     # pass the dict up
     self.dismiss(new_item_md)
 
+class DeleteItemScreen(Screen):
+  """Screen for Deleting an Item"""
+  
+
 class ShellyDocs(App):
   CSS_PATH="styles.tcss"
   SCREENS = {"kb": KnowledgeBaseScreen}
