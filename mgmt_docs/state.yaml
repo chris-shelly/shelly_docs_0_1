@@ -108,41 +108,46 @@ items:
     level: 1
   USECASE-7:
     title: USECASE-7 Get List of Items via CLI
-    content: "```bash\nshelly-docs items list --path \"path\"\n```"
+    content: "```yaml\nstatus: done\n```\n\n```bash\nshelly-docs items list --path
+      \"path\"\n```"
     parent_title: ''
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-7-get-list-of-items-via-cli
     level: 1
   USECASE-8:
     title: USECASE-8 Get an Item via CLI
-    content: "```yaml\nstatus: ready\n```\n\n```bash\nshelly-docs item get \"item_key\"\
+    content: "```yaml\nstatus: done\n```\n\n```bash\nshelly-docs item get \"item_key\"\
       \n```"
     parent_title: ''
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-8-get-an-item-via-cli
     level: 1
   USECASE-9:
     title: USECASE-9 Set Knowledge Base Config via CLI
-    content: "```yaml\nstatus: ready\n```\n\n```bash\nshelly-docs kb init \"path_to_kb_directory\"\
-      \ # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge
-      Base config\n```"
+    content: "```yaml\nstatus: done\n```\n\n```bash\nshelly-docs kb set --path \"\
+      path_to_kb_directory\" # reads the `shellydocs.yaml` file at the directory pathto
+      setup the Knowledge Base config\n# defaults to the current directory if no directory
+      is provided\n```"
     parent_title: ''
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-9-set-knowledge-base-config-via-cli
     level: 1
   USECASE-10:
     title: USECASE-10 Add/Update an Item via CLI
-    content: "```yaml\nstatus: ready\n```\n\nGenerally, we'd expect an agent to write
+    content: "```yaml\nstatus: done\n```\n\nGenerally, we'd expect an agent to write
       Items by using markdown, but we should also allow a way to update items using
-      json.\n\n```bash\nshelly-docs item put \"path_to_json\" # put an item to the
-      KB using JSON\n```"
+      json.\n\n```bash\nshelly-docs item put \"file.md\" \"# DESIGN-3 Capture Data\n\
+      Capture Data from user input\" \n# put an item to the KB using JSON\n```\n\n\
+      Format of an item\n\n- filepath is relative to the Knowledge Base Path\n\n```json\n\
+      {\n  \"filepath\": \"file.md\",\n  \"markdown\": \"# DESIGN-3 Capture Data \\
+      n Capture Data from user input\"\n}\n```"
     parent_title: ''
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-10-addupdate-an-item-via-cli
     level: 1
   USECASE-11:
     title: USECASE-11 Delete an Item Via CLI
-    content: "```yaml\nstatus: ready\n```\n\n```bash\nshelly-docs item delete \"item_key\"\
-      \n```"
+    content: "```yaml\nstatus: in_progress\ndepends_on: USECASE-15\n```\n\n```bash\n\
+      shelly-docs item delete \"item_key\"\n```"
     parent_title: ''
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-11-delete-an-item-via-cli
     level: 1
@@ -169,16 +174,16 @@ items:
     level: 1
   USECASE-15:
     title: USECASE-15 Refresh Knowledge Base State
-    content: "```yaml\nstatus: ready\n```\n\nRead all the Items in the Knowledge Base.\n\
-      \n```bash\nshelly-docs kb update\n```"
+    content: "```yaml\nstatus: in_progress\n```\n\nRead all the Items in the Knowledge
+      Base.\n\n```bash\nshelly-docs kb update\n```"
     parent_title: ''
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-15-refresh-knowledge-base-state
     level: 1
   USECASE-16:
     title: USECASE-16 Enter TUI
-    content: "```yaml\nstatus: ready\n```\n\nEnter the TUI from a CLI Command\n\n\
-      ```bash\nshelly-docs tui\n```"
+    content: "```yaml\nstatus: done\n```\n\nEnter the TUI from a CLI Command\n\n```bash\n\
+      shelly-docs tui\n```"
     parent_title: ''
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-16-enter-tui
     level: 1

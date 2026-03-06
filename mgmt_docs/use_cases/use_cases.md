@@ -47,7 +47,7 @@ shelly-docs items list --path "path"
 ```
 # USECASE-8 Get an Item via CLI
 ```yaml (metadata)
-status: ready
+status: done
 ```
 ```bash
 shelly-docs item get "item_key"
@@ -62,15 +62,27 @@ shelly-docs kb set --path "path_to_kb_directory" # reads the `shellydocs.yaml` f
 ```
 # USECASE-10 Add/Update an Item via CLI
 ```yaml (metadata)
-status: ready
+status: done
 ```
 Generally, we'd expect an agent to write Items by using markdown, but we should also allow a way to update items using json. 
 ```bash
-shelly-docs item put "path_to_json" # put an item to the KB using JSON
+shelly-docs item put "file.md" "# DESIGN-3 Capture Data
+Capture Data from user input" 
+# put an item to the KB using JSON
 ```
-# USECASE-11 Delete an Item Via CLI
+Format of an item
+- filepath is relative to the Knowledge Base Path
+```json
+{
+  "filepath": "file.md",
+  "markdown": "# DESIGN-3 Capture Data \n Capture Data from user input"
+}
+```
+
+# USECASE-11 Delete an Item via CLI
 ```yaml (metadata)
-status: ready
+status: done
+depends_on: USECASE-15
 ```
 ```bash
 shelly-docs item delete "item_key"
@@ -94,7 +106,7 @@ Search for Items based on semantic similarity to a question. (effectively do RAG
 
 # USECASE-15 Refresh Knowledge Base State
 ```yaml (metadata)
-status: ready
+status: done
 ```
 Read all the Items in the Knowledge Base.
 ```bash

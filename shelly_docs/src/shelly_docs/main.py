@@ -1,9 +1,10 @@
 import typer
 from pathlib import Path
 from rich import print
+from rich.markdown import Markdown
 
 from .tui.tui import ShellyDocs
-from .be.crud.crud import get_items
+from .be.crud.crud import get_items, get_item, put_item, convert_new_item_md, delete_item, write_items_to_state
 from .be.shelly_docs_config.config import get_config
 
 app = typer.Typer()
@@ -14,11 +15,19 @@ app.add_typer(kb_app, name="kb")
 items_app = typer.Typer()
 app.add_typer(items_app, name="items")
 
+item_app = typer.Typer()
+app.add_typer(item_app, name ="item")
+
 APP_NAME = "shelly_docs"
 
 DEFAULT_KB_PATH = "."
 
 
+def get_kb_path():
+  app_dir = typer.get_app_dir(APP_NAME)
+  config_path = Path(app_dir) / "kb_path.txt"
+  kb_path = config_path.read_text()
+  return kb_path
 @app.callback()
 def callback():
   """
@@ -54,15 +63,53 @@ def kb_set(path: str = ""):
     typer.echo(f"Setting default Knowledge Base Path, {DEFAULT_KB_PATH}")
     config_path.write_text(DEFAULT_KB_PATH)
   typer.echo("Knowledge Base Path has been set")
+@kb_app.command("update")
+def kb_update():
+  """
+  Update the the state of the Knowledge Base.
+
+  Captures all items from the current Knowledge Base.
+  """
+  kb_path = get_kb_path()
+  write_items_to_state(kb_path)
+  print(f"state updated for knowledge base {kb_path}")
   
 @items_app.command("list")
 def items_list(path: str = ""):
   """
-  List all Items in a knowledge base
+  List all Items in a knowledge base in JSON format.
   """
-  app_dir = typer.get_app_dir(APP_NAME)
-  config_path = Path(app_dir) / "kb_path.txt"
-  kb_path = config_path.read_text()
+  kb_path = get_kb_path()
   items_path = Path(kb_path) / path
   print(get_items(path=items_path,config=get_config(kb_path)))
 
+@item_app.command("get")
+def item_get(item_key: str):
+  """
+  Get an Item from the Knowldege Base by it's item key. In JSON format.
+  """
+  kb_path = get_kb_path()
+  print(get_item(kb_path,item_key))
+
+@item_app.command("put")
+def item_put(path: str, markdown: str):
+  """
+  Put an Item via JSON file.
+
+  - path is the destination path for the Item, relative to the Knowledge Base Path
+  - markdown is the markdown content
+  """
+  kb_path = get_kb_path()
+  raw_item = {"filepath": path, "markdown": markdown, "kb_path": kb_path}
+  updated_item = convert_new_item_md(raw_item)
+  item_key = updated_item['title'].split(' ')[0]
+  put_item(kb_path, item_key, updated_item, get_config(kb_path))
+
+@item_app.command("delete")
+def item_delete(item_key: str):
+  """
+  Delete an Item from the Knowldege Base by it's Item Key.
+  """
+  kb_path = get_kb_path()
+  delete_item(kb_path, item_key)
+  print(f"{item_key} deleted from Knowledge Base {kb_path}")

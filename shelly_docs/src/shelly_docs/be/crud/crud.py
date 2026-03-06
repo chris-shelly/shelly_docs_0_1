@@ -87,6 +87,10 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   if not target_path.exists():
     target_path.parent.mkdir(exist_ok=True)
     target_path.write_text(new_block)
+    state = get_state(path)
+    state['items'][item_key] = item
+    state_path = Path(f"{path}/state.yaml")
+    yaml.dump(state,state_path)
     return
 
   lines = target_path.read_text().splitlines(keepends=True)
