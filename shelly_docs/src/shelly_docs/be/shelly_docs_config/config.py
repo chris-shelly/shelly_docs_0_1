@@ -9,7 +9,7 @@ def get_config(path: str):
   # that yaml file provides
     # the path to read from to search for docs
     # the title tags
-  print(f"--- get_config()")
+  #print(f"--- get_config()")
   if path[-1] == '/':
     path = path[:-1]
   elif path[-1] == '\\':

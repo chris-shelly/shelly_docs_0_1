@@ -39,6 +39,9 @@ status: done
 ```
 
 # USECASE-7 Get List of Items via CLI
+```yaml (metadata)
+status: done
+```
 ```bash
 shelly-docs items list --path "path"
 ```
@@ -51,10 +54,11 @@ shelly-docs item get "item_key"
 ```
 # USECASE-9 Set Knowledge Base Config via CLI
 ```yaml (metadata)
-status: ready
+status: done
 ```
 ```bash
-shelly-docs kb init "path_to_kb_directory" # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base config
+shelly-docs kb set --path "path_to_kb_directory" # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base config
+# defaults to the current directory if no directory is provided
 ```
 # USECASE-10 Add/Update an Item via CLI
 ```yaml (metadata)
