@@ -40,21 +40,21 @@ status: done
 
 # USECASE-7 Get List of Items via CLI
 ```bash
-shelly_docs items list --path "path"
+shelly-docs items list --path "path"
 ```
 # USECASE-8 Get an Item via CLI
 ```yaml (metadata)
 status: ready
 ```
 ```bash
-shelly_docs item get "item_key"
+shelly-docs item get "item_key"
 ```
 # USECASE-9 Set Knowledge Base Config via CLI
 ```yaml (metadata)
 status: ready
 ```
 ```bash
-shelly_docs kb init "path_to_kb_directory" # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base config
+shelly-docs kb init "path_to_kb_directory" # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base config
 ```
 # USECASE-10 Add/Update an Item via CLI
 ```yaml (metadata)
@@ -62,14 +62,14 @@ status: ready
 ```
 Generally, we'd expect an agent to write Items by using markdown, but we should also allow a way to update items using json. 
 ```bash
-shelly_docs item put "path_to_json" # put an item to the KB using JSON
+shelly-docs item put "path_to_json" # put an item to the KB using JSON
 ```
 # USECASE-11 Delete an Item Via CLI
 ```yaml (metadata)
 status: ready
 ```
 ```bash
-shelly_docs item delete "item_key"
+shelly-docs item delete "item_key"
 ```
 
 # USECASE-12 Add Metadata to Items
@@ -94,5 +94,14 @@ status: ready
 ```
 Read all the Items in the Knowledge Base.
 ```bash
-shelly_docs kb update
+shelly-docs kb update
+```
+
+# USECASE-16 Enter TUI
+```yaml (metadata)
+status: ready
+```
+Enter the TUI from a CLI Command
+```bash
+shelly-docs tui
 ```
