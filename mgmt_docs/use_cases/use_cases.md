@@ -99,7 +99,7 @@ shelly-docs kb update
 
 # USECASE-16 Enter TUI
 ```yaml (metadata)
-status: ready
+status: done
 ```
 Enter the TUI from a CLI Command
 ```bash

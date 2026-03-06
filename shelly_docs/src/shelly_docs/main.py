@@ -1,6 +1,6 @@
 import typer
 
-from tui.tui import ShellyDocs
+from .tui.tui import ShellyDocs
 
 app = typer.Typer()
 

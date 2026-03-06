@@ -5,7 +5,7 @@ from ruamel.yaml import YAML
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
-import be.shelly_docs_config.config as config
+from ..shelly_docs_config.config import get_config
 
 yaml = YAML()
 def get_items(path: str, config: dict) -> list[dict]:
@@ -29,7 +29,7 @@ def write_items_to_state(path: str) -> None:
   """
   state = {"items":{}}
   state_path = Path(f"{path}/state.yaml")
-  items = get_items(path, config.get_config(path))
+  items = get_items(path, get_config(path))
   # given an array of items, write them to state
   for item in items:
     item_key = item['title'].split(' ')[0]

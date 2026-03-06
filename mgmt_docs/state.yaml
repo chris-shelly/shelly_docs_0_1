@@ -65,46 +65,120 @@ items:
   USECASE-1:
     title: USECASE-1 Human gets list of Items
     content: "Human uses the TUI to view the Items in their Knowledge Base.\n\n```yaml\n\
-      status: in_progress\n```"
+      status: done\n```"
     parent_title: ''
-    path: 
-      ..\mgmt_docs\use_cases\human_use_cases.md#usecase-1-human-gets-list-of-items
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-1-human-gets-list-of-items
     level: 1
   USECASE-2:
     title: USECASE-2 Human reads an Item
-    content: Human uses the TUI to view a specific Item in the Knowledge Base.
+    content: "Human uses the TUI to view a specific Item in the Knowledge Base.\n\n\
+      ```yaml\nstatus: done\n```"
     parent_title: ''
-    path: 
-      ..\mgmt_docs\use_cases\human_use_cases.md#usecase-2-human-reads-an-item
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-2-human-reads-an-item
     level: 1
   USECASE-3:
     title: USECASE-3 Human sets the Knowledge Base Config
     content: "Human opens a project in the TUI by specifying the directory for the
-      Knowledge Base.\n\nHuman sets the configuration for the Knowledge base using
-      a `shellydocs.yaml` file.\n\n```yaml\nitem_tags: # tags to recognize as items\n\
-      \  - INPUT\n  - DESIGN\n  - REQ\n```\n\nItem Tags are used to detect items."
+      Knowledge Base.\n\n```yaml\nstatus: done\n```\n\nHuman sets the configuration
+      for the Knowledge base using a `shellydocs.yaml` file.\n\n```yaml\nitem_tags:
+      # tags to recognize as items\n  - INPUT\n  - DESIGN\n  - REQ\n```\n\nItem Tags
+      are used to detect items."
     parent_title: ''
     path: 
-      ..\mgmt_docs\use_cases\human_use_cases.md#usecase-3-human-sets-the-knowledge-base-config
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-3-human-sets-the-knowledge-base-config
     level: 1
   USECASE-4:
     title: USECASE-4 Human adds a new Item
-    content: Human uses the TUI to create a new Item
+    content: "Human uses the TUI to create a new Item\n\n```yaml\nstatus: done\n```"
     parent_title: ''
-    path: 
-      ..\mgmt_docs\use_cases\human_use_cases.md#usecase-4-human-adds-a-new-item
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-4-human-adds-a-new-item
     level: 1
   USECASE-5:
     title: USECASE-5 Human updates an Item
-    content: Human uses the TUI to update an existing Item
+    content: "Human uses the TUI to update an existing Item\n\n```yaml\nstatus: done\n\
+      ```"
     parent_title: ''
-    path: 
-      ..\mgmt_docs\use_cases\human_use_cases.md#usecase-5-human-updates-an-item
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-5-human-updates-an-item
     level: 1
   USECASE-6:
     title: USECASE-6 Human deletes an Item
-    content: Human uses TUI to delete an Item
+    content: "Human uses TUI to delete an Item\n\n```yaml\nstatus: done\n```"
+    parent_title: ''
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-6-human-deletes-an-item
+    level: 1
+  USECASE-7:
+    title: USECASE-7 Get List of Items via CLI
+    content: "```bash\nshelly-docs items list --path \"path\"\n```"
     parent_title: ''
     path: 
-      ..\mgmt_docs\use_cases\human_use_cases.md#usecase-6-human-deletes-an-item
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-7-get-list-of-items-via-cli
+    level: 1
+  USECASE-8:
+    title: USECASE-8 Get an Item via CLI
+    content: "```yaml\nstatus: ready\n```\n\n```bash\nshelly-docs item get \"item_key\"\
+      \n```"
+    parent_title: ''
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-8-get-an-item-via-cli
+    level: 1
+  USECASE-9:
+    title: USECASE-9 Set Knowledge Base Config via CLI
+    content: "```yaml\nstatus: ready\n```\n\n```bash\nshelly-docs kb init \"path_to_kb_directory\"\
+      \ # reads the `shellydocs.yaml` file at the directory pathto setup the Knowledge
+      Base config\n```"
+    parent_title: ''
+    path: 
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-9-set-knowledge-base-config-via-cli
+    level: 1
+  USECASE-10:
+    title: USECASE-10 Add/Update an Item via CLI
+    content: "```yaml\nstatus: ready\n```\n\nGenerally, we'd expect an agent to write
+      Items by using markdown, but we should also allow a way to update items using
+      json.\n\n```bash\nshelly-docs item put \"path_to_json\" # put an item to the
+      KB using JSON\n```"
+    parent_title: ''
+    path: 
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-10-addupdate-an-item-via-cli
+    level: 1
+  USECASE-11:
+    title: USECASE-11 Delete an Item Via CLI
+    content: "```yaml\nstatus: ready\n```\n\n```bash\nshelly-docs item delete \"item_key\"\
+      \n```"
+    parent_title: ''
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-11-delete-an-item-via-cli
+    level: 1
+  USECASE-12:
+    title: USECASE-12 Add Metadata to Items
+    content: "```yaml\nstatus: drafting\n```"
+    parent_title: ''
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-12-add-metadata-to-items
+    level: 1
+  USECASE-13:
+    title: USECASE-13 Query Items based on Metadata
+    content: "```yaml\nstatus: drafting\n```\n\nSearch for Items based on the Metadata"
+    parent_title: ''
+    path: 
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-13-query-items-based-on-metadata
+    level: 1
+  USECASE-14:
+    title: USECASE-14 Semantic Search for Items
+    content: "```yaml\nstatus: future\n```\n\nSearch for Items based on semantic similarity
+      to a question. (effectively do RAG)"
+    parent_title: ''
+    path: 
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-14-semantic-search-for-items
+    level: 1
+  USECASE-15:
+    title: USECASE-15 Refresh Knowledge Base State
+    content: "```yaml\nstatus: ready\n```\n\nRead all the Items in the Knowledge Base.\n\
+      \n```bash\nshelly-docs kb update\n```"
+    parent_title: ''
+    path: 
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-15-refresh-knowledge-base-state
+    level: 1
+  USECASE-16:
+    title: USECASE-16 Enter TUI
+    content: "```yaml\nstatus: ready\n```\n\nEnter the TUI from a CLI Command\n\n\
+      ```bash\nshelly-docs tui\n```"
+    parent_title: ''
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-16-enter-tui
     level: 1

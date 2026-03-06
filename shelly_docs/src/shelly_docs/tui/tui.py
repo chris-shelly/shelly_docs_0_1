@@ -9,8 +9,8 @@ from textual.message import Message
 from textual.reactive import reactive
 
 from rich.markdown import Markdown as RichMD
-from be.shelly_docs_config.config import get_config
-from be.crud import get_items, convert_new_item_md, put_item, delete_item, write_items_to_state
+from ..be.shelly_docs_config.config import get_config
+from ..be.crud.crud import get_items, convert_new_item_md, put_item, delete_item, write_items_to_state
 
 from pathlib import Path
 
@@ -176,7 +176,53 @@ class KnowledgeBaseItems(Widget):
     yield options
 
 class KnowledgeBase(Widget):
-  DEFAULT_CSS = Path("knowledge_base_widget.tcss").read_text()
+  DEFAULT_CSS = """\
+  KnowledgeBase {
+    layout: grid;
+    grid-size: 3;
+    grid-columns: 3fr 3fr 3fr; 
+  }
+
+  KnowledgeBaseMenu {
+    row-span: 3;
+  }
+
+  Item {
+    column-span: 2;
+    row-span: 2;
+  }
+
+  KnowledgeBaseConfig {
+    column-span: 2;
+    row-span: 1;
+  }
+
+  .box {
+    border: solid white;
+    height: 100%;
+
+  }
+
+  KnowledgeBaseMenu {
+    layout: grid;
+    grid-size: 1 2;
+    grid-rows: 2fr 6fr;
+  }
+
+  #kb-menu-options {
+    border: solid white;
+  }
+
+  #kb-menu-options .kb-menu-option {
+    content-align: center middle;
+  }
+
+  .kb-menu-option {
+    width: 1fr;
+    height: 100%;
+  }
+
+  """
   item = reactive({})
   items = reactive([])
   item_index = reactive(0)
