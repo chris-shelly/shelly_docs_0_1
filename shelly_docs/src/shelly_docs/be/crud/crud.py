@@ -7,7 +7,7 @@ from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from ..shelly_docs_config.config import get_config
 
-from .shelly_doc_processing import process_shelly_docs_items
+from .shelly_doc_processing import process_shelly_docs_items, prep_new_shelly_doc_items_from_document_update
 
 yaml = YAML()
 def get_items(path: str, config: dict) -> list[dict]:
@@ -81,9 +81,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
 
   # Build the new heading + content block
   target_path = Path(item['path'])
-  level = item.get('level', 2)
-  heading_line = f"{'#' * level} {item['title']}"
-  new_block = f"{heading_line}\n{item['content']}\n"
+  new_block = f"{item['markdown']}\n"
 
   if not target_path.exists():
     target_path.parent.mkdir(exist_ok=True)
@@ -108,7 +106,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
       break
 
   if heading_idx is not None:
-    # Update: find end boundary (next heading at same or higher level, or EOF)
+    # Update the item: find end boundary (next heading at same or higher level, or EOF)
     end_idx = len(lines)
     for i in range(heading_idx + 1, len(lines)):
       m = re.match(r'^(#+)\s', lines[i])
@@ -117,21 +115,31 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
         break
 
     # Replace the heading + content block
-    new_lines = [f"{'#' * heading_level} {item['title']}\n", f"{item['content']}\n"]
+    new_lines = [f"{item['markdown']}\n"]
     # Ensure a blank line before next section if not at EOF
     if end_idx < len(lines) and not new_lines[-1].endswith('\n\n'):
       new_lines.append('\n')
     lines[heading_idx:end_idx] = new_lines
     target_path.write_text(''.join(lines))
   else:
-    # Add: append to end of file
-    text = target_path.read_text()
-    if text and not text.endswith('\n'):
-      text += '\n'
-    text += f"\n{new_block}"
-    target_path.write_text(text)
+    # Add the item:
+    # look up the parent in the state and check if its at the same path
+    state: dict = get_state(path)
+    state_items: dict = state['items']
+    parent = state_items.get(item['parent'])
+    # if parent exists in the target path, write to the parent
+    if parent:
+      print("parent exists")
+      pass
+    # else, append to end of file
+    else:
+      text = target_path.read_text()
+      if text and not text.endswith('\n'):
+        text += '\n'
+      text += f"\n{new_block}"
+      target_path.write_text(text)
 
-  state = get_state(path)
+  
   state['items'][item_key] = item
   state_path = Path(f"{path}/state.yaml")
   yaml.dump(state,state_path)
@@ -203,15 +211,6 @@ def get_md_docs_in_dir(dir: Path) -> list[Path]:
     elif child.is_dir():
       docs = docs + get_md_docs_in_dir(child)
   return docs
-
-def read_items_in_doc(doc: dict, item_tags: list[str], doc_path: Path) -> list[dict]:
-  item_tag_base = '^(ABC-\\d+.*)\\s*$'
-  items = []
-  for item_tag in item_tags:
-    item_tag_pattern = re.compile(item_tag_base.replace('ABC', item_tag))
-    new_items = traverse_for_items(doc, item_tag_pattern, doc_path, [])
-    items = items + new_items
-  return items
 
 def get_text_from_children(node: dict, text: str = "", mode: str = "normal"):
   for child in node['children']:
@@ -345,62 +344,16 @@ def traverse_for_items(doc: dict, item_tag_pattern: re.Pattern, doc_path: Path, 
 
   return items
 
-def convert_new_item_md(new_item_md: dict) -> dict:
-  """Convert a new_item_md object into an item dict for put_item().
+def convert_new_item_md(new_item_obj: dict) -> dict:
+  """Convert a new_item_md object into a list of item dicts, where we can pass each to put_item().
 
   Args:
-    new_item_md: dict with 'kb_path', 'filepath', and 'markdown' keys
+    new_item_obj: dict with 'kb_path', 'filepath', and 'markdown' keys
 
   Returns:
     dict with 'path', 'title', 'content', and 'parent_title' keys
   """
-  kb_path = new_item_md['kb_path'].rstrip('/')
-  filepath = new_item_md['filepath'].lstrip('/')
-  full_path = f"{kb_path}/{filepath}"
-
-  md_text = new_item_md['markdown']
-  parsed = parse_md_text(md_text)
-  children = parsed.get('children', [])
-
-  title = ""
-  content = ""
-  parent_title = ""
-  level = 2
-  item_heading_found = False
-
-  for node in children:
-    if not item_heading_found and node['type'] == 'Heading':
-      title = get_text_from_children(node)
-      level = node.get('level', 2)
-      item_heading_found = True
-    elif item_heading_found:
-      content += node_to_markdown(node)
-
-  content = content.strip()
-
-  # Detect parent: if the target file exists, find the nearest parent heading
-  target_path = Path(full_path)
-  if target_path.exists():
-    existing_parsed = parse_md_doc(target_path)
-    existing_children = existing_parsed.get('children', [])
-    parent_stack = []
-    for node in existing_children:
-      if node['type'] == 'Heading':
-        level = node.get('level', 1)
-        while parent_stack and parent_stack[-1][0] >= level:
-          parent_stack.pop()
-        parent_stack.append((level, get_text_from_children(node)))
-    # The new item will be appended, so the last heading at a higher level is the parent
-    if parent_stack:
-      parent_title = parent_stack[-1][1]
-
-  return {
-    "path": full_path,
-    "title": title,
-    "content": content,
-    "parent_title": parent_title,
-    "level": level,
-  }
+  return prep_new_shelly_doc_items_from_document_update(new_item_obj)
 
 def parse_md_text(md_text: str) -> dict:
   md_doc_tree = Document(md_text)
