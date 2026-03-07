@@ -120,7 +120,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
         end_idx = i
         break
 
-    # Replace the heading + content block
+    # Add the new markdown block
     new_lines = [f"{item['markdown']}\n"]
     # Ensure a blank line before next section if not at EOF
     if end_idx < len(lines) and not new_lines[-1].endswith('\n\n'):

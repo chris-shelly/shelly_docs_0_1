@@ -2,6 +2,7 @@ items:
   SPEC-1:
     start_line: 1
     path: ..\experiment_code\md_parsing\new.md#spec-1-stuff-here
+    level: 1
     end_line: 3
     markdown: "# SPEC-1 stuff here\nThere is some content here probably but who knows.
       lets get it.\n\n"
@@ -9,45 +10,40 @@ items:
     data:
     key: SPEC-1
     parent:
-  SPEC-1-1:
-    start_line: 4
-    path: ..\experiment_code\md_parsing\new.md#spec-1-1-child-item
-    end_line: 6
-    markdown: "# SPEC-1-1 Child Item\nThis is a new child item bro.\n\n"
-    title: SPEC-1-1 Child Item
-    data:
-    key: SPEC-1-1
-    parent: SPEC-1
   SPEC-2:
-    start_line: 7
+    start_line: 4
     path: ..\experiment_code\md_parsing\new.md#spec-2-yurr
-    end_line: 9
+    level: 1
+    end_line: 6
     markdown: "# SPEC-2 YURR\nYEE YEE YEE\n\n"
     title: SPEC-2 YURR
     data:
     key: SPEC-2
     parent:
   SPEC-3:
-    start_line: 10
+    start_line: 7
     path: ..\experiment_code\md_parsing\new.md#spec-3-jojo
-    end_line: 12
+    level: 1
+    end_line: 9
     markdown: "# SPEC-3 jojo\njolyne\n\n"
     title: SPEC-3 jojo
     data:
     key: SPEC-3
     parent:
   SPEC-4:
-    start_line: 13
+    start_line: 10
     path: ..\experiment_code\md_parsing\new.md#spec-4-dio
-    end_line: 15
+    level: 1
+    end_line: 12
     markdown: "# SPEC-4 dio\nKono dio da\n\n"
     title: SPEC-4 dio
     data:
     key: SPEC-4
     parent:
   SPEC-5:
-    start_line: 16
+    start_line: 13
     path: ..\experiment_code\md_parsing\new.md#spec-5-jobro
+    level: 1
     markdown: "# SPEC-5 JoBro\nHermes"
     title: SPEC-5 JoBro
     data:
@@ -56,25 +52,39 @@ items:
   YO-99:
     start_line: 1
     path: ..\experiment_code\md_parsing\newnew.md#yo-99-carl-beat-michael
+    level: 1
     end_line: 3
     markdown: "# YO-99 Carl beat Michael\ncry about it f1 fans\n\n"
     title: YO-99 Carl beat Michael
     data:
     key: YO-99
     parent:
-  YO-100:
+  YO-99-1:
     start_line: 4
+    path: ..\experiment_code\md_parsing\newnew.md#yo-99-1-nascar-better-than-f1
+    level: 2
+    end_line: 5
+    markdown: "## YO-99-1 NASCAR better than f1\nKeep crying about it. TUrning left
+      is better.\n"
+    title: YO-99-1 NASCAR better than f1
+    data:
+    key: YO-99-1
+    parent: YO-99
+  YO-100:
+    start_line: 6
     path: ..\experiment_code\md_parsing\newnew.md#yo-100-fukumean
-    end_line: 6
+    level: 1
+    end_line: 8
     markdown: "# YO-100 fukumean\ni done 100 fuck is you splurged\n\n"
     title: YO-100 fukumean
     data:
     key: YO-100
     parent:
   YO-100-1:
-    start_line: 7
+    start_line: 9
     path: ..\experiment_code\md_parsing\newnew.md#yo-100-1-i-came-to-goon
-    end_line: 9
+    level: 1
+    end_line: 11
     markdown: "# YO-100-1 i came to goon\nfor 10, the bih get loose, she tryna win\n\
       \n"
     title: YO-100-1 i came to goon
@@ -82,9 +92,10 @@ items:
     key: YO-100-1
     parent: YO-100
   YO-100-2:
-    start_line: 10
+    start_line: 12
     path: ..\experiment_code\md_parsing\newnew.md#yo-100-2-come-stop-me
-    end_line: 12
+    level: 1
+    end_line: 14
     markdown: "# YO-100-2 Come stop me\nAquafina Deer Park DFD\n\n"
     title: YO-100-2 Come stop me
     data:
@@ -93,6 +104,7 @@ items:
   YO-1:
     start_line: 1
     path: ..\experiment_code\md_parsing\simple_md.md#yo-1-whats-poppin
+    level: 1
     end_line: 3
     markdown: "# YO-1 What's Poppin'\nWhats good baby\n\n"
     title: YO-1 What's Poppin'
@@ -102,6 +114,7 @@ items:
   YO-2:
     start_line: 4
     path: ..\experiment_code\md_parsing\simple_md.md#yo-2-theres-an-object
+    level: 1
     markdown: "# YO-2 there's an `object`\nlook out"
     title: YO-2 there's an `object`
     data:

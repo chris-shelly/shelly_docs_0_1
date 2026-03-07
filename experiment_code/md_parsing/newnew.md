@@ -1,6 +1,8 @@
 # YO-99 Carl beat Michael
 cry about it f1 fans
 
+## YO-99-1 NASCAR better than f1
+Keep crying about it. TUrning left is better.
 # YO-100 fukumean
 i done 100 fuck is you splurged
 

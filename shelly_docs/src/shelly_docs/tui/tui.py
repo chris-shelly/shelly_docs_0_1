@@ -396,8 +396,9 @@ class ShellyDocs(App):
       # add the knowledge base path
       raw_item_obj['kb_path'] = self.kb_path
       new_items = convert_new_item_md(raw_item_obj)
-      item_key = new_item['title'].split(' ')[0]
-      put_item(self.kb_path,item_key, new_item, get_config(self.kb_path))
+      for new_item in new_items:
+        item_key = new_item['key']
+        put_item(self.kb_path,item_key, new_item, get_config(self.kb_path))
     self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen
 
   def on_knowledge_base_menu_delete_item(self, msg: KnowledgeBaseMenu.DeleteItem) -> None:
@@ -414,13 +415,14 @@ class ShellyDocs(App):
   def on_knowledge_base_menu_update_item(self, msg: KnowledgeBaseMenu.UpdateItem) -> None:
     kb_widget = self.kb_screen.query_one("KnowledgeBase", KnowledgeBase)
     item = kb_widget.item
-    def handle_update(raw_item_md: dict):
-      if raw_item_md is None:
+    def handle_update(raw_item_obj: dict):
+      if raw_item_obj is None:
         return
-      raw_item_md['kb_path'] = self.kb_path
-      updated_item = convert_new_item_md(raw_item_md)
-      item_key = updated_item['title'].split(' ')[0]
-      put_item(self.kb_path, item_key, updated_item, get_config(self.kb_path))
+      raw_item_obj['kb_path'] = self.kb_path
+      updated_items = convert_new_item_md(raw_item_obj)
+      for updated_item in updated_items:
+        item_key = updated_item['key']
+        put_item(self.kb_path,item_key, updated_item, get_config(self.kb_path))
       # calling the function automatically pops the screen, no need to pop again
     self.push_screen(UpdateItemScreen(item, self.kb_path), handle_update)
 
