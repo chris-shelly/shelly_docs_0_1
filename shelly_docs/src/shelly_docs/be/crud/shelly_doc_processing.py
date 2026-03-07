@@ -95,6 +95,16 @@ def get_item_title(item: dict) -> str:
     return title
   else:
     raise ValueError("item markdown has not been retrieved. Cannot determine title.")
+  
+
+def get_tag_from_title(title: str):
+  """
+  Determine the Item Tag from a title string ("ABC-2-1 Johnathan")
+  """
+  item_tag_connector = "-"
+  item_tag = title.split(item_tag_connector)[0]
+  return item_tag
+
 def get_string_section(path: str , start: int = 1, end: Union[int, None] = None) -> str:
   """
   Get a section of string from a document by lines. 
@@ -158,23 +168,24 @@ def heading_to_anchor(title: str) -> str:
   anchor = re.sub(r'\s+', '-', anchor.strip())
   return anchor
 
-def process_shelly_docs_items(path: str) -> list[dict]:
+def process_shelly_docs_items(path: str, config: dict) -> list[dict]:
   """"""
   path = Path(path)
   items = get_raw_shelly_docs_items(path)
+  processed_items = []
   for item in items:
     item['markdown'] = get_item_markdown(item)
     #print(item['markdown'])
     item['title'] = get_item_title(item)
-    item['data'] = get_codefenced_data(item)
-    item['key'] = get_item_key(item)
-    item['parent'] = get_item_parent(item)
-    item['path'] += "#" + heading_to_anchor(item['title'])
-    # heading object no longer needed
-    del item['heading']
-  return items
-
-
-if __name__ == "__main__":
-  path = "data.md"
-  print(process_shelly_docs_items(path))
+    # check the title to make sure its a valid item type, only continue parsing if that's the case
+    if get_tag_from_title(item['title']) in config['item_tags']:
+      
+      item['data'] = get_codefenced_data(item)
+      item['key'] = get_item_key(item)
+      item['parent'] = get_item_parent(item)
+      item['path'] += "#" + heading_to_anchor(item['title'])
+      # heading object no longer needed
+      del item['heading']
+      processed_items.append(item)
+      
+  return processed_items

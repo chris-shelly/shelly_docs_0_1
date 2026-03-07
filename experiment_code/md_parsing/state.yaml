@@ -84,7 +84,8 @@ items:
   YO-100-2:
     start_line: 10
     path: ..\experiment_code\md_parsing\newnew.md#yo-100-2-come-stop-me
-    markdown: "# YO-100-2 Come stop me\nAquafina Deer Park DFD\n"
+    end_line: 12
+    markdown: "# YO-100-2 Come stop me\nAquafina Deer Park DFD\n\n"
     title: YO-100-2 Come stop me
     data:
     key: YO-100-2

@@ -18,8 +18,7 @@ def get_items(path: str, config: dict) -> list[dict]:
     docs = get_md_docs_in_dir(dir)
 
   for doc in docs:
-    #parsed_doc = parse_md_doc(doc)
-    items = items + process_shelly_docs_items(doc)
+    items = items + process_shelly_docs_items(doc, config)
   return items
 
 def write_items_to_state(path: str) -> None:
