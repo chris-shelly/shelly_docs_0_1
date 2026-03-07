@@ -13,6 +13,9 @@ from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from mistletoe.block_token import CodeFence
 from mistletoe.token import Token
+
+
+from ..shelly_docs_config.config import get_config
 yaml = YAML()
 
 def parse_md_ast(path: Path) -> dict:
@@ -75,7 +78,7 @@ def parse_token_dict(token_dict: dict, path: Path) -> list[dict]:
       if item.get("heading"):
         item["end_line"] = child["line_number"] - 1
         items.append(item)
-      item = {"heading": child, "start_line": child["line_number"], "path": str(path)}
+      item = {"heading": child, "start_line": child["line_number"], "path": str(path), "level": child["level"]}
   # add last item at end
   if item.get("heading"):
     items.append(item)
@@ -232,7 +235,8 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
   """
   # determine the new items
   # it's not guaranteed that the new_item_obj is only one item, so we capture this in a list of items called 'raw_new_items'
-  raw_new_items = get_raw_shelly_docs_items_from_md(new_item_obj['markdown'], new_item_obj['kb_path'] / new_item_obj['filepath'])
+  raw_new_items = get_raw_shelly_docs_items_from_md(new_item_obj['markdown'], f"{new_item_obj['kb_path']}/{new_item_obj['filepath']}")
+  config = get_config(new_item_obj['kb_path'])
   # each of these raw_new_items should then
   semi_processed_items = []
   for item in raw_new_items:
@@ -250,8 +254,9 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
       semi_processed_items.append(item)
 
   # recall that 'start' and 'end' are only for that snippet, and none of the items have actually been added to a file yet
-  # for each of the semi processed items, we check where their parent is, and 
+  # for each of the semi processed items, we check where their parent is, and
   print(semi_processed_items)
+  return semi_processed_items
   
 
   #return processed_items

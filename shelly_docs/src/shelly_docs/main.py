@@ -94,16 +94,17 @@ def item_get(item_key: str):
 @item_app.command("put")
 def item_put(path: str, markdown: str):
   """
-  Put an Item via JSON file.
+  Put an Item and some markdown
 
   - path is the destination path for the Item, relative to the Knowledge Base Path
   - markdown is the markdown content
   """
   kb_path = get_kb_path()
   raw_item = {"filepath": path, "markdown": markdown, "kb_path": kb_path}
-  updated_item = convert_new_item_md(raw_item)
-  item_key = updated_item['title'].split(' ')[0]
-  put_item(kb_path, item_key, updated_item, get_config(kb_path))
+  semi_processed_items = convert_new_item_md(raw_item)
+  for item in semi_processed_items:
+    item_key = item['key']
+    put_item(kb_path, item_key, item, get_config(kb_path))
 
 @item_app.command("delete")
 def item_delete(item_key: str):

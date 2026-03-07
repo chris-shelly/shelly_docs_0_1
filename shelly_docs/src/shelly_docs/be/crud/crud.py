@@ -2,6 +2,7 @@ from pathlib import Path
 import re
 import json
 from ruamel.yaml import YAML
+from rich import print
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
@@ -59,6 +60,10 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
     ValueError: if item_key tag prefix not in config item_tags
     ValueError: if item_key already exists in a different file
   """
+
+  state: dict = get_state(path)
+  state_items: dict = state['items']
+
   # Validate item type — match the longest configured tag that the key starts with
   tag_prefix = None
   for tag in config['item_tags']:
@@ -80,7 +85,8 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
       )
 
   # Build the new heading + content block
-  target_path = Path(item['path'])
+  target_path = Path(item['path'].split('#')[0]) # split off the md anchor
+
   new_block = f"{item['markdown']}\n"
 
   if not target_path.exists():
@@ -124,13 +130,29 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   else:
     # Add the item:
     # look up the parent in the state and check if its at the same path
-    state: dict = get_state(path)
-    state_items: dict = state['items']
+    
     parent = state_items.get(item['parent'])
     # if parent exists in the target path, write to the parent
     if parent:
       print("parent exists")
-      pass
+      # insert the child item after the parent item, after all existing sibling items
+      print("parent", parent)
+      # check the state for siblings
+
+      insert_idx = get_sibling_positioning(state, item)
+      #print("lines before insert", lines)
+      if insert_idx: # insert after siblings of the same level
+        lines.insert(insert_idx,new_block)
+      elif insert_idx:
+        # sibling is at the end of the file
+        lines.append(new_block)
+      else: # no siblings, insert after parent
+        lines.insert(parent['end_line'],new_block)
+        
+      #print("lines after insert", lines)
+
+      target_path.write_text(''.join(lines))
+      
     # else, append to end of file
     else:
       text = target_path.read_text()
@@ -139,10 +161,37 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
       text += f"\n{new_block}"
       target_path.write_text(text)
 
-  
-  state['items'][item_key] = item
-  state_path = Path(f"{path}/state.yaml")
-  yaml.dump(state,state_path)
+  write_items_to_state(path)
+
+def get_sibling_positioning(state: dict, item: str) -> int:
+  """
+  Check the `state` for siblings, so we can put a new item as the latest of the existing siblings
+  """
+  state_items: dict = state['items']
+  parent_key: str = item['parent'] # we know if this is triggered, that the propsed item to be inserted has a parent
+  destination_path: str = item['path'].split('#')[0] # remove anchor from the path
+  insert_position = None
+  for item_key in state_items.keys():
+    if parent_key in item_key:
+      family_member_item: dict = state_items.get(item_key)
+      # check if sibling item has the same path as the current item
+      family_member_item_path: str = family_member_item['path'].split('#')[0]
+      family_member_item_level: int = family_member_item['level']
+      print("family_member_item", family_member_item)
+      print("item", item)
+      if (family_member_item_path == destination_path) and (family_member_item_level == item['level']):
+        # check if the sibling has an end_line
+        # if so, insert position is the sibling's end line
+        # else, insert position is the end, because the sibling is at the end of the file
+        sibling_end_line = family_member_item.get("end_line")
+        if sibling_end_line:
+          if (insert_position == None) or (sibling_end_line > insert_position):
+            insert_position = sibling_end_line
+        else:
+          insert_position = -1
+      
+  print("insert position", insert_position)
+  return insert_position
 
 def delete_item(path: str, item_key: str):
   """Remove an Item from its Markdown document.

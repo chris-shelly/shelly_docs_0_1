@@ -2,6 +2,7 @@ items:
   ABC-1:
     start_line: 1
     path: ..\experiment_code\md_data_parsing\data.md#abc-1-yo
+    level: 1
     end_line: 9
     markdown: "# ABC-1 Yo\nThis is a markdown document with a data block in it.\n\n\
       ```yaml (data)\nfield1: yo\nfield2: 27\n```\nSee ya later.\n\n"
@@ -11,10 +12,21 @@ items:
       field2: 27
     key: ABC-1
     parent:
-  ABC-2:
+  ABC-1-1:
     start_line: 10
+    path: ..\experiment_code\md_data_parsing\data.md#abc-1-1-brodie
+    level: 2
+    end_line: 13
+    markdown: "## ABC-1-1 Brodie\nKostecki be sending it down the mountain.\n\n\n"
+    title: ABC-1-1 Brodie
+    data:
+    key: ABC-1-1
+    parent: ABC-1
+  ABC-2:
+    start_line: 14
     path: ..\experiment_code\md_data_parsing\data.md#abc-2-hi-there
-    end_line: 15
+    level: 1
+    end_line: 19
     markdown: "# ABC-2 Hi **`there`**\nWhat's up.\n```yaml (data)\nfield3: bruh\n\
       ```\n\n"
     title: ABC-2 Hi **`there`**
@@ -23,10 +35,32 @@ items:
     key: ABC-2
     parent:
   ABC-2-1:
-    start_line: 16
+    start_line: 20
     path: ..\experiment_code\md_data_parsing\data.md#abc-2-1-bruh
-    markdown: "## ABC-2-1 bruh \n!!! note\npiss\nbaby\n\nyo"
+    level: 2
+    end_line: 24
+    markdown: "## ABC-2-1 bruh \n!!! note\npiss\nbaby\n\n"
     title: ABC-2-1 bruh
     data:
     key: ABC-2-1
+    parent: ABC-2
+  ABC-2-1-1:
+    start_line: 25
+    path: ..\experiment_code\md_data_parsing\data.md#abc-2-1-1-keep-it-a-buck
+    level: 3
+    end_line: 27
+    markdown: "### ABC-2-1-1 keep it a buck\ndont need you tellin me how to feel\n\
+      \n"
+    title: ABC-2-1-1 keep it a buck
+    data:
+    key: ABC-2-1-1
+    parent: ABC-2-1
+  ABC-2-2:
+    start_line: 28
+    path: ..\experiment_code\md_data_parsing\data.md#abc-2-2-jamie-chadwick
+    level: 2
+    markdown: "## ABC-2-2 Jamie Chadwick\nDouse flames mad quick.\n\n\nyo"
+    title: ABC-2-2 Jamie Chadwick
+    data:
+    key: ABC-2-2
     parent: ABC-2

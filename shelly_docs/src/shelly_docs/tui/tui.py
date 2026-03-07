@@ -395,7 +395,7 @@ class ShellyDocs(App):
     def create_new_item(raw_item_obj: dict):
       # add the knowledge base path
       raw_item_obj['kb_path'] = self.kb_path
-      new_item = proce
+      new_items = convert_new_item_md(raw_item_obj)
       item_key = new_item['title'].split(' ')[0]
       put_item(self.kb_path,item_key, new_item, get_config(self.kb_path))
     self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen
