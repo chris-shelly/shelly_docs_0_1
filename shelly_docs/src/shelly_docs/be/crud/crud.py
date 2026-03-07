@@ -7,6 +7,8 @@ from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from ..shelly_docs_config.config import get_config
 
+from .shelly_doc_processing import process_shelly_docs_items
+
 yaml = YAML()
 def get_items(path: str, config: dict) -> list[dict]:
   """Check the directory for items"""
@@ -16,8 +18,8 @@ def get_items(path: str, config: dict) -> list[dict]:
     docs = get_md_docs_in_dir(dir)
 
   for doc in docs:
-    parsed_doc = parse_md_doc(doc)
-    items = items + read_items_in_doc(parsed_doc, config['item_tags'], doc_path=doc)
+    #parsed_doc = parse_md_doc(doc)
+    items = items + process_shelly_docs_items(doc)
   return items
 
 def write_items_to_state(path: str) -> None:
@@ -407,7 +409,10 @@ def parse_md_text(md_text: str) -> dict:
     rendered = renderer.render(md_doc_tree)
   return json.loads(rendered)
 
-def parse_md_doc(path: Path):
+def parse_md_doc(path: Path) -> dict:
+  """
+  Get the AST of a Markdown document
+  """
   md_doc_text = path.read_text()
   md_doc_tree = Document(md_doc_text)
   with ASTRenderer() as renderer:

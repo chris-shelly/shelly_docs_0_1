@@ -1,3 +1,6 @@
+"""
+Module for processing Shelly Docs Items in a Document
+"""
 from pathlib import Path
 import re
 import json
@@ -5,12 +8,10 @@ from ruamel.yaml import YAML
 from typing import Union
 
 from rich import print
-from rich.markdown import Markdown
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
-from mistletoe.markdown_renderer import MarkdownRenderer
-from mistletoe.block_token import BlockToken, CodeFence, Heading
+from mistletoe.block_token import CodeFence
 from mistletoe.token import Token
 yaml = YAML()
 
@@ -151,6 +152,12 @@ def get_item_parent(item: dict):
   else: 
     return None
 
+def heading_to_anchor(title: str) -> str:
+  anchor = title.lower()
+  anchor = re.sub(r'[^\w\s-]', '', anchor)
+  anchor = re.sub(r'\s+', '-', anchor.strip())
+  return anchor
+
 def process_shelly_docs_items(path: str) -> list[dict]:
   """"""
   path = Path(path)
@@ -162,6 +169,9 @@ def process_shelly_docs_items(path: str) -> list[dict]:
     item['data'] = get_codefenced_data(item)
     item['key'] = get_item_key(item)
     item['parent'] = get_item_parent(item)
+    item['path'] += "#" + heading_to_anchor(item['title'])
+    # heading object no longer needed
+    del item['heading']
   return items
 
 

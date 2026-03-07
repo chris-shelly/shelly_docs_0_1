@@ -1,67 +1,108 @@
 items:
   SPEC-1:
-    title: SPEC-1 stuff here
-    content: There is some content here probably but who knows. lets get it.
-    parent_title: ''
+    start_line: 1
     path: ..\experiment_code\md_parsing\new.md#spec-1-stuff-here
-    level: 1
+    end_line: 3
+    markdown: "# SPEC-1 stuff here\nThere is some content here probably but who knows.
+      lets get it.\n\n"
+    title: SPEC-1 stuff here
+    data:
+    key: SPEC-1
+    parent:
   SPEC-1-1:
-    title: SPEC-1-1 Child Item
-    content: This is a new child item bro.
-    parent_title: ''
+    start_line: 4
     path: ..\experiment_code\md_parsing\new.md#spec-1-1-child-item
-    level: 1
+    end_line: 6
+    markdown: "# SPEC-1-1 Child Item\nThis is a new child item bro.\n\n"
+    title: SPEC-1-1 Child Item
+    data:
+    key: SPEC-1-1
+    parent: SPEC-1
   SPEC-2:
-    title: SPEC-2 YURR
-    content: YEE YEE YEE
-    parent_title: ''
+    start_line: 7
     path: ..\experiment_code\md_parsing\new.md#spec-2-yurr
-    level: 1
+    end_line: 9
+    markdown: "# SPEC-2 YURR\nYEE YEE YEE\n\n"
+    title: SPEC-2 YURR
+    data:
+    key: SPEC-2
+    parent:
   SPEC-3:
-    title: SPEC-3 jojo
-    content: jolyne
-    parent_title: ''
+    start_line: 10
     path: ..\experiment_code\md_parsing\new.md#spec-3-jojo
-    level: 1
+    end_line: 12
+    markdown: "# SPEC-3 jojo\njolyne\n\n"
+    title: SPEC-3 jojo
+    data:
+    key: SPEC-3
+    parent:
   SPEC-4:
-    title: SPEC-4 dio
-    content: Kono dio da
-    parent_title: ''
+    start_line: 13
     path: ..\experiment_code\md_parsing\new.md#spec-4-dio
-    level: 1
+    end_line: 15
+    markdown: "# SPEC-4 dio\nKono dio da\n\n"
+    title: SPEC-4 dio
+    data:
+    key: SPEC-4
+    parent:
   SPEC-5:
-    title: SPEC-5 JoBro
-    content: Hermes
-    parent_title: ''
+    start_line: 16
     path: ..\experiment_code\md_parsing\new.md#spec-5-jobro
-    level: 1
+    markdown: "# SPEC-5 JoBro\nHermes"
+    title: SPEC-5 JoBro
+    data:
+    key: SPEC-5
+    parent:
   YO-99:
-    title: YO-99 Carl beat Michael
-    content: cry about it
-    parent_title: ''
+    start_line: 1
     path: ..\experiment_code\md_parsing\newnew.md#yo-99-carl-beat-michael
-    level: 1
+    end_line: 3
+    markdown: "# YO-99 Carl beat Michael\ncry about it f1 fans\n\n"
+    title: YO-99 Carl beat Michael
+    data:
+    key: YO-99
+    parent:
   YO-100:
-    title: YO-100 fukumean
-    content: i done 100 fuck is you splurged
-    parent_title: ''
+    start_line: 4
     path: ..\experiment_code\md_parsing\newnew.md#yo-100-fukumean
-    level: 1
+    end_line: 6
+    markdown: "# YO-100 fukumean\ni done 100 fuck is you splurged\n\n"
+    title: YO-100 fukumean
+    data:
+    key: YO-100
+    parent:
   YO-100-1:
-    title: YO-100-1 i came to goon
-    content: for 10, the bih get loose, she tryna win
-    parent_title: ''
+    start_line: 7
     path: ..\experiment_code\md_parsing\newnew.md#yo-100-1-i-came-to-goon
-    level: 1
+    end_line: 9
+    markdown: "# YO-100-1 i came to goon\nfor 10, the bih get loose, she tryna win\n\
+      \n"
+    title: YO-100-1 i came to goon
+    data:
+    key: YO-100-1
+    parent: YO-100
+  YO-100-2:
+    start_line: 10
+    path: ..\experiment_code\md_parsing\newnew.md#yo-100-2-come-stop-me
+    markdown: "# YO-100-2 Come stop me\nAquafina Deer Park DFD\n"
+    title: YO-100-2 Come stop me
+    data:
+    key: YO-100-2
+    parent: YO-100
   YO-1:
-    title: YO-1 What's Poppin'
-    content: Whats good baby
-    parent_title: ''
+    start_line: 1
     path: ..\experiment_code\md_parsing\simple_md.md#yo-1-whats-poppin
-    level: 1
+    end_line: 3
+    markdown: "# YO-1 What's Poppin'\nWhats good baby\n\n"
+    title: YO-1 What's Poppin'
+    data:
+    key: YO-1
+    parent:
   YO-2:
-    title: YO-2 there's an `object`
-    content: look out
-    parent_title: ''
+    start_line: 4
     path: ..\experiment_code\md_parsing\simple_md.md#yo-2-theres-an-object
-    level: 1
+    markdown: "# YO-2 there's an `object`\nlook out"
+    title: YO-2 there's an `object`
+    data:
+    key: YO-2
+    parent:

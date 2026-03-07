@@ -1,0 +1,32 @@
+items:
+  ABC-1:
+    start_line: 1
+    path: ..\experiment_code\md_data_parsing\data.md#abc-1-yo
+    end_line: 9
+    markdown: "# ABC-1 Yo\nThis is a markdown document with a data block in it.\n\n\
+      ```yaml (data)\nfield1: yo\nfield2: 27\n```\nSee ya later.\n\n"
+    title: ABC-1 Yo
+    data:
+      field1: yo
+      field2: 27
+    key: ABC-1
+    parent:
+  ABC-2:
+    start_line: 10
+    path: ..\experiment_code\md_data_parsing\data.md#abc-2-hi-there
+    end_line: 15
+    markdown: "# ABC-2 Hi **`there`**\nWhat's up.\n```yaml (data)\nfield3: bruh\n\
+      ```\n\n"
+    title: ABC-2 Hi **`there`**
+    data:
+      field3: bruh
+    key: ABC-2
+    parent:
+  ABC-2-1:
+    start_line: 16
+    path: ..\experiment_code\md_data_parsing\data.md#abc-2-1-bruh
+    markdown: "## ABC-2-1 bruh \n!!! note\npiss\nbaby\n\nyo"
+    title: ABC-2-1 bruh
+    data:
+    key: ABC-2-1
+    parent: ABC-2

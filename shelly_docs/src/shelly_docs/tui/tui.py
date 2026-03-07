@@ -240,7 +240,7 @@ class KnowledgeBase(Widget):
     self.item = self.items[0]
     yield KnowledgeBaseMenu(self.items, self.item_index, self.path)
     # render markdown content of a single item
-    yield Item(self.item['content'], item_title=self.item['title'], document_path=self.item['path'])
+    yield Item(self.item['markdown'], item_title=self.item['title'], document_path=self.item['path'])
     # pretty print the JSON representation of the Config
     yield KnowledgeBaseConfig(self.kb_config, classes="box")
   
@@ -261,7 +261,7 @@ class KnowledgeBase(Widget):
     item_display.border_title = self.item['title']
     item_display.border_subtitle = self.item['path']
     markdown = item_display.query_one("Markdown", Markdown)
-    markdown.update(self.item['content'])
+    markdown.update(self.item['markdown'])
 
 
   
@@ -354,16 +354,14 @@ class UpdateItemScreen(Screen):
   def compose(self) -> ComposeResult:
     yield ShellyDocsHeader()
     yield Static("Update Item")
-    # rebuild the full markdown from the item's heading + content
-    level = self.item.get('level', 2)
-    heading = f"{'#' * level} {self.item['title']}"
-    existing_md = f"{heading}\n{self.item['content']}\n"
+    # retrieve the markdown of the item
+    existing_md = self.item['markdown']
     yield UpdateItemMd("Markdown", existing_md)
     yield Button("Update")
 
   def on_mount(self) -> None:
     text_area = self.query_one("#new-item-md", TextArea)
-    text_area.text = f"{'#' * self.item.get('level', 2)} {self.item['title']}\n{self.item['content']}\n"
+    text_area.text = f"{self.item['markdown']}\n"
 
   def on_button_pressed(self, event: Button.Pressed) -> None:
     md_text = self.query_one("#new-item-md", TextArea).text

@@ -33,3 +33,9 @@ Display the data to the user
 ...
 ```
 Aside from headings of the same or higher level (which would indicate another `Item`), any sort of content can be within a given `Item`, including paragraphs, code blocks, images, etc.
+## DESIGN-2-2 `Item.data`
+An `Item` can have structured data attached to it within the markdown document.
+
+A yaml code block with the `yaml (data)` around it is then parsed and saved alongside the item in state.
+
+This data can later be queried from the `state.yaml` to provide information to the user about the items.
