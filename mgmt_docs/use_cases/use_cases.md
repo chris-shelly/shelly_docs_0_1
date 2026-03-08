@@ -100,11 +100,31 @@ Data on a given item is provided using a yaml `data` code block.
 Data is then saved in the state of the knowledge base, where the item has a field called `"data"`, which contains the object defined from the yaml code block.
 
 
-# USECASE-13 Query Items based on Metadata
+# USECASE-13 Query Items based on `Item.data`
 ```yaml (data)
 status: drafting
 ```
-Search for Items based on the Metadata
+Search for Items based on their `data` field.
+An Item object has data from codefences stored in the 'data' object in the state file.
+
+We can then query that data from the state file by iterating through the items and checking logical conditions
+
+A query can be formatted with mongodb-like objects
+```yaml
+# format
+<field>: <query_obj> # scalar for a single value, or a mapping for checking several conditions
+
+# query for status of done
+status: done
+# ...
+# query conditionals
+points:
+  $gte: 3
+  $lte: 8
+$or:
+  - status: drafting
+  - winner: true
+```
 
 # USECASE-14 Semantic Search for Items
 ```yaml (data)

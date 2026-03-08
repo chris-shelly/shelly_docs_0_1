@@ -1,6 +1,6 @@
 import typer
 from pathlib import Path
-from rich import print
+#from rich import print
 from rich.markdown import Markdown
 
 from .tui.tui import ShellyDocs
