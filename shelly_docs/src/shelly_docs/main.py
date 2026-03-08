@@ -1,10 +1,13 @@
 import typer
+import json
 from pathlib import Path
 #from rich import print
 from rich.markdown import Markdown
+from ruamel.yaml import YAML
 
 from .tui.tui import ShellyDocs
-from .be.crud.crud import get_items, get_item, put_item, convert_new_item_md, delete_item, write_items_to_state
+from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_item_md, delete_item, write_items_to_state
+from .be.crud.query import query_items
 from .be.shelly_docs_config.config import get_config
 
 app = typer.Typer()
@@ -82,6 +85,34 @@ def items_list(path: str = ""):
   kb_path = get_kb_path()
   items_path = Path(kb_path) / path
   print(get_items(path=items_path,config=get_config(kb_path)))
+
+@items_app.command("query")
+def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'status: done'")):
+  """
+  Query Items by their data fields. Uses MongoDB-like query syntax.
+
+  Examples:
+    shelly-docs items query --query "status: done"
+    shelly-docs items query --query "priority: {$gt: 3}"
+    shelly-docs items query --query '$or: [{status: done}, {status: drafting}]'
+  """
+  kb_path = get_kb_path()
+  yaml = YAML()
+  try:
+    parsed_query = yaml.load(query)
+  except Exception as e:
+    print(f"Error parsing query YAML: {e}")
+    raise typer.Exit(code=1)
+  if not isinstance(parsed_query, dict):
+    print("Error: query must be a YAML mapping (e.g. 'status: done')")
+    raise typer.Exit(code=1)
+  state = get_state(kb_path)
+  try:
+    results = query_items(state["items"], parsed_query)
+  except ValueError as e:
+    print(f"Error: {e}")
+    raise typer.Exit(code=1)
+  print(json.dumps(results, indent=2, default=str))
 
 @item_app.command("get")
 def item_get(item_key: str):

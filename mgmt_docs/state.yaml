@@ -1,189 +1,335 @@
 items:
   DESIGN-1:
-    title: DESIGN-1 Knowledge Base
-    content: "The Knowledge Base is the directory in which Shelly Docs is initialized.\n\
-      \nShelly Docs scans markdown documents within that directory to read, update,
-      create and delete ."
-    parent_title: ''
+    start_line: 1
     path: ..\mgmt_docs\design\item.md#design-1-knowledge-base
     level: 1
+    end_line: 5
+    markdown: "# DESIGN-1 Knowledge Base\nThe Knowledge Base is the directory in which
+      Shelly Docs is initialized.\n\nShelly Docs scans markdown documents within that
+      directory to read, update, create and delete [`Item`s](#design-2-item).\n\n"
+    title: DESIGN-1 Knowledge Base
+    data:
+    key: DESIGN-1
+    parent:
   DESIGN-1-1:
-    title: DESIGN-1-1 Knowledge Base `state.yaml`
-    content: "Within the KnowledgeBase is a `state.yaml` file that stores the data
-      on the `Items` like a very simplistic kind of database collection.\n\n```yaml\n\
-      items:\n  ABC-32:\n    title: \"ABC-32 Retrieve Data\",\n    content: \"Retrieve
-      data so we can display it to the user\",\n    parent_title: \"\" #empty if there
-      is no parent item\n  ABC-33:\n    title: \"ABC-33 Display Data\"\n    # ...\n\
-      ```"
-    parent_title: DESIGN-1 Knowledge Base
+    start_line: 6
     path: ..\mgmt_docs\design\item.md#design-1-1-knowledge-base-stateyaml
     level: 2
+    end_line: 18
+    markdown: "## DESIGN-1-1 Knowledge Base `state.yaml`\nWithin the KnowledgeBase
+      is a `state.yaml` file that stores the data on the `Items` like a very simplistic
+      kind of database collection.\n```yaml\nitems:\n  ABC-32:\n    title: \"ABC-32
+      Retrieve Data\",\n    content: \"Retrieve data so we can display it to the user\"\
+      ,\n    parent_title: \"\" #empty if there is no parent item\n  ABC-33:\n   \
+      \ title: \"ABC-33 Display Data\"\n    # ...\n```\n\n"
+    title: DESIGN-1-1 Knowledge Base `state.yaml`
+    data:
+    key: DESIGN-1-1
+    parent: DESIGN-1
   DESIGN-2:
-    title: DESIGN-2 `Item`
-    content: "An `Item` is a piece of markdown documentation content within a .\n\n\
-      An `Item` is defined as a markdown heading with content under it."
-    parent_title: ''
+    start_line: 19
     path: ..\mgmt_docs\design\item.md#design-2-item
     level: 1
+    end_line: 22
+    markdown: "# DESIGN-2 `Item`\nAn `Item` is a piece of markdown documentation content
+      within a [Knowledge Base](#design-1-knowledge-base).\n\nAn `Item` is defined
+      as a markdown heading with content under it.\n"
+    title: DESIGN-2 `Item`
+    data:
+    key: DESIGN-2
+    parent:
   DESIGN-2-1:
-    title: DESIGN-2-1 `Item` Example
-    content: "For example,\n\n```md\n<!-- Item starts with the Heading-->\n## ABC-32
-      Retrieve Data\nRetrieve data so we can display itto the user\n<!-- Item ends
-      either with end of the document or another Heading with the same or higher level
-      -->\n<!--New Item, separate from ABC-32-->\n## ABC-33 Display Data\nDisplay
-      the data to the user\n...\n```\n\nAside from headings of the same or higher
-      level (which would indicate another `Item`), any sort of content can be within
-      a given `Item`, including paragraphs, code blocks, images, etc."
-    parent_title: DESIGN-2 `Item`
+    start_line: 23
     path: ..\mgmt_docs\design\item.md#design-2-1-item-example
     level: 2
+    end_line: 35
+    markdown: "## DESIGN-2-1 `Item` Example\nFor example,\n```md\n<!-- Item starts
+      with the Heading-->\n## ABC-32 Retrieve Data\nRetrieve data so we can display
+      itto the user\n<!-- Item ends either with end of the document or another Heading
+      with the same or higher level -->\n<!--New Item, separate from ABC-32-->\n##
+      ABC-33 Display Data\nDisplay the data to the user\n...\n```\nAside from headings
+      of the same or higher level (which would indicate another `Item`), any sort
+      of content can be within a given `Item`, including paragraphs, code blocks,
+      images, etc.\n"
+    title: DESIGN-2-1 `Item` Example
+    data:
+    key: DESIGN-2-1
+    parent: DESIGN-2
+  DESIGN-2-2:
+    start_line: 36
+    path: ..\mgmt_docs\design\item.md#design-2-2-itemdata
+    level: 2
+    markdown: "## DESIGN-2-2 `Item.data`\nAn `Item` can have structured data attached
+      to it within the markdown document.\n\nA yaml code block with the `yaml (data)`
+      around it is then parsed and saved alongside the item in state.\n\nThis data
+      can later be queried from the `state.yaml` to provide information to the user
+      about the items."
+    title: DESIGN-2-2 `Item.data`
+    data:
+    key: DESIGN-2-2
+    parent: DESIGN-2
   USECASE-77:
-    title: USECASE-77 Yo this is a new item from the TUI
-    content: This is a new item created in the TUI.
-    parent_title: ''
+    start_line: 1
     path: ..\mgmt_docs\reqs\new.md#usecase-77-yo-this-is-a-new-item-from-the-tui
     level: 2
+    end_line: 3
+    markdown: "## USECASE-77 Yo this is a new item from the TUI\nThis is a new item
+      created in the TUI.\n\n"
+    title: USECASE-77 Yo this is a new item from the TUI
+    data:
+    key: USECASE-77
+    parent:
   USECASE-77-1:
-    title: USECASE-77-1 Child Item being added
-    content: This is a child item being edited via TUI. baby
-    parent_title: USECASE-77 Yo this is a new item from the TUI
+    start_line: 4
     path: ..\mgmt_docs\reqs\new.md#usecase-77-1-child-item-being-added
     level: 3
+    markdown: "### USECASE-77-1 Child Item being added\nThis is a child item being
+      edited via TUI. baby\n"
+    title: USECASE-77-1 Child Item being added
+    data:
+    key: USECASE-77-1
+    parent: USECASE-77
   ACTOR-1:
-    title: ACTOR-1 `Human`
-    content: A Human user. Primarily expected to use the TUI, but can also use 
-      CLI commands.
-    parent_title: ''
+    start_line: 1
     path: ..\mgmt_docs\use_cases\actors.md#actor-1-human
     level: 1
+    end_line: 2
+    markdown: "# ACTOR-1 `Human`\nA Human user. Primarily expected to use the TUI,
+      but can also use CLI commands.\n"
+    title: ACTOR-1 `Human`
+    data:
+    key: ACTOR-1
+    parent:
   ACTOR-2:
-    title: ACTOR-2 `Agent`
-    content: An AI Agent. Primarily expected to use the CLI.
-    parent_title: ''
+    start_line: 3
     path: ..\mgmt_docs\use_cases\actors.md#actor-2-agent
     level: 1
+    markdown: "# ACTOR-2 `Agent`\nAn AI Agent. Primarily expected to use the CLI.\n"
+    title: ACTOR-2 `Agent`
+    data:
+    key: ACTOR-2
+    parent:
   USECASE-1:
-    title: USECASE-1 Human gets list of Items
-    content: "Human uses the TUI to view the Items in their Knowledge Base.\n\n```yaml\n\
-      status: done\n```"
-    parent_title: ''
+    start_line: 1
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-1-human-gets-list-of-items
     level: 1
+    end_line: 5
+    markdown: "# USECASE-1 Human gets list of Items\nHuman uses the TUI to view the
+      Items in their Knowledge Base.\n```yaml (data)\nstatus: done\n```\n"
+    title: USECASE-1 Human gets list of Items
+    data:
+      status: done
+    key: USECASE-1
+    parent:
   USECASE-2:
-    title: USECASE-2 Human reads an Item
-    content: "Human uses the TUI to view a specific Item in the Knowledge Base.\n\n\
-      ```yaml\nstatus: done\n```"
-    parent_title: ''
+    start_line: 6
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-2-human-reads-an-item
     level: 1
+    end_line: 10
+    markdown: "# USECASE-2 Human reads an Item\nHuman uses the TUI to view a specific
+      Item in the Knowledge Base.\n```yaml (data)\nstatus: done\n```\n"
+    title: USECASE-2 Human reads an Item
+    data:
+      status: done
+    key: USECASE-2
+    parent:
   USECASE-3:
-    title: USECASE-3 Human sets the Knowledge Base Config
-    content: "Human opens a project in the TUI by specifying the directory for the
-      Knowledge Base.\n\n```yaml\nstatus: done\n```\n\nHuman sets the configuration
-      for the Knowledge base using a `shellydocs.yaml` file.\n\n```yaml\nitem_tags:
-      # tags to recognize as items\n  - INPUT\n  - DESIGN\n  - REQ\n```\n\nItem Tags
-      are used to detect items."
-    parent_title: ''
+    start_line: 11
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-3-human-sets-the-knowledge-base-config
     level: 1
+    end_line: 24
+    markdown: "# USECASE-3 Human sets the Knowledge Base Config\nHuman opens a project
+      in the TUI by specifying the directory for the Knowledge Base.\n```yaml (data)\n\
+      status: done\n```\nHuman sets the configuration for the Knowledge base using
+      a `shellydocs.yaml` file.\n```yaml\nitem_tags: # tags to recognize as items\n\
+      \  - INPUT\n  - DESIGN\n  - REQ\n```\nItem Tags are used to detect items.\n\n"
+    title: USECASE-3 Human sets the Knowledge Base Config
+    data:
+      status: done
+    key: USECASE-3
+    parent:
   USECASE-4:
-    title: USECASE-4 Human adds a new Item
-    content: "Human uses the TUI to create a new Item\n\n```yaml\nstatus: done\n```"
-    parent_title: ''
+    start_line: 25
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-4-human-adds-a-new-item
     level: 1
+    end_line: 29
+    markdown: "# USECASE-4 Human adds a new Item\nHuman uses the TUI to create a new
+      Item\n```yaml (data)\nstatus: done\n```\n"
+    title: USECASE-4 Human adds a new Item
+    data:
+      status: done
+    key: USECASE-4
+    parent:
   USECASE-5:
-    title: USECASE-5 Human updates an Item
-    content: "Human uses the TUI to update an existing Item\n\n```yaml\nstatus: done\n\
-      ```"
-    parent_title: ''
+    start_line: 30
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-5-human-updates-an-item
     level: 1
+    end_line: 34
+    markdown: "# USECASE-5 Human updates an Item\nHuman uses the TUI to update an
+      existing Item\n```yaml (data)\nstatus: done\n```\n"
+    title: USECASE-5 Human updates an Item
+    data:
+      status: done
+    key: USECASE-5
+    parent:
   USECASE-6:
-    title: USECASE-6 Human deletes an Item
-    content: "Human uses TUI to delete an Item\n\n```yaml\nstatus: done\n```"
-    parent_title: ''
+    start_line: 35
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-6-human-deletes-an-item
     level: 1
+    end_line: 40
+    markdown: "# USECASE-6 Human deletes an Item\nHuman uses TUI to delete an Item\n\
+      ```yaml (data)\nstatus: done\n```\n\n"
+    title: USECASE-6 Human deletes an Item
+    data:
+      status: done
+    key: USECASE-6
+    parent:
   USECASE-7:
-    title: USECASE-7 Get List of Items via CLI
-    content: "```yaml\nstatus: done\n```\n\n```bash\nshelly-docs items list --path
-      \"path\"\n```"
-    parent_title: ''
+    start_line: 41
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-7-get-list-of-items-via-cli
     level: 1
+    end_line: 47
+    markdown: "# USECASE-7 Get List of Items via CLI\n```yaml (data)\nstatus: done\n\
+      ```\n```bash\nshelly-docs items list --path \"path\"\n```\n"
+    title: USECASE-7 Get List of Items via CLI
+    data:
+      status: done
+    key: USECASE-7
+    parent:
   USECASE-8:
-    title: USECASE-8 Get an Item via CLI
-    content: "```yaml\nstatus: done\n```\n\n```bash\nshelly-docs item get \"item_key\"\
-      \n```"
-    parent_title: ''
+    start_line: 48
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-8-get-an-item-via-cli
     level: 1
+    end_line: 54
+    markdown: "# USECASE-8 Get an Item via CLI\n```yaml (data)\nstatus: done\n```\n\
+      ```bash\nshelly-docs item get \"item_key\"\n```\n"
+    title: USECASE-8 Get an Item via CLI
+    data:
+      status: done
+    key: USECASE-8
+    parent:
   USECASE-9:
-    title: USECASE-9 Set Knowledge Base Config via CLI
-    content: "```yaml\nstatus: done\n```\n\n```bash\nshelly-docs kb set --path \"\
-      path_to_kb_directory\" # reads the `shellydocs.yaml` file at the directory pathto
-      setup the Knowledge Base config\n# defaults to the current directory if no directory
-      is provided\n```"
-    parent_title: ''
+    start_line: 55
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-9-set-knowledge-base-config-via-cli
     level: 1
+    end_line: 62
+    markdown: "# USECASE-9 Set Knowledge Base Config via CLI\n```yaml (data)\nstatus:
+      done\n```\n```bash\nshelly-docs kb set --path \"path_to_kb_directory\" # reads
+      the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base
+      config\n# defaults to the current directory if no directory is provided\n```\n"
+    title: USECASE-9 Set Knowledge Base Config via CLI
+    data:
+      status: done
+    key: USECASE-9
+    parent:
   USECASE-10:
-    title: USECASE-10 Add/Update an Item via CLI
-    content: "```yaml\nstatus: done\n```\n\nGenerally, we'd expect an agent to write
-      Items by using markdown, but we should also allow a way to update items using
-      json.\n\n```bash\nshelly-docs item put \"file.md\" \"# DESIGN-3 Capture Data\n\
-      Capture Data from user input\" \n# put an item to the KB using JSON\n```\n\n\
-      Format of an item\n\n- filepath is relative to the Knowledge Base Path\n\n```json\n\
-      {\n  \"filepath\": \"file.md\",\n  \"markdown\": \"# DESIGN-3 Capture Data \\
-      n Capture Data from user input\"\n}\n```"
-    parent_title: ''
+    start_line: 63
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-10-addupdate-an-item-via-cli
     level: 1
+    end_line: 81
+    markdown: "# USECASE-10 Add/Update an Item via CLI\n```yaml (data)\nstatus: done\n\
+      ```\nGenerally, we'd expect an agent to write Items by using markdown, but we
+      should also allow a way to update items using json. \n```bash\nshelly-docs item
+      put \"file.md\" \"# DESIGN-3 Capture Data\nCapture Data from user input\" \n\
+      # put an item to the KB using JSON\n```\nFormat of an item\n- filepath is relative
+      to the Knowledge Base Path\n```json\n{\n  \"filepath\": \"file.md\",\n  \"markdown\"\
+      : \"# DESIGN-3 Capture Data \\n Capture Data from user input\"\n}\n```\n\n"
+    title: USECASE-10 Add/Update an Item via CLI
+    data:
+      status: done
+    key: USECASE-10
+    parent:
   USECASE-11:
-    title: USECASE-11 Delete an Item Via CLI
-    content: "```yaml\nstatus: in_progress\ndepends_on: USECASE-15\n```\n\n```bash\n\
-      shelly-docs item delete \"item_key\"\n```"
-    parent_title: ''
+    start_line: 82
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-11-delete-an-item-via-cli
     level: 1
+    end_line: 90
+    markdown: "# USECASE-11 Delete an Item via CLI\n```yaml (data)\nstatus: done\n\
+      depends_on: USECASE-15\n```\n```bash\nshelly-docs item delete \"item_key\"\n\
+      ```\n\n"
+    title: USECASE-11 Delete an Item via CLI
+    data:
+      status: done
+      depends_on: USECASE-15
+    key: USECASE-11
+    parent:
   USECASE-12:
-    title: USECASE-12 Add Metadata to Items
-    content: "```yaml\nstatus: drafting\n```"
-    parent_title: ''
-    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-12-add-metadata-to-items
+    start_line: 91
+    path: ..\mgmt_docs\use_cases\use_cases.md#usecase-12-add-data-to-items
     level: 1
+    end_line: 102
+    markdown: "# USECASE-12 Add Data to Items\n```yaml (data)\nstatus: drafting\n\
+      related_to: DESIGN-2-2\n```\nAs seen above, allow Items to have structured data
+      that can be analyzed and queried.\n\nData on a given item is provided using
+      a yaml `data` code block.\n\nData is then saved in the state of the knowledge
+      base, where the item has a field called `\"data\"`, which contains the object
+      defined from the yaml code block.\n\n\n"
+    title: USECASE-12 Add Data to Items
+    data:
+      status: drafting
+      related_to: DESIGN-2-2
+    key: USECASE-12
+    parent:
   USECASE-13:
-    title: USECASE-13 Query Items based on Metadata
-    content: "```yaml\nstatus: drafting\n```\n\nSearch for Items based on the Metadata"
-    parent_title: ''
+    start_line: 103
     path: 
-      ..\mgmt_docs\use_cases\use_cases.md#usecase-13-query-items-based-on-metadata
+      ..\mgmt_docs\use_cases\use_cases.md#usecase-13-query-items-based-on-itemdata
     level: 1
+    end_line: 128
+    markdown: "# USECASE-13 Query Items based on `Item.data`\n```yaml (data)\nstatus:
+      drafting\n```\nSearch for Items based on their `data` field.\nAn Item object
+      has data from codefences stored in the 'data' object in the state file.\n\n\
+      We can then query that data from the state file by iterating through the items
+      and checking logical conditions\n\nA query can be formatted with mongodb-like
+      objects\n```yaml\n# format\n<field>: <query_obj> # scalar for a single value,
+      or a mapping for checking several conditions\n\n# query for status of done\n\
+      status: done\n# ...\n# query conditionals\npoints:\n  $gte: 3\n  $lte: 8\n$or:\n\
+      \  - status: drafting\n  - winner: true\n```\n\n"
+    title: USECASE-13 Query Items based on `Item.data`
+    data:
+      status: drafting
+    key: USECASE-13
+    parent:
   USECASE-14:
-    title: USECASE-14 Semantic Search for Items
-    content: "```yaml\nstatus: future\n```\n\nSearch for Items based on semantic similarity
-      to a question. (effectively do RAG)"
-    parent_title: ''
+    start_line: 129
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-14-semantic-search-for-items
     level: 1
+    end_line: 134
+    markdown: "# USECASE-14 Semantic Search for Items\n```yaml (data)\nstatus: future\n\
+      ```\nSearch for Items based on semantic similarity to a question. (effectively
+      do RAG)\n\n"
+    title: USECASE-14 Semantic Search for Items
+    data:
+      status: future
+    key: USECASE-14
+    parent:
   USECASE-15:
-    title: USECASE-15 Refresh Knowledge Base State
-    content: "```yaml\nstatus: in_progress\n```\n\nRead all the Items in the Knowledge
-      Base.\n\n```bash\nshelly-docs kb update\n```"
-    parent_title: ''
+    start_line: 135
     path: 
       ..\mgmt_docs\use_cases\use_cases.md#usecase-15-refresh-knowledge-base-state
     level: 1
+    end_line: 143
+    markdown: "# USECASE-15 Refresh Knowledge Base State\n```yaml (data)\nstatus:
+      done\n```\nRead all the Items in the Knowledge Base.\n```bash\nshelly-docs kb
+      update\n```\n\n"
+    title: USECASE-15 Refresh Knowledge Base State
+    data:
+      status: done
+    key: USECASE-15
+    parent:
   USECASE-16:
-    title: USECASE-16 Enter TUI
-    content: "```yaml\nstatus: done\n```\n\nEnter the TUI from a CLI Command\n\n```bash\n\
-      shelly-docs tui\n```"
-    parent_title: ''
+    start_line: 144
     path: ..\mgmt_docs\use_cases\use_cases.md#usecase-16-enter-tui
     level: 1
+    markdown: "# USECASE-16 Enter TUI\n```yaml (data)\nstatus: done\n```\nEnter the
+      TUI from a CLI Command\n```bash\nshelly-docs tui\n```"
+    title: USECASE-16 Enter TUI
+    data:
+      status: done
+    key: USECASE-16
+    parent:

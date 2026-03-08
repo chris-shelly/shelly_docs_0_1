@@ -16,6 +16,7 @@ Each Item may have a `yaml (data)` codefence for storing data about that item, u
 ## `Goal`
 Plan a Feature that lets users query and analyze their Shelly Docs Items.
 - for example, determining tasks that are in progress, requirements linked to specific tests, etc. 
+## Example `state.yaml` file
 ```yaml
 items:
   ABC-1:
@@ -53,4 +54,5 @@ items:
       field3: bruh
     key: ABC-2
     parent:
+  #...
 ```
