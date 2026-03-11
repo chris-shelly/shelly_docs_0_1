@@ -90,7 +90,7 @@ shelly-docs item delete "item_key"
 
 # USECASE-12 Add Data to Items
 ```yaml (data)
-status: drafting
+status: in_progress
 related_to: DESIGN-2-2
 ```
 As seen above, allow Items to have structured data that can be analyzed and queried.
@@ -98,6 +98,8 @@ As seen above, allow Items to have structured data that can be analyzed and quer
 Data on a given item is provided using a yaml `data` code block.
 
 Data is then saved in the state of the knowledge base, where the item has a field called `"data"`, which contains the object defined from the yaml code block.
+
+By default, at least the 'type' will be added to the data object, but it can be overwritten by a type specified in the code fence.
 
 
 # USECASE-13 Query Items based on `Item.data`
@@ -152,6 +154,23 @@ shelly-docs tui
 
 # USECASE-17 Aggregate Queried Items
 ```yaml (data)
-status: done
+status: in_progress
+related_to: DESIGN-2-2
 ```
-Given a user has queried some items, let them aggregate that data
+Given a user has queried some items, let them aggregate that data.
+
+For example, if the user wants to know how many items are of a certain "status" value.
+
+How about we enable "pipelines", where each part of the query is run in sequence.
+
+```yaml
+# status_query.yaml
+- status: done # gets the items that have a status done
+- $count # then, counts those items
+```
+
+```bash
+# query the items
+shelly-docs items query --query "$(cat status_query.yaml)"
+
+```

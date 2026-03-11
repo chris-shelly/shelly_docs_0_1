@@ -7,7 +7,7 @@ from ruamel.yaml import YAML
 
 from .tui.tui import ShellyDocs
 from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_item_md, delete_item, write_items_to_state
-from .be.crud.query import query_items
+from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
 app = typer.Typer()
@@ -105,6 +105,7 @@ def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'st
     shelly-docs items query --query "status: done"
     shelly-docs items query --query "priority: {$gt: 3}"
     shelly-docs items query --query '$or: [{status: done}, {status: drafting}]'
+    shelly-docs items query --query "$(cat my_query.yaml)"
   """
   kb_path = get_kb_path()
   yaml = YAML()
@@ -113,12 +114,16 @@ def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'st
   except Exception as e:
     print(f"Error parsing query YAML: {e}")
     raise typer.Exit(code=1)
-  if not isinstance(parsed_query, dict):
-    print("Error: query must be a YAML mapping (e.g. 'status: done')")
+  if not ((isinstance(parsed_query, dict)) or (isinstance(parsed_query, list))) :
+    print("Error: query must be a YAML mapping (e.g. 'status: done') or YAML sequence (e.g. '- status: done\n- related_to: DESIGN-2-2')")
     raise typer.Exit(code=1)
   state = get_state(kb_path)
   try:
-    results = query_items(state["items"], parsed_query)
+    if isinstance(parsed_query, dict):
+      results = query_items(state["items"], parsed_query)
+      print("query item")
+    elif isinstance(parsed_query, list):
+      results = query_pipeline(state["items"], parsed_query)
   except ValueError as e:
     print(f"Error: {e}")
     raise typer.Exit(code=1)
