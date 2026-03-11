@@ -149,3 +149,9 @@ Enter the TUI from a CLI Command
 ```bash
 shelly-docs tui
 ```
+
+# USECASE-17 Aggregate Queried Items
+```yaml (data)
+status: done
+```
+Given a user has queried some items, let them aggregate that data
