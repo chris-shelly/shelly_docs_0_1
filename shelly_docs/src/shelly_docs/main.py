@@ -1,7 +1,7 @@
 import typer
 import json
 from pathlib import Path
-#from rich import print
+from rich import print
 from rich.markdown import Markdown
 from ruamel.yaml import YAML
 
@@ -66,6 +66,16 @@ def kb_set(path: str = ""):
     typer.echo(f"Setting default Knowledge Base Path, {DEFAULT_KB_PATH}")
     config_path.write_text(DEFAULT_KB_PATH)
   typer.echo("Knowledge Base Path has been set")
+
+@kb_app.command("get")
+def kb_get():
+  """
+  Get the current knowledge base path setting.
+  """
+  app_dir = typer.get_app_dir(APP_NAME)
+  config_path = Path(app_dir) / "kb_path.txt"
+  typer.echo(config_path.read_text())
+
 @kb_app.command("update")
 def kb_update():
   """
