@@ -55,3 +55,31 @@ class TestQueryPipeline:
     query = [{"status": "done"}, "$count"]
     actual_results = query_pipeline(items, query)
     assert actual_results == 2
+  def test_sum(self):
+    """
+    `$sum` is used to get the sum of a field of a list of items
+    `"$sum: field"`
+    for now, can only be called via pipeline from a list of items
+    """
+    items = {
+      "ABC-1": {"title": "ABC-1 Alpha", "data": {"status": "done", "related_to": "DESIGN-2-2", "story_points": 5}},
+      "ABC-2": {"title": "ABC-2 Beta","data": {"status": "drafting", "story_points": 8}},
+      "ABC-3": {"title": "ABC-3 Charlie","data": {"status": "done", "story_points": 3}}
+    }
+    query = [{"status": "done"}, {"$sum":"story_points"}]
+    actual_results = query_pipeline(items, query)
+    assert actual_results == 8
+  def test_concat(self):
+    """
+    `$concat` is used to concatenate a string from a field of a list of items
+    `"$concat: field"`
+    for now, can only be called via pipeline from a list of items
+    """
+    items = {
+      "ABC-1": {"title": "ABC-1 Alpha", "data": {"status": "done", "related_to": "DESIGN-2-2", "story_points": 5, "trace": "hi"}},
+      "ABC-2": {"title": "ABC-2 Beta","data": {"status": "drafting", "story_points": 8}},
+      "ABC-3": {"title": "ABC-3 Charlie","data": {"status": "done", "story_points": 3, "trace": "there"}}
+    }
+    query = [{"status": "done"}, {"$concat":"trace"}]
+    actual_results = query_pipeline(items, query)
+    assert actual_results == "hithere"

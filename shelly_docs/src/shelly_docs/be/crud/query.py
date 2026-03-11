@@ -14,7 +14,7 @@ def query_pipeline(items: dict, query_pipeline: list[Union[dict, str]]) -> list[
     pipeline_results = query_items(pipeline_results, query)
   return pipeline_results
 
-def query_items(items: dict, query: dict) -> list[dict]:
+def query_items(items: dict, query: Union[dict,str]) -> list[dict]:
   """Filter state items by matching their `data` field against a query.
   Args:
     items: dict of item_key -> item_dict (from state['items'])
@@ -31,12 +31,20 @@ def query_items(items: dict, query: dict) -> list[dict]:
       if match_item(data, query):
         results.append(item)
   elif isinstance(items, list):
-    for item in items:
-      data = item.get("data")
-      if data is None:
-        continue
-      if match_item(data, query):
-        results.append(item)
+    # if items are a list, we can then consider aggregations ($sum, $count)
+    # check if query is an agggregation
+
+    if isinstance(query, str): # ex. "$count"
+      return aggregate_items(items, query)
+    elif isinstance(query, dict) and (any(val in query.keys() for val in ("$sum","$concat"))): # ex. "$sum: field"
+      return aggregate_items(items, query)
+    else:
+      for item in items:
+        data = item.get("data")
+        if data is None:
+          continue
+        if match_item(data, query):
+          results.append(item)
   return results
 
 
@@ -54,6 +62,28 @@ def match_item(data: dict, query: dict) -> bool:
       if not _evaluate_condition(field_value, condition, key in data):
         return False
   return True
+
+def aggregate_items(items: list, query: Union[str, dict]):
+  if isinstance(query, str):
+    if query == "$count":
+      return len(items)
+  elif isinstance(query, dict):
+    # only take the first item
+    query_key, query_field = list(query.items())[0]
+    if query_key == "$sum":
+      result = 0
+      for item in items:
+        item_data = item.get("data",{}).get(query_field)
+        if (item_data is not None) and (isinstance(item_data,(int, float))):
+          result += item_data
+    
+    elif query_key == "$concat":
+      result = ""
+      for item in items:
+        item_data = item.get("data",{}).get(query_field)
+        if (item_data is not None) and (isinstance(item_data,str)):
+          result += item_data
+    return result
 
 
 def _evaluate_condition(field_value, condition, field_exists: bool) -> bool:
