@@ -64,7 +64,7 @@ def get_raw_shelly_docs_items_from_md(md: str, filepath: str):
   token_dict = parse_token_ast(document)
   return parse_token_dict(token_dict, Path(filepath))
 
-def parse_token_dict(token_dict: dict, path: Path) -> list[dict]:
+def parse_token_dict(token_dict: dict, filepath: Path, tags: list[str]) -> list[dict]:
   """
   Take a dict representation of a Markdown AST and return all of the Shelly Doc items
   """
@@ -74,15 +74,28 @@ def parse_token_dict(token_dict: dict, path: Path) -> list[dict]:
   item = {"heading": None, "content": []}
   for child in token_dict['children']:
     if child['type'] == "Heading":
-      # push the last item to the items list
-      if item.get("heading"):
-        item["end_line"] = child["line_number"] - 1
-        items.append(item)
-      item = {"heading": child, "start_line": child["line_number"], "path": str(path), "level": child["level"]}
+      # check the line to make sure it's a valid heading
+      potential_item_title = get_string_section_from_path(filepath, child['line_number'],child['line_number'] + 1)
+      if title_is_valid_item_decl(potential_item_title, tags):
+        # look back and push the last item to the items list
+        if item.get("heading"):
+          item["end_line"] = child["line_number"] - 1
+          items.append(item)
+        item = {"heading": child, "start_line": child["line_number"], "path": str(filepath), "level": child["level"]}
   # add last item at end
   if item.get("heading"):
     items.append(item)
   return items
+
+def title_is_valid_item_decl(potential_title: str, tags: list[str]) -> Union[re.Match, None]:
+  for tag in tags:
+    title_pattern_base = r'^(#{1,6})\s+(ABC-\d+.*)\s*$'
+    title_pattern = title_pattern_base.replace('ABC',tag)
+    match = re.match(title_pattern, potential_title)
+    if match:
+      return match
+  # if haven't matched with a tag, return None
+  return None
 
 def get_raw_shelly_docs_items_from_path(path: Path) -> list[dict]:
   """

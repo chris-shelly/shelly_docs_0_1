@@ -19,18 +19,28 @@ python src/be/crud.py
 python experiment_code/md_parsing/md_parsing.py
 ```
 
-No test framework, linter, or build system is configured yet.
+## Testing
+Use `pytest` for Unit tests of functions. In progress with bulding the tests.
+- `test_crud.py` for 
 
 ## Architecture
 
 ```
-src/main.py          → TUI frontend (Textual app, screens, widgets)
-src/be/config.py     → Reads shellydocs.yaml config from a Knowledge Base directory
-src/be/crud.py       → Markdown parsing (mistletoe) and item extraction
-src/styles.tcss      → Textual CSS for the TUI
+shelly_docs/src/shelly_docs/tui/tui.py          → TUI frontend (Textual app, screens, widgets)
+shelly_docs/src/shelly_docs/tui/styles.tcss          → Textual CSS for the TUI in General
+shelly_docs/src/shelly_docs/tui/knowledge_base_widget.tcss          → Textual CSS for the TUI Knowledge Base Widgets
+shelly_docs/src/shelly_docs/be/shelly_docs/config.py     → Reads shellydocs.yaml config from a Knowledge Base directory
+shelly_docs/src/shelly_docs/be/crud/crud.py       → Creating and Reading Shelly Doc Items
+shelly_docs/src/shelly_docs/be/crud/query.py       → Querying
+shelly_docs/src/shelly_docs/be/crud/shelly_doc_processing.py       → Markdown parsing (mistletoe) and item extraction
+shelly_docs/src/shelly_docs/main.py      → Typer CLI
 ```
 
-**Data flow:** User provides KB path → `config.get_config()` reads `shellydocs.yaml` for item_tags → `crud.get_items()` recursively finds `.md` files, parses each to an AST via mistletoe, and traverses headings matching tag patterns (regex `^(TAG-\d+.*)`) → results displayed in TUI or returned as structured data.
+### Functionality/
+- User provides Knowledge Base path
+- `config.get_config()` reads `shellydocs.yaml` for item_tags, which determines the valid types of Shelly Doc Items to look for in the Knowledge Base
+- `crud.get_items()` recursively finds `.md` files, and processes items parses each to an AST via mistletoe, and traverses headings matching tag patterns (regex `^(TAG-\d+.*)`) 
+- data can be accessed and updated via TUI or returned as structured data via CLI.
 
 **Key backend functions in `crud.py`:**
 - `get_items(path, config)` — entry point: finds docs and extracts all items
@@ -43,15 +53,20 @@ src/styles.tcss      → Textual CSS for the TUI
 ## Key Dependencies
 
 - **textual** — TUI framework
+- **typer** - CLI Framework
 - **mistletoe** — Markdown-to-AST parser
 - **ruamel.yaml** — YAML config parsing
+- **pytest** - Testing
 
 ## Knowledge Base Format
+A Knowledge Base (KB) directory contains:
+- `shellydocs.yaml` config file defining `item_tags` 
+- `.md` files with Items declared via headings (e.g., `## USECASE-1 Title`). Files can be nested within directories. 
+- The `mgmt_docs/` directory is the KB for this project itself.
 
-A Knowledge Base directory contains a `shellydocs.yaml` config file defining `item_tags` and `.md` files with items as headings (e.g., `## USECASE-1 Title`). The `mgmt_docs/` directory is the KB for this project itself.
+After processing Items, a `state.yaml` file is created/updated to reflect the current set of Items in the Knowledge Base.
 
-## Development Notes
+## Item Format
+An Item is a section of a Markdown document, declared with a Markdown heading and Item tag.
 
-- `experiment_code/` contains prototyping/research code, separate from the main app
-- Item content extraction (`get_item()` for full item content) is actively being developed
-- No `requirements.txt` or `pyproject.toml` exists yet — dependencies must be installed manually
+Items can have a 'data' field, which is declared as a codefenced `yaml (data)` block.
