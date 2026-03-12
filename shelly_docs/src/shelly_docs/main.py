@@ -1,5 +1,5 @@
 import typer
-import json
+import json as jsn
 from pathlib import Path
 from rich import print
 from rich.markdown import Markdown
@@ -47,37 +47,47 @@ def tui():
   tui_app.run()
 
 @kb_app.command("set")
-def kb_set(path: str = ""):
+def kb_set(path: str = "", json: bool = True):
   """
   Set a directory to read the knowledge base from.
   """
-  typer.echo("setting Knowledge Base Path")
+  if not json:
+    typer.echo("setting Knowledge Base Path")
   app_dir = typer.get_app_dir(APP_NAME)
   config_path = Path(app_dir) / "kb_path.txt"
   if not config_path.is_file():
-    typer.echo("Knowledge Base Path doesn't exist yet, creating path")
+    if not json:
+      typer.echo("Knowledge Base Path doesn't exist yet, creating path")
     # ensure parent directories exist
     config_path.parent.mkdir(parents=True, exist_ok=True)
   # puts the kb path to the 'kb_path.txt' file
   if path:
-    typer.echo(f"Setting {path} as Knowledge Base Path")
+    if not json:
+      typer.echo(f"Setting {path} as Knowledge Base Path")
     config_path.write_text(path)
   else:
-    typer.echo(f"Setting default Knowledge Base Path, {DEFAULT_KB_PATH}")
+    if not json:
+      typer.echo(f"Setting default Knowledge Base Path, {DEFAULT_KB_PATH}")
     config_path.write_text(DEFAULT_KB_PATH)
-  typer.echo("Knowledge Base Path has been set")
+  if not json:
+    typer.echo("Knowledge Base Path has been set")
+  else:
+    print({"message": "Knowledge Base Path has been set", "kb_path": config_path.read_text()})
+
 
 @kb_app.command("get")
-def kb_get():
+def kb_get(json: bool = True):
   """
   Get the current knowledge base path setting.
   """
-  app_dir = typer.get_app_dir(APP_NAME)
-  config_path = Path(app_dir) / "kb_path.txt"
-  typer.echo(config_path.read_text())
+  kb_path = get_kb_path()
+  if json:
+    print(jsn.dumps({"kb_path": kb_path}))
+  else:
+    typer.echo(kb_path)
 
 @kb_app.command("update")
-def kb_update():
+def kb_update(json: bool = True):
   """
   Update the the state of the Knowledge Base.
 
@@ -85,21 +95,27 @@ def kb_update():
   """
   kb_path = get_kb_path()
   write_items_to_state(kb_path)
-  typer.echo(f"state updated for knowledge base {kb_path}")
+  if json:
+    print(jsn.dumps({ "message": f"state updated for knowledge base {kb_path}"}))
+  else:
+    typer.echo(f"state updated for knowledge base {kb_path}")
   
 @items_app.command("list")
-def items_list(path: str = ""):
+def items_list(path: str = "", json: bool = True):
   """
-  List all Items in a knowledge base in JSON format.
+  List all Items in a knowledge base
   """
   kb_path = get_kb_path()
   items_path = Path(kb_path) / path
-  print(get_items(path=items_path,config=get_config(kb_path)))
+  if json:
+    print(jsn.dumps({"items": get_items(path=items_path,config=get_config(kb_path))}))
+  else:
+    print(get_items(path=items_path,config=get_config(kb_path)))
 
 @items_app.command("query")
-def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'status: done'")):
+def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'status: done'"), json: bool = True):
   """
-  Query Items by their data fields. Uses MongoDB-like query syntax for each query object.
+  Query Items by their data fields. Uses MongoDB-inspired query syntax for each query object.
 
   Can optionally chain a list of queries together as a pipeline
 
@@ -129,18 +145,24 @@ def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'st
   except ValueError as e:
     print(f"Error: {e}")
     raise typer.Exit(code=1)
-  print(json.dumps(results, indent=2, default=str))
+  if json:
+    print(jsn.dumps({"results": results, "query": parsed_query}, indent=2, default=str))
+  else:
+    print(results)
 
 @item_app.command("get")
-def item_get(item_key: str):
+def item_get(item_key: str, json: bool = True):
   """
   Get an Item from the Knowldege Base by it's item key. In JSON format.
   """
   kb_path = get_kb_path()
-  print(get_item(kb_path,item_key))
+  if json:
+    print(jsn.dumps(get_item(kb_path,item_key)))
+  else:
+    print(get_item(kb_path,item_key))
 
 @item_app.command("put")
-def item_put(path: str, markdown: str):
+def item_put(path: str, markdown: str, json: bool = True):
   """
   Put an Item and some markdown
 
@@ -150,16 +172,25 @@ def item_put(path: str, markdown: str):
   kb_path = get_kb_path()
   raw_item = {"filepath": path, "markdown": markdown, "kb_path": kb_path}
   semi_processed_items = convert_new_item_md(raw_item)
+  added_item_keys = []
   for item in semi_processed_items:
     item_key = item['key']
     put_item(kb_path, item_key, item, get_config(kb_path))
-    print("put item:", item_key)
+    added_item_keys.append(item_key)
+  if json:
+    print(jsn.dumps({"added_items": added_item_keys}))
+  else:
+    print(f"added items: {added_item_keys}")
+    
 
 @item_app.command("delete")
-def item_delete(item_key: str):
+def item_delete(item_key: str, json: bool = True):
   """
   Delete an Item from the Knowldege Base by it's Item Key.
   """
   kb_path = get_kb_path()
   delete_item(kb_path, item_key)
-  print(f"{item_key} deleted from Knowledge Base {kb_path}")
+  if json:
+    print(jsn.dumps({"message": f"deleted item {item_key}"}))
+  else:
+    print(f"{item_key} deleted from Knowledge Base {kb_path}")
