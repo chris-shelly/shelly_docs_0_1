@@ -2,3 +2,4 @@ item_tags: # tags to recognize as items
   - USECASE
   - DESIGN
   - ACTOR
+  - PROMPT
