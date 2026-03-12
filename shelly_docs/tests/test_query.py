@@ -1,6 +1,4 @@
 from src.shelly_docs.be.crud.query import match_item
-positive_item_data = {"status": "done"}
-match_item(positive_item_data,{"status":"done"})
 class TestMatchItem:
   def test_positive(self):
     
