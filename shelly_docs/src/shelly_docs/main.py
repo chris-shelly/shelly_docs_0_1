@@ -85,7 +85,7 @@ def kb_update():
   """
   kb_path = get_kb_path()
   write_items_to_state(kb_path)
-  print(f"state updated for knowledge base {kb_path}")
+  typer.echo(f"state updated for knowledge base {kb_path}")
   
 @items_app.command("list")
 def items_list(path: str = ""):
@@ -99,12 +99,15 @@ def items_list(path: str = ""):
 @items_app.command("query")
 def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'status: done'")):
   """
-  Query Items by their data fields. Uses MongoDB-like query syntax.
+  Query Items by their data fields. Uses MongoDB-like query syntax for each query object.
+
+  Can optionally chain a list of queries together as a pipeline
 
   Examples:
     shelly-docs items query --query "status: done"
     shelly-docs items query --query "priority: {$gt: 3}"
     shelly-docs items query --query '$or: [{status: done}, {status: drafting}]'
+    shelly-docs items query --query "- status: done\n - $count"
     shelly-docs items query --query "$(cat my_query.yaml)"
   """
   kb_path = get_kb_path()
@@ -121,7 +124,6 @@ def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'st
   try:
     if isinstance(parsed_query, dict):
       results = query_items(state["items"], parsed_query)
-      print("query item")
     elif isinstance(parsed_query, list):
       results = query_pipeline(state["items"], parsed_query)
   except ValueError as e:
@@ -151,6 +153,7 @@ def item_put(path: str, markdown: str):
   for item in semi_processed_items:
     item_key = item['key']
     put_item(kb_path, item_key, item, get_config(kb_path))
+    print("put item:", item_key)
 
 @item_app.command("delete")
 def item_delete(item_key: str):

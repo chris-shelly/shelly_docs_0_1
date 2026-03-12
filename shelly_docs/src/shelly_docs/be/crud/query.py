@@ -10,7 +10,6 @@ def query_pipeline(items: dict, query_pipeline: list[Union[dict, str]]) -> list[
   """
   pipeline_results = items
   for query in query_pipeline:
-    print("query_pipeline::query", query)
     pipeline_results = query_items(pipeline_results, query)
   return pipeline_results
 
