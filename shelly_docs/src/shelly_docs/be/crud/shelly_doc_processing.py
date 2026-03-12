@@ -56,13 +56,13 @@ def get_item_key(item: dict):
   return title.split(' ')[0]
 
 
-def get_raw_shelly_docs_items_from_md(md: str, filepath: str):
+def get_raw_shelly_docs_items_from_md(md: str, filepath: str, tags: list[str]):
   """
   For parsing new Shelly Doc Items created from the TUI or CLI
   """
   document = parse_md_doc_from_string(md)
   token_dict = parse_token_ast(document)
-  return parse_token_dict(token_dict, Path(filepath))
+  return parse_token_dict(token_dict, Path(filepath), tags)
 
 def parse_token_dict(token_dict: dict, filepath: Path, tags: list[str]) -> list[dict]:
   """
@@ -75,7 +75,7 @@ def parse_token_dict(token_dict: dict, filepath: Path, tags: list[str]) -> list[
   for child in token_dict['children']:
     if child['type'] == "Heading":
       # check the line to make sure it's a valid heading
-      potential_item_title = get_string_section_from_path(filepath, child['line_number'],child['line_number'] + 1)
+      potential_item_title = get_string_section_from_path(filepath, child['line_number'],child['line_number'])
       if title_is_valid_item_decl(potential_item_title, tags):
         # look back and push the last item to the items list
         if item.get("heading"):
@@ -97,7 +97,7 @@ def title_is_valid_item_decl(potential_title: str, tags: list[str]) -> Union[re.
   # if haven't matched with a tag, return None
   return None
 
-def get_raw_shelly_docs_items_from_path(path: Path) -> list[dict]:
+def get_raw_shelly_docs_items_from_path(path: Path, tags: list[str]) -> list[dict]:
   """
   Read the Markdown mistletoe.Document and determine the raw items.
   Provides the 'start' and 'end' lines delineating the Items.
@@ -105,7 +105,7 @@ def get_raw_shelly_docs_items_from_path(path: Path) -> list[dict]:
   document = parse_md_doc_from_path(path)
   # get the token as a dict
   token_dict = parse_token_ast(document)
-  return parse_token_dict(token_dict, path)
+  return parse_token_dict(token_dict, path, tags)
 
 
 def get_item_markdown(item: dict, markdown_string: Union[str, None] = None ):
@@ -216,7 +216,7 @@ def heading_to_anchor(title: str) -> str:
 def process_shelly_docs_items(path: str, config: dict) -> list[dict]:
   """"""
   path = Path(path)
-  items = get_raw_shelly_docs_items_from_path(path)
+  items = get_raw_shelly_docs_items_from_path(path, config['item_tags'])
   processed_items = []
   for item in items:
     item['markdown'] = get_item_markdown(item)
@@ -248,8 +248,8 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
   """
   # determine the new items
   # it's not guaranteed that the new_item_obj is only one item, so we capture this in a list of items called 'raw_new_items'
-  raw_new_items = get_raw_shelly_docs_items_from_md(new_item_obj['markdown'], f"{new_item_obj['kb_path']}/{new_item_obj['filepath']}")
   config = get_config(new_item_obj['kb_path'])
+  raw_new_items = get_raw_shelly_docs_items_from_md(new_item_obj['markdown'], f"{new_item_obj['kb_path']}/{new_item_obj['filepath']}", config['item_tags'])
   # each of these raw_new_items should then
   semi_processed_items = []
   for item in raw_new_items:

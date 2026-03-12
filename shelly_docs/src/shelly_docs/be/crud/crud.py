@@ -246,12 +246,6 @@ def delete_item(path: str, item_key: str):
   state_path = Path(f"{path}/state.yaml")
   yaml.dump(state,state_path)
 
-def heading_to_anchor(title: str) -> str:
-  anchor = title.lower()
-  anchor = re.sub(r'[^\w\s-]', '', anchor)
-  anchor = re.sub(r'\s+', '-', anchor.strip())
-  return anchor
-
 def get_md_docs_in_dir(dir: Path) -> list[Path]:
   docs = []
   for child in dir.iterdir():
