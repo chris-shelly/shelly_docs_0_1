@@ -1,4 +1,4 @@
-# PROMPT-8 Data Querying
+# PROMPT-10 Data Querying
 ## `Role`
 You are a Senior Python Developer with experience making CLI apps that allow users to query data.
 ## `Background`
