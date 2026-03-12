@@ -90,7 +90,7 @@ shelly-docs item delete "item_key"
 
 # USECASE-12 Add Data to Items
 ```yaml (data)
-status: in_progress
+status: done
 related_to: DESIGN-2-2
 ```
 As seen above, allow Items to have structured data that can be analyzed and queried.
@@ -104,7 +104,7 @@ By default, at least the 'type' will be added to the data object, but it can be 
 
 # USECASE-13 Query Items based on `Item.data`
 ```yaml (data)
-status: drafting
+status: done
 ```
 Search for Items based on their `data` field.
 An Item object has data from codefences stored in the 'data' object in the state file.
@@ -154,7 +154,7 @@ shelly-docs tui
 
 # USECASE-17 Aggregate Queried Items
 ```yaml (data)
-status: in_progress
+status: done
 related_to: DESIGN-2-2
 ```
 Given a user has queried some items, let them aggregate that data.

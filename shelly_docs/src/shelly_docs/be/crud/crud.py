@@ -19,7 +19,7 @@ def get_items(path: str, config: dict) -> list[dict]:
     docs = get_md_docs_in_dir(dir)
 
   for doc in docs:
-    items = items + process_shelly_docs_items(doc, config)
+    items = items + process_shelly_docs_items(doc, path, config)
   return items
 
 def write_items_to_state(path: str) -> None:
@@ -75,17 +75,17 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
 
   # Validate key uniqueness across files
   existing_items = get_items(path, config)
-  item_path_resolved = Path(item['path']).resolve()
+  item_path_resolved = (Path(path) / item['path'].split('#')[0]).resolve()
   for existing in existing_items:
     existing_key = existing['title'].split(' ')[0]
-    existing_file_resolved = Path(existing['path'].split('#')[0]).resolve()
+    existing_file_resolved = (Path(path) / existing['path'].split('#')[0]).resolve()
     if existing_key == item_key and existing_file_resolved != item_path_resolved:
       raise ValueError(
         f"Item '{item_key}' already exists in a different file: {existing['path']}"
       )
 
   # Build the new heading + content block
-  target_path = Path(item['path'].split('#')[0]) # split off the md anchor
+  target_path = Path(path) / item['path'].split('#')[0] # split off the md anchor
 
   new_block = f"{item['markdown']}\n"
 
@@ -210,7 +210,7 @@ def delete_item(path: str, item_key: str):
     raise KeyError(f"Item '{item_key}' not found in state")
 
   item = state["items"][item_key]
-  doc_path = Path(item['path'].split('#')[0])
+  doc_path = Path(path) / item['path'].split('#')[0]
 
   if not doc_path.exists():
     raise FileNotFoundError(f"Document not found: {doc_path}")

@@ -106,15 +106,14 @@ class TestGetItem:
 class TestPutItem:
     def test_append_new_item_no_parent(self, kb_with_state, config):
         path = kb_with_state
-        target_file = str(Path(path) / "input_a.md")
         new_item = {
-            "path": target_file,
+            "path": "input_a.md",
             "markdown": "# ABC-99 Brand New\nSome content here.\n",
             "title": "ABC-99 Brand New",
             "parent": None,
         }
         crud.put_item(path, "ABC-99", new_item, config)
-        text = Path(target_file).read_text()
+        text = (Path(path) / "input_a.md").read_text()
         assert "ABC-99 Brand New" in text
         # Verify state updated
         state = crud.get_state(path)
@@ -122,37 +121,34 @@ class TestPutItem:
 
     def test_update_existing_item(self, kb_with_state, config):
         path = kb_with_state
-        target_file = str(Path(path) / "input_a.md")
         updated_item = {
-            "path": target_file,
+            "path": "input_a.md",
             "markdown": "# ABC-1 Alpha Updated\nNew content for ABC-1.\n",
             "title": "ABC-1 Alpha Updated",
             "parent": None,
         }
         crud.put_item(path, "ABC-1", updated_item, config)
-        text = Path(target_file).read_text()
+        text = (Path(path) / "input_a.md").read_text()
         assert "Alpha Updated" in text
         assert "New content for ABC-1." in text
 
     def test_create_new_file(self, kb_with_state, config):
         path = kb_with_state
-        new_file = str(Path(path) / "brand_new.md")
         new_item = {
-            "path": new_file,
+            "path": "brand_new.md",
             "markdown": "# ABC-50 Fresh\nFresh content.\n",
             "title": "ABC-50 Fresh",
             "parent": None,
         }
         crud.put_item(path, "ABC-50", new_item, config)
-        assert Path(new_file).exists()
-        text = Path(new_file).read_text()
+        assert (Path(path) / "brand_new.md").exists()
+        text = (Path(path) / "brand_new.md").read_text()
         assert "ABC-50 Fresh" in text
 
     def test_invalid_tag_raises(self, kb_with_state, config):
         path = kb_with_state
-        target_file = str(Path(path) / "input_a.md")
         bad_item = {
-            "path": target_file,
+            "path": "input_a.md",
             "markdown": "# NOPE-1 Bad Tag\n",
             "title": "NOPE-1 Bad Tag",
             "parent": None,
@@ -163,9 +159,8 @@ class TestPutItem:
     def test_duplicate_key_different_file_raises(self, kb_with_state, config):
         path = kb_with_state
         # ABC-1 exists in input_a.md, try to add it to input_b.md
-        other_file = str(Path(path) / "input_b.md")
         dup_item = {
-            "path": other_file,
+            "path": "input_b.md",
             "markdown": "# ABC-1 Duplicate\nDuplicated.\n",
             "title": "ABC-1 Duplicate",
             "parent": None,
@@ -175,23 +170,21 @@ class TestPutItem:
 
     def test_insert_child_after_parent(self, kb_with_state, config):
         path = kb_with_state
-        target_file = str(Path(path) / "input_a.md")
         child_item = {
-            "path": target_file,
+            "path": "input_a.md",
             "markdown": "## ABC-2-2 New Child\nChild content.\n",
             "title": "ABC-2-2 New Child",
             "parent": "ABC-2",
             "level": 2,
         }
         crud.put_item(path, "ABC-2-2", child_item, config)
-        text = Path(target_file).read_text()
+        text = (Path(path) / "input_a.md").read_text()
         assert "ABC-2-2 New Child" in text
 
     def test_state_updated_after_put(self, kb_with_state, config):
         path = kb_with_state
-        target_file = str(Path(path) / "input_a.md")
         new_item = {
-            "path": target_file,
+            "path": "input_a.md",
             "markdown": "# ABC-77 State Check\nChecking state.\n",
             "title": "ABC-77 State Check",
             "parent": None,
@@ -207,7 +200,7 @@ class TestGetSiblingPositioning:
         # ABC-2-1 is a child of ABC-2; inserting a new ABC-2-2 should find sibling position
         new_item = {
             "parent": "ABC-2",
-            "path": str(Path(kb_with_state) / "input_a.md"),
+            "path": "input_a.md",
             "level": 2,
         }
         pos = crud.get_sibling_positioning(state, new_item)
@@ -219,7 +212,7 @@ class TestGetSiblingPositioning:
         # XYZ-1 has no children, so a new XYZ-1-1 should find no siblings
         new_item = {
             "parent": "XYZ-1",
-            "path": str(Path(kb_with_state) / "input_b.md"),
+            "path": "input_b.md",
             "level": 2,
         }
         pos = crud.get_sibling_positioning(state, new_item)
@@ -249,7 +242,7 @@ class TestDeleteItem:
         # Manually add a fake item pointing to a nonexistent file
         state["items"]["FAKE-1"] = {
             "title": "FAKE-1 Ghost",
-            "path": str(Path(path) / "ghost.md") + "#fake-1-ghost",
+            "path": "ghost.md#fake-1-ghost",
         }
         yaml.dump(state, Path(path) / "state.yaml")
         with pytest.raises(FileNotFoundError):
@@ -261,7 +254,7 @@ class TestDeleteItem:
         # Add a fake item pointing to a real file but with wrong heading
         state["items"]["FAKE-2"] = {
             "title": "FAKE-2 Phantom",
-            "path": str(Path(path) / "input_a.md") + "#fake-2-phantom",
+            "path": "input_a.md#fake-2-phantom",
         }
         yaml.dump(state, Path(path) / "state.yaml")
         with pytest.raises(ValueError, match="not found in"):

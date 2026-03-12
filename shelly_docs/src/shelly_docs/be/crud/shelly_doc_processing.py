@@ -39,8 +39,6 @@ def parse_md_doc_from_path(path: Path) -> Document:
 def parse_md_doc_from_string(md_string: str) -> Document:
   return Document(md_string)
 
-ITEM_TAGS = ["ABC"]
-
 def parse_token_ast(token: Token):
   with ASTRenderer() as renderer:
     rendered = renderer.render(token)
@@ -56,15 +54,15 @@ def get_item_key(item: dict):
   return title.split(' ')[0]
 
 
-def get_raw_shelly_docs_items_from_md(md: str, filepath: str, tags: list[str]):
+def get_raw_shelly_docs_items_from_md(md: str, filepath: str, kb_path: Union[str, Path],  tags: list[str]):
   """
   For parsing new Shelly Doc Items created from the TUI or CLI
   """
   document = parse_md_doc_from_string(md)
   token_dict = parse_token_ast(document)
-  return parse_token_dict(token_dict, Path(filepath), tags)
+  return parse_token_dict(token_dict, Path(filepath), Path(kb_path) , tags)
 
-def parse_token_dict(token_dict: dict, filepath: Path, tags: list[str]) -> list[dict]:
+def parse_token_dict(token_dict: dict, filepath: Path, kb_path: Union[str, Path], tags: list[str]) -> list[dict]:
   """
   Take a dict representation of a Markdown AST and return all of the Shelly Doc items
   """
@@ -75,13 +73,13 @@ def parse_token_dict(token_dict: dict, filepath: Path, tags: list[str]) -> list[
   for child in token_dict['children']:
     if child['type'] == "Heading":
       # check the line to make sure it's a valid heading
-      potential_item_title = get_string_section_from_path(filepath, child['line_number'],child['line_number'])
+      potential_item_title = get_string_section_from_path(kb_path / filepath, child['line_number'],child['line_number'])
       if title_is_valid_item_decl(potential_item_title, tags):
         # look back and push the last item to the items list
         if item.get("heading"):
           item["end_line"] = child["line_number"] - 1
           items.append(item)
-        item = {"heading": child, "start_line": child["line_number"], "path": str(filepath), "level": child["level"]}
+        item = {"heading": child, "start_line": child["line_number"], "path": str(filepath.relative_to(kb_path)), "level": child["level"]}
   # add last item at end
   if item.get("heading"):
     items.append(item)
@@ -97,18 +95,18 @@ def title_is_valid_item_decl(potential_title: str, tags: list[str]) -> Union[re.
   # if haven't matched with a tag, return None
   return None
 
-def get_raw_shelly_docs_items_from_path(path: Path, tags: list[str]) -> list[dict]:
+def get_raw_shelly_docs_items_from_path(filepath: Path, kb_path: Union[str, Path], tags: list[str]) -> list[dict]:
   """
   Read the Markdown mistletoe.Document and determine the raw items.
   Provides the 'start' and 'end' lines delineating the Items.
   """
-  document = parse_md_doc_from_path(path)
+  document = parse_md_doc_from_path(filepath)
   # get the token as a dict
   token_dict = parse_token_ast(document)
-  return parse_token_dict(token_dict, path, tags)
+  return parse_token_dict(token_dict, filepath, kb_path, tags)
 
 
-def get_item_markdown(item: dict, markdown_string: Union[str, None] = None ):
+def get_item_markdown(item: dict, kb_path: Union[Path, str], markdown_string: Union[str, None] = None ):
   start = item.get("start_line")
   end = item.get("end_line")
   if markdown_string:
@@ -116,7 +114,7 @@ def get_item_markdown(item: dict, markdown_string: Union[str, None] = None ):
     return item_markdown
   else:
     path = item.get("path")
-    item_markdown = get_string_section_from_path(path, start, end)
+    item_markdown = get_string_section_from_path(Path(kb_path) / Path(path) , start, end)
     return item_markdown
 
 def get_item_title(item: dict) -> str:
@@ -171,12 +169,15 @@ def get_codefenced_data(item: dict):
   """
   # parse the item to a mistletoe document
   item_document = parse_md_doc_from_string(item['markdown'])
-  # iterate through children of the item, return the data from inside the "yaml (data)" code fence
+  # iterate through children of the item, return the data from inside the first "yaml (data)" code fence
   # assumes that the code fence is a direct child of the Document object
   for child in item_document.children:
     if isinstance(child, CodeFence):
       if child.info_string == "yaml (data)":
-        return yaml.load(child.content)
+        fenced_data = yaml.load(child.content)
+        if isinstance(fenced_data, dict) and (not fenced_data.get("type")): # only overwrites the item type if it doesnt already exist
+          fenced_data["type"] = get_tag_from_title(item['title'])
+        return fenced_data
   
 
 def get_item_parent(item: dict):
@@ -213,13 +214,15 @@ def heading_to_anchor(title: str) -> str:
   anchor = re.sub(r'\s+', '-', anchor.strip())
   return anchor
 
-def process_shelly_docs_items(path: str, config: dict) -> list[dict]:
-  """"""
-  path = Path(path)
-  items = get_raw_shelly_docs_items_from_path(path, config['item_tags'])
+def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: dict) -> list[dict]:
+  """
+  Process the items within a file
+  """
+  filepath = Path(filepath)
+  items = get_raw_shelly_docs_items_from_path(filepath, kb_path,  config['item_tags'])
   processed_items = []
   for item in items:
-    item['markdown'] = get_item_markdown(item)
+    item['markdown'] = get_item_markdown(item, kb_path)
     #print(item['markdown'])
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
@@ -249,11 +252,12 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
   # determine the new items
   # it's not guaranteed that the new_item_obj is only one item, so we capture this in a list of items called 'raw_new_items'
   config = get_config(new_item_obj['kb_path'])
-  raw_new_items = get_raw_shelly_docs_items_from_md(new_item_obj['markdown'], f"{new_item_obj['kb_path']}/{new_item_obj['filepath']}", config['item_tags'])
+  kb_path = Path(new_item_obj['kb_path'])
+  raw_new_items = get_raw_shelly_docs_items_from_md(new_item_obj['markdown'], f"{new_item_obj['kb_path']}/{new_item_obj['filepath']}", new_item_obj['kb_path'], config['item_tags'])
   # each of these raw_new_items should then
   semi_processed_items = []
   for item in raw_new_items:
-    item['markdown'] = get_item_markdown(item, new_item_obj['markdown'])
+    item['markdown'] = get_item_markdown(item, kb_path ,new_item_obj['markdown'])
     #print(item['markdown'])
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
