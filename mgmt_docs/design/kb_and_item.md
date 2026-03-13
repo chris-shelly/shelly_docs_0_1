@@ -50,3 +50,10 @@ type: whatever I want
 By default, the item `type` is retrieved based on the Item Tag of the Item's title/declaration, and then stored within the Item's `data` field so it can be queried.
 
 The user can overide the ``type`` with whatever content they have in the fenced `yaml (data)` code block.
+## DESIGN-2-4 Item Hierarchy - `Item.parent` and Child `Item`s
+```yaml (data)
+status: done
+```
+Items can be nested within eachother in a hierarchy based on their Item Key declarations. For example, this item (DESIGN-2-4) is nested within DESIGN-2, indicated by the extra `-` in the Item Key number.
+
+Within the `state.yaml` of a knowledge base, an `Item` will have a `parent` field indicating the key of its parent `Item`
