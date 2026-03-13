@@ -1,7 +1,10 @@
 # SYSTEM-2 TUI
 ```yaml (data)
+status: done
 relates_to:
   - ACTOR-1
+depends_on:
+  - SYSTEM-3
 ```
 Provides a `textual` TUI for the user to interact with.
 

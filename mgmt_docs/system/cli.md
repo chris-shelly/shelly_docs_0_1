@@ -4,6 +4,8 @@ status: done
 relates_to:
   - ACTOR-1
   - ACTOR-2
+depends_on:
+  - SYSTEM-3
 ```
 Use a `typer` CLI, so that Users can work with docs from the command-line, enabling scripting, and automation with structured output.
 
