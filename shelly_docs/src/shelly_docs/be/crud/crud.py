@@ -141,9 +141,9 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
 
       insert_idx = get_sibling_positioning(state, item)
       #print("lines before insert", lines)
-      if insert_idx: # insert after siblings of the same level
+      if insert_idx >= 0: # insert after siblings of the same level
         lines.insert(insert_idx,new_block)
-      elif insert_idx:
+      elif insert_idx == -1:
         # sibling is at the end of the file
         lines.append(new_block)
       else: # no siblings, insert after parent

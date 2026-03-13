@@ -1,7 +1,7 @@
 items:
   DESIGN-1:
     start_line: 1
-    path: design\item.md#design-1-knowledge-base
+    path: design\kb_and_item.md#design-1-knowledge-base
     level: 1
     end_line: 8
     markdown: "# DESIGN-1 Knowledge Base\n```yaml (data)\nstatus: done\n```\nThe Knowledge
@@ -16,7 +16,7 @@ items:
     parent:
   DESIGN-1-1:
     start_line: 9
-    path: design\item.md#design-1-1-knowledge-base-stateyaml
+    path: design\kb_and_item.md#design-1-1-knowledge-base-stateyaml
     level: 2
     end_line: 21
     markdown: "## DESIGN-1-1 Knowledge Base `state.yaml`\nWithin the Knowledge Base
@@ -31,7 +31,7 @@ items:
     parent: DESIGN-1
   DESIGN-2:
     start_line: 22
-    path: design\item.md#design-2-item
+    path: design\kb_and_item.md#design-2-item
     level: 1
     end_line: 25
     markdown: "# DESIGN-2 `Item`\nAn `Item` is a piece of markdown documentation content
@@ -43,7 +43,7 @@ items:
     parent:
   DESIGN-2-1:
     start_line: 26
-    path: design\item.md#design-2-1-item-example
+    path: design\kb_and_item.md#design-2-1-item-example
     level: 2
     end_line: 38
     markdown: "## DESIGN-2-1 `Item` Example\nFor example,\n```md\n<!-- Item starts
@@ -60,7 +60,7 @@ items:
     parent: DESIGN-2
   DESIGN-2-2:
     start_line: 39
-    path: design\item.md#design-2-2-itemdata
+    path: design\kb_and_item.md#design-2-2-itemdata
     level: 2
     end_line: 44
     markdown: "## DESIGN-2-2 `Item.data`\nAn `Item` can have structured data attached
@@ -74,18 +74,36 @@ items:
     parent: DESIGN-2
   DESIGN-2-3:
     start_line: 45
-    path: design\item.md#design-2-3-itemdatatype
+    path: design\kb_and_item.md#design-2-3-itemdatatype
     level: 2
+    end_line: 52
     markdown: "## DESIGN-2-3 `Item.data.type`\n```yaml (data)\nstatus: done\ntype:
       whatever I want\n```\nBy default, the item `type` is retrieved based on the
-      Item Tag the Item's title/declaration, and then stored within the Item's `data`
-      field so it can be queried.\n\nThe user can overide the ``type`` with whatever
-      content they have in the fenced `yaml (data)` code block."
+      Item Tag of the Item's title/declaration, and then stored within the Item's
+      `data` field so it can be queried.\n\nThe user can overide the ``type`` with
+      whatever content they have in the fenced `yaml (data)` code block.\n"
     title: DESIGN-2-3 `Item.data.type`
     data:
       status: done
       type: whatever I want
     key: DESIGN-2-3
+    parent: DESIGN-2
+  DESIGN-2-4:
+    start_line: 53
+    path: 
+      design\kb_and_item.md#design-2-4-item-hierarchy---itemparent-and-child-items
+    level: 2
+    markdown: "## DESIGN-2-4 Item Hierarchy - `Item.parent` and Child `Item`s\n```yaml
+      (data)\nstatus: done\n```\nItems can be nested within eachother in a hierarchy
+      based on their Item Key declarations. For example, this item (DESIGN-2-4) is
+      nested within DESIGN-2, indicated by the extra `-` in the Item Key number.\n\
+      \nWithin the `state.yaml` of a knowledge base, an `Item` will have a `parent`
+      field indicating the key of its parent `Item`"
+    title: DESIGN-2-4 Item Hierarchy - `Item.parent` and Child `Item`s
+    data:
+      status: done
+      type: DESIGN
+    key: DESIGN-2-4
     parent: DESIGN-2
   PROMPT-11:
     start_line: 1
@@ -424,27 +442,440 @@ items:
     data:
     key: PROMPT-9-2
     parent: PROMPT-9
-  USECASE-77:
+  PROMPT-12:
     start_line: 1
-    path: reqs\new.md#usecase-77-yo-this-is-a-new-item-from-the-tui
-    level: 2
-    end_line: 3
-    markdown: "## USECASE-77 Yo this is a new item from the TUI\nThis is a new item
-      created in the TUI.\n\n"
-    title: USECASE-77 Yo this is a new item from the TUI
+    path: prompts\updated_paths.md#prompt-12-update-stateyaml-paths
+    level: 1
+    markdown: "# PROMPT-12 Update `state.yaml` Paths\n## `Role`\nYou are a Senior
+      Python Engineer with expertise in creating markdown-based dev tools.\n## `Background`\n\
+      We updated the way `Item.path` is calculated, now using relative path from the
+      Knowledge Base, so that absolute paths aren't forcibly stored within the the
+      markdown documents.\nNow we have 6 failing tests in `test_crud.py`\n```\n================
+      short test summary info ================\nFAILED shelly_docs/tests/test_crud.py::TestPutItem::test_update_existing_item
+      - ValueError: Item 'ABC-1' already exists in a differen...\nFAILED shelly_docs/tests/test_crud.py::TestGetSiblingPositioning::test_finds_sibling_end_line
+      - assert None is not None\nFAILED shelly_docs/tests/test_crud.py::TestDeleteItem::test_removes_item_from_file
+      - FileNotFoundError: Document not found: input_a.md\nFAILED shelly_docs/tests/test_crud.py::TestDeleteItem::test_state_updated
+      - FileNotFoundError: Document not found: input_a.md\nFAILED shelly_docs/tests/test_crud.py::TestConvertNewItemMD::test_converts_single_item
+      - KeyError: 'kb_path'\nFAILED shelly_docs/tests/test_crud.py::TestConvertNewItemMD::test_converts_multiple_items
+      - KeyError: 'kb_path'\n============= 6 failed, 34 passed in 0.71s ==============\n\
+      ```\n## `Goal`\nIdentify the root cause of the issue and plan a fix.\n\n## `Root
+      Cause Analysis`\n-`crud.py`\n  - in `put_item()` path resolves against current
+      working directory instead of the directory from within knowledge base\n    -
+      fix by prepending KB path before resolving\n  - in `get_sibling_positioning()`,
+      path is comparing between absolute and relative paths\n    - fix, normalize
+      both paths\n  - in `delete_item()`, Path is checked against the current workign
+      directory\n    - fix by prepending KB Path\n- `shelly_doc_processing.py`\n \
+      \ - ``config['kb_path']`` doesn't exist\n  - use `new_item_obj['kb_path']` instead\n\
+      - tests\n  - tests need updating to pass relative paths, rather than absolute
+      ones.\n\n"
+    title: PROMPT-12 Update `state.yaml` Paths
     data:
-    key: USECASE-77
+    key: PROMPT-12
     parent:
-  USECASE-77-1:
-    start_line: 4
-    path: reqs\new.md#usecase-77-1-child-item-being-added
-    level: 3
-    markdown: "### USECASE-77-1 Child Item being added\nThis is a child item being
-      edited via TUI. baby\n"
-    title: USECASE-77-1 Child Item being added
+  SYSTEM-3:
+    start_line: 1
+    path: system\be.md#system-3-backend-be
+    level: 1
+    end_line: 4
+    markdown: "# SYSTEM-3 Backend (`be/`)\n```yaml (data)\nstatus: done\n```\n"
+    title: SYSTEM-3 Backend (`be/`)
     data:
-    key: USECASE-77-1
-    parent: USECASE-77
+      status: done
+      type: SYSTEM
+    key: SYSTEM-3
+    parent:
+  SYSTEM-3-1:
+    start_line: 5
+    path: system\be.md#system-3-1-crud-crudcrudpy
+    level: 2
+    end_line: 10
+    markdown: "## SYSTEM-3-1 CRUD (`crud/crud.py`)\n```yaml (data)\ndepends_on:\n\
+      \  - SYSTEM-3-3\n```\nModule for making updates to items and keeping the state
+      updated.\n"
+    title: SYSTEM-3-1 CRUD (`crud/crud.py`)
+    data:
+      depends_on:
+      - SYSTEM-3-3
+      type: SYSTEM
+    key: SYSTEM-3-1
+    parent: SYSTEM-3
+  SYSTEM-3-1-1:
+    start_line: 11
+    path: system\be.md#system-3-1-1-get_items
+    level: 3
+    end_line: 12
+    markdown: "### SYSTEM-3-1-1 `get_items()`\nGet a List of items\n"
+    title: SYSTEM-3-1-1 `get_items()`
+    data:
+    key: SYSTEM-3-1-1
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-2:
+    start_line: 13
+    path: system\be.md#system-3-1-2-write_items_to_state
+    level: 3
+    end_line: 18
+    markdown: "### SYSTEM-3-1-2 `write_items_to_state()`\n```yaml (data)\ndepends_on:\n\
+      \  - SYSTEM-3-1-1\n```\nGet the Items and then write the updates to `state.yaml`\n"
+    title: SYSTEM-3-1-2 `write_items_to_state()`
+    data:
+      depends_on:
+      - SYSTEM-3-1-1
+      type: SYSTEM
+    key: SYSTEM-3-1-2
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-3:
+    start_line: 19
+    path: system\be.md#system-3-1-3-get_state
+    level: 3
+    end_line: 20
+    markdown: "### SYSTEM-3-1-3 `get_state()`\nRead the state file to get a python
+      dict of the item state\n"
+    title: SYSTEM-3-1-3 `get_state()`
+    data:
+    key: SYSTEM-3-1-3
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-4:
+    start_line: 21
+    path: system\be.md#system-3-1-4-get_item
+    level: 3
+    end_line: 26
+    markdown: "### SYSTEM-3-1-4 `get_item()`\n```yaml (data)\ndepends_on:\n  - SYSTEM-3-1-4\n\
+      ```\n\n"
+    title: SYSTEM-3-1-4 `get_item()`
+    data:
+      depends_on:
+      - SYSTEM-3-1-4
+      type: SYSTEM
+    key: SYSTEM-3-1-4
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-5:
+    start_line: 27
+    path: system\be.md#system-3-1-5-put_item
+    level: 3
+    end_line: 35
+    markdown: "### SYSTEM-3-1-5 `put_item()`\n```yaml (data)\ndepends_on:\n  - SYSTEM-3-1-3\n\
+      \  - SYSTEM-3-1-1\n  - SYSTEM-3-1-6\n```\nCreate or Update Items, intended to
+      be idempotent.\n\n"
+    title: SYSTEM-3-1-5 `put_item()`
+    data:
+      depends_on:
+      - SYSTEM-3-1-3
+      - SYSTEM-3-1-1
+      - SYSTEM-3-1-6
+      type: SYSTEM
+    key: SYSTEM-3-1-5
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-6:
+    start_line: 36
+    path: system\be.md#system-3-1-6-get_sibling_positioning
+    level: 3
+    end_line: 38
+    markdown: "### SYSTEM-3-1-6 `get_sibling_positioning()`\nDetermine where exactly
+      to put an it\n\n"
+    title: SYSTEM-3-1-6 `get_sibling_positioning()`
+    data:
+    key: SYSTEM-3-1-6
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-7:
+    start_line: 39
+    path: system\be.md#system-3-1-7-delete_item
+    level: 3
+    end_line: 41
+    markdown: "### SYSTEM-3-1-7 `delete_item()`\nDelete a given item from the markdown
+      docs and state\n\n"
+    title: SYSTEM-3-1-7 `delete_item()`
+    data:
+    key: SYSTEM-3-1-7
+    parent: SYSTEM-3-1
+  SYSTEM-3-1-8:
+    start_line: 42
+    path: system\be.md#system-3-1-8-get_md_docs_in_dir
+    level: 3
+    end_line: 45
+    markdown: "### SYSTEM-3-1-8 `get_md_docs_in_dir()`\nRecursively detect Markdown
+      DOcuments to check for `Item`s\n\n\n"
+    title: SYSTEM-3-1-8 `get_md_docs_in_dir()`
+    data:
+    key: SYSTEM-3-1-8
+    parent: SYSTEM-3-1
+  SYSTEM-3-2:
+    start_line: 46
+    path: system\be.md#system-3-2-query-crudquerypy
+    level: 2
+    end_line: 48
+    markdown: "## SYSTEM-3-2 Query (`crud/query.py`)\nQuery Engine/Module for filtering
+      and/or aggregating `Item`s by their `data` field.\n\n"
+    title: SYSTEM-3-2 Query (`crud/query.py`)
+    data:
+    key: SYSTEM-3-2
+    parent: SYSTEM-3
+  SYSTEM-3-2-1:
+    start_line: 49
+    path: system\be.md#system-3-2-1-query_items
+    level: 3
+    end_line: 56
+    markdown: "### SYSTEM-3-2-1 `query_items()`\n```yaml (data)\ndepends_on:\n  -
+      SYSTEM-3-2-3\n  - SYSTEM-3-2-4\n```\nApply a query step to the items against
+      their `data` field.\n\n"
+    title: SYSTEM-3-2-1 `query_items()`
+    data:
+      depends_on:
+      - SYSTEM-3-2-3
+      - SYSTEM-3-2-4
+      type: SYSTEM
+    key: SYSTEM-3-2-1
+    parent: SYSTEM-3-2
+  SYSTEM-3-2-2:
+    start_line: 57
+    path: system\be.md#system-3-2-2-query_pipeline
+    level: 3
+    end_line: 63
+    markdown: "### SYSTEM-3-2-2 `query_pipeline()`\n```yaml (data)\ndepends_on:\n\
+      \  - SYSTEM-3-2-1\n```\nEvaluate a list (AKA YAML sequence, AKA JSON array)
+      of queries on the Items based on the order the query steps are declared.\n\n"
+    title: SYSTEM-3-2-2 `query_pipeline()`
+    data:
+      depends_on:
+      - SYSTEM-3-2-1
+      type: SYSTEM
+    key: SYSTEM-3-2-2
+    parent: SYSTEM-3-2
+  SYSTEM-3-2-3:
+    start_line: 64
+    path: system\be.md#system-3-2-3-match_item
+    level: 3
+    end_line: 74
+    markdown: "### SYSTEM-3-2-3 `match_item()`\nEvaluates Logical Conditions to filter
+      Items\n\nImportant Query logical keywords:\n- `$ne`\n- `$gt`\n- `$gte`\n- `$lt`\n\
+      - `$lte`\n- `$in`\n\n"
+    title: SYSTEM-3-2-3 `match_item()`
+    data:
+    key: SYSTEM-3-2-3
+    parent: SYSTEM-3-2
+  SYSTEM-3-2-4:
+    start_line: 75
+    path: system\be.md#system-3-2-4-aggregate_items
+    level: 3
+    end_line: 81
+    markdown: "### SYSTEM-3-2-4 `aggregate_items()`\nEvaluates a list of Items to
+      return a scalar result.\n\nImportant Query aggregating keywords:\n- `$count`\n\
+      - `$sum`\n- `$concat`\n"
+    title: SYSTEM-3-2-4 `aggregate_items()`
+    data:
+    key: SYSTEM-3-2-4
+    parent: SYSTEM-3-2
+  SYSTEM-3-3:
+    start_line: 82
+    path: system\be.md#system-3-3-docs-processing-crudshelly_doc_processingpy
+    level: 2
+    end_line: 82
+    markdown: "## SYSTEM-3-3 Docs Processing (`crud/shelly_doc_processing.py`)\n"
+    title: SYSTEM-3-3 Docs Processing (`crud/shelly_doc_processing.py`)
+    data:
+    key: SYSTEM-3-3
+    parent: SYSTEM-3
+  SYSTEM-3-3-1:
+    start_line: 83
+    path: system\be.md#system-3-3-1-process_shelly_docs_items
+    level: 3
+    end_line: 88
+    markdown: "### SYSTEM-3-3-1 `process_shelly_docs_items()`\n```yaml (data)\nsubject_to_future_refactor:
+      true\n```\nGiven a file path process the `Item`s within a file.\n\n"
+    title: SYSTEM-3-3-1 `process_shelly_docs_items()`
+    data:
+      subject_to_future_refactor: true
+      type: SYSTEM
+    key: SYSTEM-3-3-1
+    parent: SYSTEM-3-3
+  SYSTEM-3-3-2:
+    start_line: 89
+    path: 
+      system\be.md#system-3-3-2-prep_new_shelly_doc_items_from_document_update
+    level: 3
+    end_line: 98
+    markdown: "### SYSTEM-3-3-2 `prep_new_shelly_doc_items_from_document_update()`\n\
+      ```yaml (data)\nrelated_to:\n  - SYSTEM-3-3-1\nsubject_to_future_refactor: true\n\
+      ```\nUsed to convert a New Item object, which holds a kb path, filepath, and
+      the raw markdown, into fully processable items.\n\n\n\n"
+    title: SYSTEM-3-3-2 `prep_new_shelly_doc_items_from_document_update()`
+    data:
+      related_to:
+      - SYSTEM-3-3-1
+      subject_to_future_refactor: true
+      type: SYSTEM
+    key: SYSTEM-3-3-2
+    parent: SYSTEM-3-3
+  SYSTEM-3-4:
+    start_line: 99
+    path: system\be.md#system-3-4
+    level: 2
+    markdown: '## SYSTEM-3-4'
+    title: SYSTEM-3-4
+    data:
+    key: SYSTEM-3-4
+    parent: SYSTEM-3
+  SYSTEM-1:
+    start_line: 1
+    path: system\cli.md#system-1-shelly-docs-cli
+    level: 1
+    end_line: 11
+    markdown: "# SYSTEM-1 `shelly-docs` CLI\n```yaml (data)\nstatus: done\nrelates_to:\n\
+      \  - ACTOR-1\n  - ACTOR-2\ndepends_on:\n  - SYSTEM-3\n```\nUse a `typer` CLI,
+      so that Users can work with docs from the command-line, enabling scripting,
+      and automation with structured output.\n\n"
+    title: SYSTEM-1 `shelly-docs` CLI
+    data:
+      status: done
+      relates_to:
+      - ACTOR-1
+      - ACTOR-2
+      depends_on:
+      - SYSTEM-3
+      type: SYSTEM
+    key: SYSTEM-1
+    parent:
+  SYSTEM-1-1:
+    start_line: 12
+    path: system\cli.md#system-1-1-shelly-docs-kb
+    level: 2
+    end_line: 19
+    markdown: "## SYSTEM-1-1 `shelly-docs kb`\n```yaml (data)\nstatus: done\n```\n\
+      For working with the Knowledge Base\n- Setting the Knowledge Base Path (`kb
+      set`)\n- Getting the current Knowledge Base Path (`kb get`)\n- Updating the
+      state of the Knowledge base (`kb update`)\n"
+    title: SYSTEM-1-1 `shelly-docs kb`
+    data:
+      status: done
+      type: SYSTEM
+    key: SYSTEM-1-1
+    parent: SYSTEM-1
+  SYSTEM-1-2:
+    start_line: 20
+    path: system\cli.md#system-1-2-shelly-docs-items
+    level: 2
+    end_line: 26
+    markdown: "## SYSTEM-1-2 `shelly-docs items`\n```yaml (data)\nstatus: done\n```\n\
+      For viewing Data of multiple items\n- Getting a List of All items (`items list`)\n\
+      - Querying the items (`items query`)\n"
+    title: SYSTEM-1-2 `shelly-docs items`
+    data:
+      status: done
+      type: SYSTEM
+    key: SYSTEM-1-2
+    parent: SYSTEM-1
+  SYSTEM-1-2-1:
+    start_line: 27
+    path: system\cli.md#system-1-2-1-items-query
+    level: 3
+    end_line: 63
+    markdown: "### SYSTEM-1-2-1 `items query`\n```yaml (data)\nstatus: done\n```\n\
+      Recall from DESIGN-2-1 that each item has a data field for saving structured
+      data.\n\nWe can query the items based on that structure data with `shelly-docs
+      items query` with a Mongo-DB inspired syntax, written as YAML (and therefore,
+      also can work as JSON).\n\nCan query the Knowledge base for values of certain
+      types\n```yaml\n# get the items with 'status: done'\nstatus: done\n```\n\n\n\
+      Keywords are prefixed with a `$` symbol.\n```yaml\n# non_done_items.yaml\n#
+      get the items with a 'status' field that is not equal to done.\nstatus:\n  $ne:
+      done\n```\n\nThen we can reference a file to actually run ths query from YAML.\n\
+      ```bash\nshelly-docs items query --query \"$(cat non_done_items.yaml)\"\n```\n\
+      \nCan make individual queries (a mapping) or can make query pipelines ( a sequence).\n\
+      \nAggregations are kinds of keywords used to get scalar results (number or string).\n\
+      \nAggregation Keywords include:\n- `$count`\n- `$sum`\n- `$concat`\n\n"
+    title: SYSTEM-1-2-1 `items query`
+    data:
+      status: done
+      type: SYSTEM
+    key: SYSTEM-1-2-1
+    parent: SYSTEM-1-2
+  SYSTEM-1-3:
+    start_line: 64
+    path: system\cli.md#system-1-3-shelly-docs-item
+    level: 2
+    markdown: "## SYSTEM-1-3 `shelly-docs item`\nFor working with a specific item,
+      given its item key\n- get an item (`item get`)\n- put an item (`item put`)\n\
+      \  - Still recommended to write files directly, but can write them programmatically.\n\
+      - delete an item (`item delete`)\n"
+    title: SYSTEM-1-3 `shelly-docs item`
+    data:
+    key: SYSTEM-1-3
+    parent: SYSTEM-1
+  SYSTEM-2:
+    start_line: 1
+    path: system\tui.md#system-2-tui
+    level: 1
+    end_line: 14
+    markdown: "# SYSTEM-2 TUI\n```yaml (data)\nstatus: done\nrelates_to:\n  - ACTOR-1\n\
+      depends_on:\n  - SYSTEM-3\n```\nProvides a `textual` TUI for the user to interact
+      with.\n\nPrimarily intended for HUmans, since Agents will be more efficient
+      interacting with Shelly Docs via the CLI (`shelly-docs`)\n\nAllows user to view
+      and edit the items in the knowledge base.\n\n"
+    title: SYSTEM-2 TUI
+    data:
+      status: done
+      relates_to:
+      - ACTOR-1
+      depends_on:
+      - SYSTEM-3
+      type: SYSTEM
+    key: SYSTEM-2
+    parent:
+  SYSTEM-2-1:
+    start_line: 15
+    path: system\tui.md#system-2-1-home-screen
+    level: 2
+    end_line: 17
+    markdown: "## SYSTEM-2-1 Home Screen\nLets the user specify a Knowledge Base Path
+      to open the app with respect to.\n\n"
+    title: SYSTEM-2-1 Home Screen
+    data:
+    key: SYSTEM-2-1
+    parent: SYSTEM-2
+  SYSTEM-2-2:
+    start_line: 18
+    path: system\tui.md#system-2-2-knowledge-base-screen
+    level: 2
+    end_line: 20
+    markdown: "## SYSTEM-2-2 Knowledge Base Screen\nLets the user view their Items
+      in the Knowledge Base, see the current config of the Knowledge Base, as well
+      as select items to update/delete, or create New Items.\n\n"
+    title: SYSTEM-2-2 Knowledge Base Screen
+    data:
+    key: SYSTEM-2-2
+    parent: SYSTEM-2
+  SYSTEM-2-3:
+    start_line: 21
+    path: system\tui.md#system-2-3-create-new-item-screen
+    level: 2
+    end_line: 23
+    markdown: "## SYSTEM-2-3 Create New Item Screen\nLets user write A new item with
+      a basic markdown editor and specify a filepath to locate the item. \n- if the
+      path is an existing file, then SHelly DOcs tries to place it in order amongst
+      its siblings.\n"
+    title: SYSTEM-2-3 Create New Item Screen
+    data:
+    key: SYSTEM-2-3
+    parent: SYSTEM-2
+  SYSTEM-2-4:
+    start_line: 24
+    path: system\tui.md#system-2-4-delete-item-screen
+    level: 2
+    end_line: 25
+    markdown: "## SYSTEM-2-4 Delete Item Screen\nGives the User a confirmation screen
+      asking them to confirm if they want to delete an item.\n"
+    title: SYSTEM-2-4 Delete Item Screen
+    data:
+    key: SYSTEM-2-4
+    parent: SYSTEM-2
+  SYSTEM-2-5:
+    start_line: 26
+    path: system\tui.md#system-2-5-update-item-screen
+    level: 2
+    markdown: "## SYSTEM-2-5 Update Item Screen\nGives the User a basic markdown editor
+      to update the contents of a specific item.\n"
+    title: SYSTEM-2-5 Update Item Screen
+    data:
+    key: SYSTEM-2-5
+    parent: SYSTEM-2
   ACTOR-1:
     start_line: 1
     path: use_cases\actors.md#actor-1-human
