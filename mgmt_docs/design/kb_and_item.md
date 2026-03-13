@@ -47,6 +47,6 @@ This data can later be queried from the `state.yaml` to provide information to t
 status: done
 type: whatever I want
 ```
-By default, the item `type` is retrieved based on the Item Tag the Item's title/declaration, and then stored within the Item's `data` field so it can be queried.
+By default, the item `type` is retrieved based on the Item Tag of the Item's title/declaration, and then stored within the Item's `data` field so it can be queried.
 
 The user can overide the ``type`` with whatever content they have in the fenced `yaml (data)` code block.

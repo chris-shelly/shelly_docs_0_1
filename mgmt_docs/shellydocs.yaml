@@ -1,5 +1,6 @@
 item_tags: # tags to recognize as items
-  - USECASE
-  - DESIGN
-  - ACTOR
-  - PROMPT
+  - USECASE # Features/requirements from a user's perspective
+  - ACTOR # intended types of users for different USECASEs 
+  - DESIGN # High Level system functionality
+  - PROMPT # prompts made to coding assistant
+  - SYSTEM # Medium to low-level details on system components and architecture
