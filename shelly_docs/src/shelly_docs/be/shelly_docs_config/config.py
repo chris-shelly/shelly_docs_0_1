@@ -9,10 +9,15 @@ def get_config(path: str):
   # that yaml file provides
     # the path to read from to search for docs
     # the title tags
-  #print(f"--- get_config()")
   if path[-1] == '/':
     path = path[:-1]
   elif path[-1] == '\\':
     path = path[:-1]
-  shelly_docs_config = yaml.load(Path(path + "/shellydocs.yaml").read_text())
+  config_path = Path(path + "/shellydocs.yaml")
+  try:
+    shelly_docs_config = yaml.load(config_path.read_text())
+  except FileNotFoundError:
+    raise FileNotFoundError(f"shellydocs.yaml not found at '{config_path}'. Is this a valid Knowledge Base directory?")
+  except Exception as e:
+    raise ValueError(f"Failed to parse shellydocs.yaml at '{config_path}': {e}")
   return shelly_docs_config

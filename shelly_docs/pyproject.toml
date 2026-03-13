@@ -1,7 +1,7 @@
 [project]
 name = "shelly-docs"
 version = "0.1.0"
-description = "Add your description here"
+description = "A TUI/CLI Knowledge Management application that extracts structured documentation items from Markdown"
 readme = "README.md"
 authors = [
     { name = "Chris Shella II", email = "christophershella2@gmail.com" }
@@ -12,8 +12,10 @@ dependencies = [
     "ruamel-yaml>=0.19.1",
     "textual>=8.0.2",
     "typer>=0.24.1",
-    "pytest>=9.0.2",
 ]
+
+[dependency-groups]
+dev = ["pytest>=9.0.2"]
 
 [project.scripts]
 shelly-docs = "shelly_docs.main:app"

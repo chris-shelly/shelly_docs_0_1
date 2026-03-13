@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+experiment_code/python_cli/venv/
+mgmt_docs/state.yaml

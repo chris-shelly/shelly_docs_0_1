@@ -2,8 +2,6 @@ from pathlib import Path
 import re
 import json
 from ruamel.yaml import YAML
-from rich import print
-
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from ..shelly_docs_config.config import get_config
@@ -134,13 +132,10 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
     parent = state_items.get(item['parent'])
     # if parent exists in the target path, write to the parent
     if parent:
-      print("parent exists")
       # insert the child item after the parent item, after all existing sibling items
-      print("parent", parent)
       # check the state for siblings
 
       insert_idx = get_sibling_positioning(state, item)
-      #print("lines before insert", lines)
       if insert_idx >= 0: # insert after siblings of the same level
         lines.insert(insert_idx,new_block)
       elif insert_idx == -1:
@@ -149,7 +144,6 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
       else: # no siblings, insert after parent
         lines.insert(parent['end_line'],new_block)
         
-      #print("lines after insert", lines)
 
       target_path.write_text(''.join(lines))
       
@@ -177,8 +171,6 @@ def get_sibling_positioning(state: dict, item: str) -> int:
       # check if sibling item has the same path as the current item
       family_member_item_path: str = family_member_item['path'].split('#')[0]
       family_member_item_level: int = family_member_item['level']
-      print("family_member_item", family_member_item)
-      print("item", item)
       if (family_member_item_path == destination_path) and (family_member_item_level == item['level']):
         # check if the sibling has an end_line
         # if so, insert position is the sibling's end line
@@ -189,8 +181,7 @@ def get_sibling_positioning(state: dict, item: str) -> int:
             insert_position = sibling_end_line
         else:
           insert_position = -1
-      
-  print("insert position", insert_position)
+
   return insert_position
 
 def delete_item(path: str, item_key: str):

@@ -7,8 +7,6 @@ import json
 from ruamel.yaml import YAML
 from typing import Union
 
-from rich import print
-
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from mistletoe.block_token import CodeFence
@@ -223,7 +221,6 @@ def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: 
   processed_items = []
   for item in items:
     item['markdown'] = get_item_markdown(item, kb_path)
-    #print(item['markdown'])
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
@@ -258,7 +255,6 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
   semi_processed_items = []
   for item in raw_new_items:
     item['markdown'] = get_item_markdown(item, kb_path ,new_item_obj['markdown'])
-    #print(item['markdown'])
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
@@ -271,8 +267,6 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
       semi_processed_items.append(item)
 
   # recall that 'start' and 'end' are only for that snippet, and none of the items have actually been added to a file yet
-  # for each of the semi processed items, we check where their parent is, and
-  print(semi_processed_items)
   return semi_processed_items
   
 
