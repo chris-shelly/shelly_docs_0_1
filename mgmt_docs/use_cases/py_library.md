@@ -11,4 +11,8 @@ Make a `shelly_docs` Python library so people can programmatically work with ite
 ## USECASE-18-2 `Item`
 ### USECASE-18-2-1 Read `Item.data`
 ### USECASE-18-2-2 Read `Item.content`
-### USECASE
+
+## USECASE-18-3 Bruh
+```yaml (data)
+status: todo
+```

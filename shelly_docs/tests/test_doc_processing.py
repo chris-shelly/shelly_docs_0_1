@@ -18,7 +18,7 @@ class TestGetItemContent:
       "parent": None
     }
     content = sdp.get_item_content(item)
-    expected ="Enter the TUI from a CLI Command\n\n\n```bash\nshelly-docs tui\n```\n"
+    expected ="Enter the TUI from a CLI Command\n\n\n```bash\nshelly-docs tui\n```"
     assert content == expected
   def test_item_with_no_data_block(self):
     item = {
@@ -33,5 +33,23 @@ class TestGetItemContent:
       "parent": "SYSTEM-3-2"
     }
     content = sdp.get_item_content(item)
-    expected = "Evaluates Logical Conditions to filter Items\n\nImportant Query logical keywords:\n- `$ne`\n-`$gt`\n- `$gte`\n- `$lt`\n- `$lte`\n- `$in`\n"
+    expected = "Evaluates Logical Conditions to filter Items\n\nImportant Query logical keywords:\n- `$ne`\n-`$gt`\n- `$gte`\n- `$lt`\n- `$lte`\n- `$in`"
+    assert content == expected
+  def test_item_with_only_data_block(self):
+    item = {
+      "start_line": 15,
+      "path": "use_cases\\py_library.md#usecase-18-3-bruh",
+      "level": 2,
+      "markdown": "## USECASE-18-3 Bruh\n```yaml (data)\nstatus: todo\n```",
+      "title": "USECASE-18-3 Bruh",
+      "data": {
+        "status": "todo",
+        "type": "USECASE"
+      },
+      "content": "",
+      "key": "USECASE-18-3",
+      "parent": "USECASE-18"
+    }
+    content = sdp.get_item_content(item)
+    expected = ""
     assert content == expected

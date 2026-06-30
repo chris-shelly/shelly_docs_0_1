@@ -179,7 +179,6 @@ def get_codefenced_data(item: dict):
 
 # needed to separate content 
 def get_item_content(item: dict):
-  print("--get_item_content()--")
   # parse the item to a mistletoe document
   item_document = parse_md_doc_from_string(item['markdown'])
   # iterate through children of the item, returning all content aside from the codefenced data
@@ -201,14 +200,17 @@ def get_item_content(item: dict):
       #print("data block ended at line_number:", child.line_number)
       data_block_end_line = child.line_number
       break
-  if data_block_start_line is None:
+  if (data_block_start_line is None):
     # no data block, so the content is everything after the first line (content excludes the item tag)
     content_lines = item['markdown'].splitlines()[1:]
-    content = '\n'.join(content_lines)
+    content = '\n'.join(content_lines).strip()
+  elif (data_block_end_line is None):
+    content_lines  = item['markdown'].splitlines()[1:(data_block_start_line - 1)]
+    content = '\n'.join(content_lines).strip()
   else:
     content_lines = item['markdown'].splitlines()[1:(data_block_start_line - 1)] + item['markdown'].splitlines()[(data_block_end_line - 1):]
     #print("---content_lines---", content_lines)
-    content = '\n'.join(content_lines)
+    content = '\n'.join(content_lines).strip()
   return content
 
 def get_item_parent(item: dict):
@@ -259,6 +261,7 @@ def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: 
     if get_tag_from_title(item['title']) in config['item_tags']:
       
       item['data'] = get_codefenced_data(item)
+      item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)
       item['parent'] = get_item_parent(item)
       item['path'] += "#" + heading_to_anchor(item['title'])
@@ -292,6 +295,7 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
       item['data'] = get_codefenced_data(item)
+      item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)
       item['parent'] = get_item_parent(item)
       item['path'] += "#" + heading_to_anchor(item['title'])
