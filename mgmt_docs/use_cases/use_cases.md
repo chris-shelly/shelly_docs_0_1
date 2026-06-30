@@ -104,7 +104,7 @@ By default, at least the 'type' will be added to the data object, but it can be 
 
 # USECASE-13 Query Items based on `Item.data`
 ```yaml (data)
-status: done
+status: in_progress
 ```
 Search for Items based on their `data` field.
 An Item object has data from codefences stored in the 'data' object in the state file.
@@ -127,6 +127,27 @@ $or:
   - status: drafting
   - winner: true
 ```
+
+## USECASE-13-1 Querying Item Collections
+```yaml (data)
+status: in_progress
+```
+We allow searching for values in an array
+When a query criteria applies to an array, it needs to check for the value.
+
+```yaml
+# example data item
+days: # days array
+- DAY-19
+- DAY-20
+- DAY-21
+```
+
+```yaml
+# query to get items that have 'DAY-20' in their 'days' array
+days: DAY-20 
+```
+
 
 # USECASE-14 Semantic Search for Items
 ```yaml (data)

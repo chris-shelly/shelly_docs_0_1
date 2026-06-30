@@ -105,6 +105,18 @@ items:
       type: DESIGN
     key: DESIGN-2-4
     parent: DESIGN-2
+  PROCESS-1:
+    start_line: 1
+    path: 
+      dev_processes\local_env_install_and_testing.md#process-1-running-the-env-version-of-shelly-docs
+    level: 1
+    markdown: "# PROCESS-1 Running the `env` version of `shelly-docs`\nFirst, make
+      sure you have the venv activated\n```bash\nsource .venv/Scripts/activate\n```\n\
+      \nThen, update the version in the pyproject.toml"
+    title: PROCESS-1 Running the `env` version of `shelly-docs`
+    data:
+    key: PROCESS-1
+    parent:
   PROMPT-11:
     start_line: 1
     path: 
@@ -1077,25 +1089,42 @@ items:
     level: 1
     end_line: 130
     markdown: "# USECASE-13 Query Items based on `Item.data`\n```yaml (data)\nstatus:
-      done\n```\nSearch for Items based on their `data` field.\nAn Item object has
-      data from codefences stored in the 'data' object in the state file.\n\nWe can
-      then query that data from the state file by iterating through the items and
-      checking logical conditions\n\nA query can be formatted with mongodb-like objects\n\
-      ```yaml\n# format\n<field>: <query_obj> # scalar for a single value, or a mapping
-      for checking several conditions\n\n# query for status of done\nstatus: done\n\
-      # ...\n# query conditionals\npoints:\n  $gte: 3\n  $lte: 8\n$or:\n  - status:
-      drafting\n  - winner: true\n```\n\n"
+      in_progress\n```\nSearch for Items based on their `data` field.\nAn Item object
+      has data from codefences stored in the 'data' object in the state file.\n\n\
+      We can then query that data from the state file by iterating through the items
+      and checking logical conditions\n\nA query can be formatted with mongodb-like
+      objects\n```yaml\n# format\n<field>: <query_obj> # scalar for a single value,
+      or a mapping for checking several conditions\n\n# query for status of done\n\
+      status: done\n# ...\n# query conditionals\npoints:\n  $gte: 3\n  $lte: 8\n$or:\n\
+      \  - status: drafting\n  - winner: true\n```\n\n"
     title: USECASE-13 Query Items based on `Item.data`
     data:
-      status: done
+      status: in_progress
       type: USECASE
     key: USECASE-13
     parent:
-  USECASE-14:
+  USECASE-13-1:
     start_line: 131
+    path: use_cases\use_cases.md#usecase-13-1-querying-item-collections
+    level: 2
+    end_line: 151
+    markdown: "## USECASE-13-1 Querying Item Collections\n```yaml (data)\nstatus:
+      in_progress\n```\nWe allow searching for values in an array\nWhen a query criteria
+      applies to an array, it needs to check for the value.\n\n```yaml\n# example
+      data item\ndays: # days array\n- DAY-19\n- DAY-20\n- DAY-21\n```\n\n```yaml\n\
+      # query to get items that have 'DAY-20' in their 'days' array\ndays: DAY-20\
+      \ \n```\n\n\n"
+    title: USECASE-13-1 Querying Item Collections
+    data:
+      status: in_progress
+      type: USECASE
+    key: USECASE-13-1
+    parent: USECASE-13
+  USECASE-14:
+    start_line: 152
     path: use_cases\use_cases.md#usecase-14-semantic-search-for-items
     level: 1
-    end_line: 136
+    end_line: 157
     markdown: "# USECASE-14 Semantic Search for Items\n```yaml (data)\nstatus: future\n\
       ```\nSearch for Items based on semantic similarity to a question. (effectively
       do RAG)\n\n"
@@ -1106,10 +1135,10 @@ items:
     key: USECASE-14
     parent:
   USECASE-15:
-    start_line: 137
+    start_line: 158
     path: use_cases\use_cases.md#usecase-15-refresh-knowledge-base-state
     level: 1
-    end_line: 145
+    end_line: 166
     markdown: "# USECASE-15 Refresh Knowledge Base State\n```yaml (data)\nstatus:
       done\n```\nRead all the Items in the Knowledge Base.\n```bash\nshelly-docs kb
       update\n```\n\n"
@@ -1120,10 +1149,10 @@ items:
     key: USECASE-15
     parent:
   USECASE-16:
-    start_line: 146
+    start_line: 167
     path: use_cases\use_cases.md#usecase-16-enter-tui
     level: 1
-    end_line: 154
+    end_line: 175
     markdown: "# USECASE-16 Enter TUI\n```yaml (data)\nstatus: done\n```\nEnter the
       TUI from a CLI Command\n```bash\nshelly-docs tui\n```\n\n"
     title: USECASE-16 Enter TUI
@@ -1133,7 +1162,7 @@ items:
     key: USECASE-16
     parent:
   USECASE-17:
-    start_line: 155
+    start_line: 176
     path: use_cases\use_cases.md#usecase-17-aggregate-queried-items
     level: 1
     markdown: "# USECASE-17 Aggregate Queried Items\n```yaml (data)\nstatus: done\n\
