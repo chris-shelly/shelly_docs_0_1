@@ -10,6 +10,8 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
+cli_version = "0.1.1.1"
+
 app = typer.Typer()
 
 kb_app = typer.Typer()
@@ -36,6 +38,14 @@ def callback():
   """
   Shelly Docs
   """
+
+@app.command()
+def version():
+  """
+  if `--version`, print out a version
+  """
+  if version:
+    typer.echo(cli_version)
 
 @app.command()
 def tui():

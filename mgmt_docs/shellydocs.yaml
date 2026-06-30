@@ -4,3 +4,4 @@ item_tags: # tags to recognize as items
   - DESIGN # High Level system functionality
   - PROMPT # prompts made to coding assistant
   - SYSTEM # Medium to low-level details on system components and architecture
+  - PROCESS # repeatable development process
