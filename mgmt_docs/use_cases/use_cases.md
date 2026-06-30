@@ -130,7 +130,7 @@ $or:
 
 ## USECASE-13-1 Querying Item Collections
 ```yaml (data)
-status: in_progress
+status: done
 ```
 We allow searching for values in an array
 When a query criteria applies to an array, it needs to check for the value.
@@ -145,8 +145,12 @@ days: # days array
 
 ```yaml
 # query to get items that have 'DAY-20' in their 'days' array
-days: DAY-20 
+days: DAY-20
+# field: value
 ```
+
+If the 'field' we're querying is an array, but the 'value' we're checking for is not an array, then we search return items with that 'value' in the array
+- this makes it so we can still search for exact match arrays, AND we can also search for specific values in an array.
 
 
 # USECASE-14 Semantic Search for Items

@@ -93,9 +93,15 @@ def _evaluate_condition(field_value, condition, field_exists: bool) -> bool:
         return False
     return True
   else:
-    # Simple equality
+    # Simple equality (ex. 'status: done')
+    # in other words, the condition is actually a value
     if not field_exists:
       return False
+    
+    # USECASE-13-1, if the field value is an array but the condition is not, then check if that condition is in the array
+    if isinstance(field_value, list):
+      return condition in field_value
+    
     return field_value == condition
 
 

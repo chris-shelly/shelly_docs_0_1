@@ -27,7 +27,15 @@ class TestQueryItems:
     query = {"status": "done", "related_to": "DESIGN-2-2"}
     actual_results = query_items(items, query)
     assert actual_results == [{"title": "ABC-1 Alpha","data": {"status": "done", "related_to": "DESIGN-2-2"}}]
-  
+  def test_val_in_array(self):
+    items = {
+      "ABC-1": {"title": "ABC-1 Alpha", "data": {"days": ["DAY-19", "DAY-20", "DAY-21"]}},
+      "ABC-2": {"title": "ABC-2 Beta","data": {"status": "drafting"}}
+    }
+    query = {"days": "DAY-20"}
+    actual_results = query_items(items, query)
+    # should return the item with '"DAY-20"' in 'days'
+    assert actual_results == [{"title": "ABC-1 Alpha", "data": {"days": ["DAY-19", "DAY-20", "DAY-21"]}}]
 from src.shelly_docs.be.crud.query import query_pipeline
 class TestQueryPipeline:
   def test_dict(self):
