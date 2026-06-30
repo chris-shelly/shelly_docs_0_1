@@ -93,7 +93,9 @@ related_to:
 subject_to_future_refactor: true
 ```
 Used to convert a New Item object, which holds a kb path, filepath, and the raw markdown, into fully processable items.
-
-
+### SYSTEM-3-3-3 `get_item_content()`
+```yaml (data)
+```
+Used to extract `Item.content`, which is everything in the Item except for the Item's `data` block and the Item's `title`
 
 ## SYSTEM-3-4

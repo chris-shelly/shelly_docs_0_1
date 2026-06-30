@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.1.1"
+cli_version = "0.1.1.2"
 
 app = typer.Typer()
 
@@ -167,7 +167,7 @@ def item_get(item_key: str, json: bool = True):
   """
   kb_path = get_kb_path()
   if json:
-    print(jsn.dumps(get_item(kb_path,item_key)))
+    print(jsn.dumps(get_item(kb_path,item_key),indent=2))
   else:
     print(get_item(kb_path,item_key))
 

@@ -173,6 +173,8 @@ shelly-docs kb update
 status: done
 ```
 Enter the TUI from a CLI Command
+
+
 ```bash
 shelly-docs tui
 ```

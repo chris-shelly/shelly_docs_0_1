@@ -176,7 +176,40 @@ def get_codefenced_data(item: dict):
         if isinstance(fenced_data, dict) and (not fenced_data.get("type")): # only overwrites the item type if it doesnt already exist
           fenced_data["type"] = get_tag_from_title(item['title'])
         return fenced_data
-  
+
+# needed to separate content 
+def get_item_content(item: dict):
+  print("--get_item_content()--")
+  # parse the item to a mistletoe document
+  item_document = parse_md_doc_from_string(item['markdown'])
+  # iterate through children of the item, returning all content aside from the codefenced data
+  content=""
+  # get the lines where the data block starts and ends
+  data_block_started = False
+  data_block_start_line = None
+  data_block_end_line = None
+  for child in item_document.children:
+    if (isinstance(child, CodeFence) and (child.info_string == "yaml (data)")):
+      data_block_started = True
+      #print("data block started at line_number:", child.line_number)
+      data_block_start_line = child.line_number
+      # span tokens have content, # block tokens have span tokens
+      #print(child.line_number)
+      #content += str(child.read())
+    elif data_block_started:
+      data_block_started = False
+      #print("data block ended at line_number:", child.line_number)
+      data_block_end_line = child.line_number
+      break
+  if data_block_start_line is None:
+    # no data block, so the content is everything after the first line (content excludes the item tag)
+    content_lines = item['markdown'].splitlines()[1:]
+    content = '\n'.join(content_lines)
+  else:
+    content_lines = item['markdown'].splitlines()[1:(data_block_start_line - 1)] + item['markdown'].splitlines()[(data_block_end_line - 1):]
+    #print("---content_lines---", content_lines)
+    content = '\n'.join(content_lines)
+  return content
 
 def get_item_parent(item: dict):
   """
