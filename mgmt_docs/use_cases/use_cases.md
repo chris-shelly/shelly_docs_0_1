@@ -136,7 +136,7 @@ We allow searching for values in an array
 When a query criteria applies to an array, it needs to check for the value.
 
 ```yaml
-# example data item
+# example 'Item.data'
 days: # days array
 - DAY-19
 - DAY-20
