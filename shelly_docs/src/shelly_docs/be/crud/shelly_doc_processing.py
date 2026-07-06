@@ -71,7 +71,7 @@ def parse_token_dict(token_dict: dict, filepath: Path, kb_path: Union[str, Path]
   for child in token_dict['children']:
     if child['type'] == "Heading":
       # check the line to make sure it's a valid heading
-      potential_item_title = get_string_section_from_path(kb_path / filepath, child['line_number'],child['line_number'])
+      potential_item_title = get_string_section_from_path(filepath, child['line_number'],child['line_number'])
       if title_is_valid_item_decl(potential_item_title, tags):
         # look back and push the last item to the items list
         if item.get("heading"):

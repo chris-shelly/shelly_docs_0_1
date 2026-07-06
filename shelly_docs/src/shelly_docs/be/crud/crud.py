@@ -51,7 +51,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   Args:
     path: KB directory path
     item_key: e.g. "USECASE-4"
-    item: dict with 'title', 'content', 'path' (target .md file)
+    item: dict with 'title', 'markdown', 'path' (target .md file)
     config: config dict containing 'item_tags'
 
   Raises:
@@ -128,8 +128,8 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   else:
     # Add the item:
     # look up the parent in the state and check if its at the same path
-    
-    parent = state_items.get(item['parent'])
+    print(item)
+    parent = state_items.get(item.get('parent'))
     # if parent exists in the target path, write to the parent
     if parent:
       # insert the child item after the parent item, after all existing sibling items
@@ -254,7 +254,7 @@ def convert_new_item_md(new_item_obj: dict) -> dict:
     new_item_obj: dict with 'kb_path', 'filepath', and 'markdown' keys
 
   Returns:
-    dict with 'path', 'title', 'content', and 'parent_title' keys
+    dict with 'path', 'title', 'markdown', and 'parent_title' keys
   """
   return prep_new_shelly_doc_items_from_document_update(new_item_obj)
 
