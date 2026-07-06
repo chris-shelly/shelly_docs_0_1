@@ -4,7 +4,7 @@ import sys
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
-from ..be.crud.crud import put_item
+from ..be.crud.crud import put_item, write_items_to_state
 from ..be.crud.shelly_doc_processing import get_tag_from_title
 
 
@@ -29,8 +29,8 @@ class KnowledgeBase:
     shelly_docs_file = self.path / "shellydocs.yaml"
     self.shelly_docs_obj = self.yaml.load(shelly_docs_file.read_text())
     print(self.shelly_docs_obj)
-    state_file = self.path / "state.yaml"
-    self.state = self.yaml.load(state_file.read_text())
+    self.state_file = self.path / "state.yaml"
+    self.state = self.yaml.load(self.state_file.read_text())
   
   def create_item(self, file, item_type, item_name: str, item_data, item_content, parent_key=None):
     """
@@ -68,7 +68,7 @@ class KnowledgeBase:
             if int(key.split("-")[-1]) == next_key_num:
               next_key_num += 1
         return f"{item_type}-{next_key_num}"
-      pass
+
     def make_item_dict(item_key):
       """
       to create the item, we need to make a python dictionary out of the data
@@ -94,6 +94,10 @@ class KnowledgeBase:
     if valid_item_type():
       print("creating item")
       put_item(self.path_str, item_key, item_dict, self.shelly_docs_obj)
+
+    # update state after writing
+    write_items_to_state(self.path_str)
+    self.state = self.yaml.load(self.state_file.read_text())
 
   def get_item(self, item_key: str) -> dict:
     """
