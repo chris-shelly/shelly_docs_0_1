@@ -5,16 +5,29 @@ from pathlib import Path
 import re
 import json
 from ruamel.yaml import YAML
+from ruamel.yaml.compat import StringIO
 from typing import Union
 
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from mistletoe.block_token import CodeFence
 from mistletoe.token import Token
+from mistletoe.markdown_renderer import MarkdownRenderer
 
 
 from ..shelly_docs_config.config import get_config
-yaml = YAML()
+from . import md_handling as mdh 
+
+class MyYAML(YAML):
+  def dump(self, data, stream=None, **kw):
+    inefficient = False
+    if stream is None:
+      inefficient = True
+      stream = StringIO()
+    YAML.dump(self, data, stream, **kw)
+    if inefficient:
+      return stream.getvalue()
+yaml = MyYAML()
 
 def parse_md_ast(path: Path) -> dict:
   """
@@ -176,6 +189,25 @@ def get_codefenced_data(item: dict):
         if isinstance(fenced_data, dict) and (not fenced_data.get("type")): # only overwrites the item type if it doesnt already exist
           fenced_data["type"] = get_tag_from_title(item['title'])
         return fenced_data
+
+def set_codefenced_data(item: dict, new_data: dict) -> str:
+  """
+  Returns an Item dict where the markdown has been updated with the 'new_data'
+  """
+  # parse the item to a mistletoe document
+  item_document = parse_md_doc_from_string(item['markdown'])
+  # iterate through children of the item, return the data from inside the first "yaml (data)" code fence
+  # assumes that the code fence is a direct child of the Document object
+  for child in item_document.children:
+    if isinstance(child, CodeFence):
+      print("set_codefenced_data::codefence",child)
+      if child.info_string == "yaml (data)":
+        fenced_data = yaml.dump(new_data)
+        mdh.update_block(child, fenced_data)
+        renderer = MarkdownRenderer()
+        return renderer.render(child)
+  raise ValueError("no structured data block found")
+
 
 # needed to separate content 
 def get_item_content(item: dict):

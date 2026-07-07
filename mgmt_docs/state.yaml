@@ -12,9 +12,6 @@ items:
     data:
       status: done
       type: DESIGN
-    content: "The Knowledge Base is the directory in which Shelly Docs is initialized.\n\
-      \nShelly Docs scans markdown documents within that directory to read, update,
-      create and delete [`Item`s](#design-2-item)."
     key: DESIGN-1
     parent:
   DESIGN-1-1:
@@ -30,12 +27,6 @@ items:
       \ title: \"ABC-33 Display Data\"\n    # ...\n```\n\n"
     title: DESIGN-1-1 Knowledge Base `state.yaml`
     data:
-    content: "Within the Knowledge Base is a `state.yaml` file that stores the data
-      on the `Item`s like a very simplistic kind of database collection.\n```yaml\n\
-      items:\n  ABC-32:\n    title: \"ABC-32 Retrieve Data\",\n    content: \"Retrieve
-      data so we can display it to the user\",\n    parent_title: \"\" #empty if there
-      is no parent item\n  ABC-33:\n    title: \"ABC-33 Display Data\"\n    # ...\n\
-      ```"
     key: DESIGN-1-1
     parent: DESIGN-1
   DESIGN-2:
@@ -48,9 +39,6 @@ items:
       as a markdown heading with content under it.\n"
     title: DESIGN-2 `Item`
     data:
-    content: "An `Item` is a piece of markdown documentation content within a [Knowledge
-      Base](#design-1-knowledge-base).\n\nAn `Item` is defined as a markdown heading
-      with content under it."
     key: DESIGN-2
     parent:
   DESIGN-2-1:
@@ -68,13 +56,6 @@ items:
       images, etc.\n"
     title: DESIGN-2-1 `Item` Example
     data:
-    content: "For example,\n```md\n<!-- Item starts with the Heading-->\n## ABC-32
-      Retrieve Data\nRetrieve data so we can display itto the user\n<!-- Item ends
-      either with end of the document or another Heading with the same or higher level
-      -->\n<!--New Item, separate from ABC-32-->\n## ABC-33 Display Data\nDisplay
-      the data to the user\n...\n```\nAside from headings of the same or higher level
-      (which would indicate another `Item`), any sort of content can be within a given
-      `Item`, including paragraphs, code blocks, images, etc."
     key: DESIGN-2-1
     parent: DESIGN-2
   DESIGN-2-2:
@@ -89,10 +70,6 @@ items:
       about the items.\n"
     title: DESIGN-2-2 `Item.data`
     data:
-    content: "An `Item` can have structured data attached to it within the markdown
-      document.\n\nA yaml code block with the `yaml (data)` around it is then parsed
-      and saved alongside the item in state.\n\nThis data can later be queried from
-      the `state.yaml` to provide information to the user about the items."
     key: DESIGN-2-2
     parent: DESIGN-2
   DESIGN-2-3:
@@ -109,10 +86,6 @@ items:
     data:
       status: done
       type: whatever I want
-    content: "By default, the item `type` is retrieved based on the Item Tag of the
-      Item's title/declaration, and then stored within the Item's `data` field so
-      it can be queried.\n\nThe user can overide the ``type`` with whatever content
-      they have in the fenced `yaml (data)` code block."
     key: DESIGN-2-3
     parent: DESIGN-2
   DESIGN-2-4:
@@ -130,11 +103,6 @@ items:
     data:
       status: done
       type: DESIGN
-    content: "Items can be nested within eachother in a hierarchy based on their Item
-      Key declarations. For example, this item (DESIGN-2-4) is nested within DESIGN-2,
-      indicated by the extra `-` in the Item Key number.\n\nWithin the `state.yaml`
-      of a knowledge base, an `Item` will have a `parent` field indicating the key
-      of its parent `Item`"
     key: DESIGN-2-4
     parent: DESIGN-2
   PROCESS-1:
@@ -146,7 +114,6 @@ items:
     markdown: "# PROCESS-1 Running the `env` version of `shelly-docs`\n"
     title: PROCESS-1 Running the `env` version of `shelly-docs`
     data:
-    content: ''
     key: PROCESS-1
     parent:
   PROCESS-1-1:
@@ -159,8 +126,6 @@ items:
       ```bash\nsource .venv/Scripts/activate\n```\n"
     title: PROCESS-1-1 Activate Venv
     data:
-    content: "First, make sure you have the venv activated\n```bash\nsource .venv/Scripts/activate\n\
-      ```"
     key: PROCESS-1-1
     parent: PROCESS-1
   PROCESS-1-2:
@@ -173,7 +138,6 @@ items:
       in the pyproject.toml\n\n"
     title: PROCESS-1-2 Update version in pyproject
     data:
-    content: Then, update the version in the pyproject.toml
     key: PROCESS-1-2
     parent: PROCESS-1
   PROCESS-1-3:
@@ -184,7 +148,6 @@ items:
     markdown: '## PROCESS-1-3 Update version in the CLI'
     title: PROCESS-1-3 Update version in the CLI
     data:
-    content: ''
     key: PROCESS-1-3
     parent: PROCESS-1
   PROMPT-11:
@@ -197,7 +160,6 @@ items:
       Unit Tests for our `be.crud` functions\n"
     title: PROMPT-11 Build Unit Tests for `crud` functions
     data:
-    content: Working on Creating Unit Tests for our `be.crud` functions
     key: PROMPT-11
     parent:
   PROMPT-11-1:
@@ -227,25 +189,6 @@ items:
       is a duplicates `shelly_doc_processing.heading_to_anchor()`\n\n"
     title: PROMPT-11-1 Research how `crud` module is Used
     data:
-    content: "### Role\nYou are Senior Python Engineer with extensive experience developing
-      tests for Python applications using `pytest`.\n### Goal\nResearch how the functions
-      are used in `be/crud.py`.\n### Research Summary (output)\n#### Functions\n-
-      ``get_items()``\n  - entry point to find .md files, and extract items\n  - calls
-      `process_shelly_docs_items()`\n- `write_items_to_state(path)`\n  - builds the
-      state dictionary and writes `state.yaml`\n  - calls `get_items()`\n- `get_state(path)`\n\
-      \  - reads `state.yaml`, returinign it as a dict\n- `get_item()`\n  - gets a
-      single item from the state by key\n- `put_item()`\n  - adds or updates an item
-      in the markdown file, and updates state\n- `delete_item()`\n  - removes item
-      from markdown, updates state\n- `convert_new_item_md()`\n  - wrapper around
-      `prep_new_shelly_doc_items_from_document_update()`\n- `get_sibling_positioning(state,
-      item)`\n  - finds the insert position among siblings for new child ites\n- `get_md_docs_in_dir()`\n\
-      \  - recursively finds `.md` files\n- `parse_md_text()` and `parse_md_doc()`\n\
-      \  - markdown-to-ast parsing\n#### Key Obsevations for testing\n- most functions
-      depend on filesystem state\n- existing test scaffold\n- two consumers of `crud.py`,
-      ``main.py`` and ``tui.py``\n- `put_item()` is among the most complex functions\n\
-      - `write_items_to_state()` is called with only `path`\n#### Changes since prompt
-      was ran\n- `crud.heading_to_anchor()` has been deleted since it's not used and
-      is a duplicates `shelly_doc_processing.heading_to_anchor()`"
     key: PROMPT-11-1
     parent: PROMPT-11
   PROMPT-11-2:
@@ -273,23 +216,6 @@ items:
       for testing `crud.py` as a Markdown file.\n\n\n"
     title: PROMPT-11-2 Plan Testing for `crud`
     data:
-    content: "### Role\nYou are Senior Python Engineer with extensive experience developing
-      tests for Python applications using `pytest`.\n### Background, Research from
-      PROMPT-11-1\n#### Functions\n- ``get_items()``\n  - entry point to find .md
-      files, and extract items\n  - calls `process_shelly_docs_items()`\n- `write_items_to_state(path)`\n\
-      \  - builds the state dictionary and writes `state.yaml`\n  - calls `get_items()`\n\
-      - `get_state(path)`\n  - reads `state.yaml`, returinign it as a dict\n- `get_item()`\n\
-      \  - gets a single item from the state by key\n- `put_item()`\n  - adds or updates
-      an item in the markdown file, and updates state\n- `delete_item()`\n  - removes
-      item from markdown, updates state\n- `convert_new_item_md()`\n  - wrapper around
-      `prep_new_shelly_doc_items_from_document_update()`\n- `get_sibling_positioning(state,
-      item)`\n  - finds the insert position among siblings for new child ites\n- `get_md_docs_in_dir()`\n\
-      \  - recursively finds `.md` files\n- `parse_md_text()` and `parse_md_doc()`\n\
-      \  - markdown-to-ast parsing\n#### Key Obsevations for testing\n- most functions
-      depend on filesystem state\n- existing test scaffold\n- two consumers of `crud.py`,
-      ``main.py`` and ``tui.py``\n- `put_item()` is among the most complex functions\n\
-      - `write_items_to_state()` is called with only `path`\n### Goal\nDevelop a plan
-      for testing `crud.py` as a Markdown file."
     key: PROMPT-11-2
     parent: PROMPT-11
   PROMPT-11-3:
@@ -302,9 +228,6 @@ items:
       to call get_config() before the function that needs the tags"
     title: PROMPT-11-3 Develop Tests for `crud`
     data:
-    content: "### Notes on Updates/Bugs discovered during testing\nBug fixes in shelly_doc_processing.py\n\
-      - Missing `tags` argument\n- Off-by-one in heading validation\n- Config ordering,
-      we need to call get_config() before the function that needs the tags"
     key: PROMPT-11-3
     parent: PROMPT-11
   PROMPT-10:
@@ -341,34 +264,6 @@ items:
       \  #...\n```"
     title: PROMPT-10 Data Querying
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with experience making
-      CLI apps that allow users to query data.\n## `Background`\nYou are working on
-      Shelly Docs, a TUI/CLI app that lets users organize and analyze documentation
-      in markdown files.\n### Knowledge Base\nA \"Knowledge Base\" is a directory
-      users set to capture Documentation Items.\n\nConfiguration for item types is
-      captured in a `shellydocs.yaml` file in the Knowledge Base directory.\n\nThe
-      Knowledge Base stores item state and metadata in the `state.yaml` file in the
-      Knowledge Base directory.\n### Items\n\"Items\" are chunks of markdown documents,
-      written by human or AI agent users that write sections of markdown starting
-      with an item tag markdown header.\n\nEach Item may have a `yaml (data)` codefence
-      for storing data about that item, useful for analyzing/querying later.\n## `Goal`\n\
-      Plan a Feature that lets users query and analyze their Shelly Docs Items.\n\
-      - for example, determining tasks that are in progress, requirements linked to
-      specific tests, etc. \n## Example `state.yaml` file\n```yaml\nitems:\n  ABC-1:\n\
-      \    start_line: 1\n    path: ..\\experiment_code\\md_data_parsing\\data.md#abc-1-yo\n\
-      \    level: 1\n    end_line: 9\n    markdown: \"# ABC-1 Yo\\nThis is a markdown
-      document with a data block in it.\\n\\n\\\n      ```yaml (data)\\nfield1: yo\\
-      nfield2: 27\\n```\\nSee ya later.\\n\\n\"\n    title: ABC-1 Yo\n    data:\n\
-      \      field1: yo\n      field2: 27\n    key: ABC-1\n    parent:\n  ABC-1-1:\n\
-      \    start_line: 10\n    path: ..\\experiment_code\\md_data_parsing\\data.md#abc-1-1-brodie\n\
-      \    level: 2\n    end_line: 13\n    markdown: \"## ABC-1-1 Brodie\\nKostecki
-      be sending it down the mountain.\\n\\n\\n\"\n    title: ABC-1-1 Brodie\n   \
-      \ data:\n    key: ABC-1-1\n    parent: ABC-1\n  ABC-2:\n    start_line: 14\n\
-      \    path: ..\\experiment_code\\md_data_parsing\\data.md#abc-2-hi-there\n  \
-      \  level: 1\n    end_line: 19\n    markdown: \"# ABC-2 Hi **`there`**\\nWhat's
-      up.\\n```yaml (data)\\nfield3: bruh\\n\\\n      ```\\n\\n\"\n    title: ABC-2
-      Hi **`there`**\n    data:\n      field3: bruh\n    key: ABC-2\n    parent:\n\
-      \  #...\n```"
     key: PROMPT-10
     parent:
   PROMPT-1:
@@ -400,27 +295,6 @@ items:
       - Cleaning up debug prints\n\n"
     title: PROMPT-1 Reading Item Content
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive experience
-      parsing and extending markdown. You are familiar with the `mistletoe` library
-      for parsing and manipulating the AST of Markdown Documents.\n## `Background
-      on Goal`\nIn `crud.py`, we want to update the `get_items()` function to parse
-      documentation Items. Letting us determine the `title`, `content`, and `parent_title`
-      (if applicable).\n## `Design` - Documentation `Item`s\nAn `Item` is a piece
-      of markdown documentation content within a [Knowledge Base](#design-1-knowledge-base).\n\
-      \nAn `Item` is defined as a markdown heading with content under it.\n\nFor example
-      ...\n\n\n```md\n<!-- Item starts with the Heading-->\n## ABC-32 Retrieve Data\n\
-      Retrieve data so we can display it to the user\n<!-- Item ends either with end
-      of the document or another Heading with the same or higher level -->\n<!--New
-      Item, separate from ABC-32-->\n## ABC-33 Display Data\nDisplay the data to the
-      user\n...\n```\nAside from headings of the same or higher level (which would
-      indicate another `Item`), any sort of content can be within a given `Item`,
-      including paragraphs, code blocks, images, etc.\n\n## `Goal`\nIn `crud.py`,
-      update the `get_items()` function to parse documentation Items. A documentation
-      item must be made available as json.\n```yaml\n{\n\"title\": \"ABC-32 Retrieve
-      Data\",\n\"content\": \"Retrieve data so we can display it to the user\",\n\"\
-      parent_title\": \"\" #empty because there is no parent `Item`\n}\n```\n## ``Claude
-      Plan``\n- Recursive traversal should be replaced with a linear scan approach\n\
-      - Add a `node_to_markdown` helper\n- Cleaning up debug prints"
     key: PROMPT-1
     parent:
   PROMPT-2:
@@ -439,15 +313,6 @@ items:
       have to use raw text\n\n"
     title: PROMPT-2 Put Items
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive experience
-      parsing and extending markdown. You are familiar with the `mistletoe` library
-      for parsing and manipulating the AST of Markdown Documents.\n## `Goal`\nIn `crud.py`,
-      we want an `put_item()` function to idempotently add/update an item's content
-      in the markdown document.\n\nAdd logic that ensures:\n- the item key is unique\n\
-      - the item type is one of the valid types defined in `shellydocs.yaml` config\n\
-      ## `Summary of Claude's Plan`\n- replace `update_item()` stub with `put_item()`\n\
-      - add validation logic\n  - type\n  - key uniqueness\n- write to markdown file,
-      have to use raw text"
     key: PROMPT-2
     parent:
   PROMPT-3:
@@ -466,11 +331,6 @@ items:
     title: PROMPT-3 Update `Item.path` so that it represents the path to the 
       `Item`
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive experience
-      parsing and extending markdown. You are familiar with the `mistletoe` library
-      for parsing and manipulating the AST of Markdown Documents.\n## `Goal`\nUpdate
-      the generation of `Item.path` so that it presents a path directly to the markdown
-      (includes the anchors, ex. [Link to DESIGN-2 Item](../design/item.md#design-2-item'))"
     key: PROMPT-3
     parent:
   PROMPT-4:
@@ -485,10 +345,6 @@ items:
       Document.\n\n"
     title: PROMPT-4 Delete Item
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive experience
-      parsing and extending markdown. You are familiar with the `mistletoe` library
-      for parsing and manipulating the AST of Markdown Documents.\n## `Goal`\nAdd
-      a `delete_item()` method that removes an Item from a Markdown Document."
     key: PROMPT-4
     parent:
   PROMPT-5:
@@ -516,23 +372,6 @@ items:
       the last heading that would be a parent\n\n"
     title: PROMPT-5 Convert `new_item_md` objects into `item`
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive experience
-      parsing and extending markdown. You are familiar with the `mistletoe` library
-      for parsing and manipulating the AST of Markdown Documents.\n## `Goal\nCreate
-      a function in `be/crud.py` that reads/parses a `new_item_md` object to convert
-      it into our typical `item` object, so that we can use pass it to the `put_item()`
-      function to actually write the `Item`.\n\nWe will use this so that Humans can
-      create Items via the TUI.\n## `Design`\n### example `new_item_md` dict object\n\
-      ```python\n{\n  \"kb_path\": \"../mgmt_docs\"\n  \"filepath\": \"reqs/reqs.md\"\
-      ,\n  \"markdown\": \"# REQ-2 Verify Data\\n I have some content here.\"\n}\n\
-      ```\n### expected output `item` dict object from above example\n```python\n\
-      {\n  \"path\": \"../mgmt_docs/reqs/reqs.md\",\n  \"title\": \"# REQ-2 Verify
-      Data\",\n  \"content\": \"I have some content here.\",\n  \"parent_title\":
-      \"\" # detect parent if applicable\n}\n```\n## Output Summary\n- Created a `convert_new_item_md(new_item_md:
-      dict)` function\n  - joins the `kb_path` and `file_path`\n  - Prases the markdown
-      via a new helper `parse_md_text()`\n  - extracts the first heading as `title`,
-      everything after it as content\n  - if the target file already exists, reads
-      it to detect the last heading that would be a parent"
     key: PROMPT-5
     parent:
   PROMPT-6:
@@ -553,16 +392,6 @@ items:
       \n"
     title: PROMPT-6 Better Handling of Item Hierarchies
     data:
-    content: "## `Role`\nYou are a Senior Python developer working on Shelly Docs.
-      A TUI/CLI tool for managing documentation items using markdown.\n## `Background
-      on Issue`\nOn trying to add an item with a key of `USECASE-77-1`, we get this
-      error.\n```\nValueError: Tag 'USECASE-77' not in configured item_tags: ['USECASE',
-      'DESIGN', 'ACTOR']\n```\n\nIt seems that we are not correctly pattern matching
-      to get the tag prefix.\n## `Goal`\nUpdate the pattern matching approach in `put_item()`
-      so that the item type (aka `tag_prefix`) is correctly determined.\n\n## Output
-      Summary\n- replace `rsplit('-', 1)` with a loop checking if the item_key starts
-      with any configured tag followed by `-`.\n- this correctly identifies the item
-      types."
     key: PROMPT-6
     parent:
   PROMPT-7:
@@ -587,19 +416,6 @@ items:
     title: PROMPT-7 - Items are written as Heading 2s, even if they are set at a
       different level.
     data:
-    content: "## `Role`\nYou are a Senior Python developer working on Shelly Docs.
-      A TUI/CLI tool for managing documentation items using markdown.\n\nYou have
-      extensive experience parsing and extending markdown. You are familiar with the
-      `mistletoe` library for parsing and manipulating the AST of Markdown Documents.\n\
-      ## `Background on Issue`\nIn Line 72 of `be/crud.py` within `put_item()` it
-      looks like we are assuming that all Items should be written as Heading 2s (starting
-      with '##') instead of whatever was directly in their heading.\n## `Goal`\nUpdate
-      the `item` objects so that we properly store and write the heading levels based
-      on what was initially written in markdown, allowing users to hierachically model
-      their items.\n## Output summary\n- updated `traverse_for_items()` to store `level`
-      in each item dict\n- `put_item` now uses `item.get()` to generate the correct
-      heading prefix\n- `convert_new_item` captures the `level` from the parsed heading
-      node and includes it in the returned dict"
     key: PROMPT-7
     parent:
   PROMPT-8:
@@ -619,15 +435,6 @@ items:
       a call to be.crud.delete_item()\n\n"
     title: PROMPT-8 Allow user to Delete Item via TUI
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive expertise
-      using the `textual` python library to create Terminal User Interfaces (TUIs).\n\
-      \nYou are working on Shelly Docs a TUI & CLI application for managing markdown
-      documentation Items.\n## `Goal`\nWe want to enable the user to Delete Items
-      from the TUI.\n\n## `Design`\n### Delete Button\nWithin the Knowledge Base Screen,
-      add a \"Delete Item\" button next to the `KnowledgeBaseConfig` widget, so that
-      we can delete the active item.\n### DeleteItemScreen\nAdd a Screen that lets
-      the user confirm if they want to delete the item. On confirmation, extract the
-      `item_key` and use it to make a call to be.crud.delete_item()"
     key: PROMPT-8
     parent:
   PROMPT-9:
@@ -650,19 +457,6 @@ items:
       how the the `CreateNewItemScreen()` handles new items. \n\n"
     title: PROMPT-9 Allow user to Update Item via TUI
     data:
-    content: "## `Role`\nYou are a Senior Python Developer with extensive expertise
-      using the `textual` python library to create Terminal User Interfaces (TUIs).\n\
-      \nYou are working on Shelly Docs a TUI & CLI application for managing markdown
-      documentation Items.\n## `Goal`\nWe want to enable the user to Update Items
-      from the TUI.\n\n## `Design`\n### Update Button\nWithin the Knowledge Base Screen,
-      add a \"Delete Item\" button next to the `KnowledgeBaseConfig` widget, so that
-      we can delete the active item.\n### UpdateItemScreen\nAdd a Screen that lets
-      the user write to a Markdown TextArea (similar to the one used for the `NewItemMd`
-      widget) to update the Item.\n- loads the TextArea with the existing content.\n\
-      - loads the item using it's existing filepath.\nAfter making an update, convert
-      yields a `raw_item_md` that can be converted to an `item` dict taht can be passed
-      to `put_item()`, similarly to how the the `CreateNewItemScreen()` handles new
-      items."
     key: PROMPT-9
     parent:
   PROMPT-9-1:
@@ -679,12 +473,6 @@ items:
       \nPlease fix the issue so the Path calculates correctly.\n\n"
     title: PROMPT-9-1 Follow-up, Path not calculating correctly
     data:
-    content: "After attempting to edit `USECASE-77-1`, `put_item()` raised a ValueError
-      for it already existing in a different file.\n\n```\nValueError: Item 'USECASE-77-1'
-      already exists in a different file: ..\\mgmt_docs\\reqs\\new.md#usecase-77-1-child-item-being-added\n\
-      ```\n\nIT seems that the path being collected for us to make the updates isn't
-      correct. as it shows as `'path': '../mgmt_docs/..\\\\mgmt_docs\\\\reqs\\\\new.md',`.\n\
-      \nPlease fix the issue so the Path calculates correctly."
     key: PROMPT-9-1
     parent: PROMPT-9
   PROMPT-9-2:
@@ -697,10 +485,6 @@ items:
       reqs\\new.md#usecase-77-1-child-item-being-added\n```\n"
     title: PROMPT-9-2 Path still broken
     data:
-    content: "Path still broken, need a better check of the paths. seems like the
-      paths aren't matching due to the anchors.\n\n```\nValueError: Item 'USECASE-77-1'
-      already exists in a different file: ..\\mgmt_docs\\reqs\\new.md#usecase-77-1-child-item-being-added\n\
-      ```"
     key: PROMPT-9-2
     parent: PROMPT-9
   PROMPT-12:
@@ -731,28 +515,6 @@ items:
       ones.\n\n"
     title: PROMPT-12 Update `state.yaml` Paths
     data:
-    content: "## `Role`\nYou are a Senior Python Engineer with expertise in creating
-      markdown-based dev tools.\n## `Background`\nWe updated the way `Item.path` is
-      calculated, now using relative path from the Knowledge Base, so that absolute
-      paths aren't forcibly stored within the the markdown documents.\nNow we have
-      6 failing tests in `test_crud.py`\n```\n================ short test summary
-      info ================\nFAILED shelly_docs/tests/test_crud.py::TestPutItem::test_update_existing_item
-      - ValueError: Item 'ABC-1' already exists in a differen...\nFAILED shelly_docs/tests/test_crud.py::TestGetSiblingPositioning::test_finds_sibling_end_line
-      - assert None is not None\nFAILED shelly_docs/tests/test_crud.py::TestDeleteItem::test_removes_item_from_file
-      - FileNotFoundError: Document not found: input_a.md\nFAILED shelly_docs/tests/test_crud.py::TestDeleteItem::test_state_updated
-      - FileNotFoundError: Document not found: input_a.md\nFAILED shelly_docs/tests/test_crud.py::TestConvertNewItemMD::test_converts_single_item
-      - KeyError: 'kb_path'\nFAILED shelly_docs/tests/test_crud.py::TestConvertNewItemMD::test_converts_multiple_items
-      - KeyError: 'kb_path'\n============= 6 failed, 34 passed in 0.71s ==============\n\
-      ```\n## `Goal`\nIdentify the root cause of the issue and plan a fix.\n\n## `Root
-      Cause Analysis`\n-`crud.py`\n  - in `put_item()` path resolves against current
-      working directory instead of the directory from within knowledge base\n    -
-      fix by prepending KB path before resolving\n  - in `get_sibling_positioning()`,
-      path is comparing between absolute and relative paths\n    - fix, normalize
-      both paths\n  - in `delete_item()`, Path is checked against the current workign
-      directory\n    - fix by prepending KB Path\n- `shelly_doc_processing.py`\n \
-      \ - ``config['kb_path']`` doesn't exist\n  - use `new_item_obj['kb_path']` instead\n\
-      - tests\n  - tests need updating to pass relative paths, rather than absolute
-      ones."
     key: PROMPT-12
     parent:
   SYSTEM-3:
@@ -765,7 +527,6 @@ items:
     data:
       status: done
       type: SYSTEM
-    content: ''
     key: SYSTEM-3
     parent:
   SYSTEM-3-1:
@@ -781,7 +542,6 @@ items:
       depends_on:
       - SYSTEM-3-3
       type: SYSTEM
-    content: Module for making updates to items and keeping the state updated.
     key: SYSTEM-3-1
     parent: SYSTEM-3
   SYSTEM-3-1-1:
@@ -792,7 +552,6 @@ items:
     markdown: "### SYSTEM-3-1-1 `get_items()`\nGet a List of items\n"
     title: SYSTEM-3-1-1 `get_items()`
     data:
-    content: Get a List of items
     key: SYSTEM-3-1-1
     parent: SYSTEM-3-1
   SYSTEM-3-1-2:
@@ -807,7 +566,6 @@ items:
       depends_on:
       - SYSTEM-3-1-1
       type: SYSTEM
-    content: Get the Items and then write the updates to `state.yaml`
     key: SYSTEM-3-1-2
     parent: SYSTEM-3-1
   SYSTEM-3-1-3:
@@ -819,7 +577,6 @@ items:
       dict of the item state\n"
     title: SYSTEM-3-1-3 `get_state()`
     data:
-    content: Read the state file to get a python dict of the item state
     key: SYSTEM-3-1-3
     parent: SYSTEM-3-1
   SYSTEM-3-1-4:
@@ -834,7 +591,6 @@ items:
       depends_on:
       - SYSTEM-3-1-4
       type: SYSTEM
-    content: ''
     key: SYSTEM-3-1-4
     parent: SYSTEM-3-1
   SYSTEM-3-1-5:
@@ -852,7 +608,6 @@ items:
       - SYSTEM-3-1-1
       - SYSTEM-3-1-6
       type: SYSTEM
-    content: Create or Update Items, intended to be idempotent.
     key: SYSTEM-3-1-5
     parent: SYSTEM-3-1
   SYSTEM-3-1-6:
@@ -864,7 +619,6 @@ items:
       to put an it\n\n"
     title: SYSTEM-3-1-6 `get_sibling_positioning()`
     data:
-    content: Determine where exactly to put an it
     key: SYSTEM-3-1-6
     parent: SYSTEM-3-1
   SYSTEM-3-1-7:
@@ -876,7 +630,6 @@ items:
       docs and state\n\n"
     title: SYSTEM-3-1-7 `delete_item()`
     data:
-    content: Delete a given item from the markdown docs and state
     key: SYSTEM-3-1-7
     parent: SYSTEM-3-1
   SYSTEM-3-1-8:
@@ -888,7 +641,6 @@ items:
       DOcuments to check for `Item`s\n\n\n"
     title: SYSTEM-3-1-8 `get_md_docs_in_dir()`
     data:
-    content: Recursively detect Markdown DOcuments to check for `Item`s
     key: SYSTEM-3-1-8
     parent: SYSTEM-3-1
   SYSTEM-3-2:
@@ -900,8 +652,6 @@ items:
       and/or aggregating `Item`s by their `data` field.\n\n"
     title: SYSTEM-3-2 Query (`crud/query.py`)
     data:
-    content: Query Engine/Module for filtering and/or aggregating `Item`s by 
-      their `data` field.
     key: SYSTEM-3-2
     parent: SYSTEM-3
   SYSTEM-3-2-1:
@@ -918,7 +668,6 @@ items:
       - SYSTEM-3-2-3
       - SYSTEM-3-2-4
       type: SYSTEM
-    content: Apply a query step to the items against their `data` field.
     key: SYSTEM-3-2-1
     parent: SYSTEM-3-2
   SYSTEM-3-2-2:
@@ -934,8 +683,6 @@ items:
       depends_on:
       - SYSTEM-3-2-1
       type: SYSTEM
-    content: Evaluate a list (AKA YAML sequence, AKA JSON array) of queries on 
-      the Items based on the order the query steps are declared.
     key: SYSTEM-3-2-2
     parent: SYSTEM-3-2
   SYSTEM-3-2-3:
@@ -948,8 +695,6 @@ items:
       - `$lte`\n- `$in`\n\n"
     title: SYSTEM-3-2-3 `match_item()`
     data:
-    content: "Evaluates Logical Conditions to filter Items\n\nImportant Query logical
-      keywords:\n- `$ne`\n- `$gt`\n- `$gte`\n- `$lt`\n- `$lte`\n- `$in`"
     key: SYSTEM-3-2-3
     parent: SYSTEM-3-2
   SYSTEM-3-2-4:
@@ -962,8 +707,6 @@ items:
       - `$sum`\n- `$concat`\n"
     title: SYSTEM-3-2-4 `aggregate_items()`
     data:
-    content: "Evaluates a list of Items to return a scalar result.\n\nImportant Query
-      aggregating keywords:\n- `$count`\n- `$sum`\n- `$concat`"
     key: SYSTEM-3-2-4
     parent: SYSTEM-3-2
   SYSTEM-3-3:
@@ -974,7 +717,6 @@ items:
     markdown: "## SYSTEM-3-3 Docs Processing (`crud/shelly_doc_processing.py`)\n"
     title: SYSTEM-3-3 Docs Processing (`crud/shelly_doc_processing.py`)
     data:
-    content: ''
     key: SYSTEM-3-3
     parent: SYSTEM-3
   SYSTEM-3-3-1:
@@ -988,7 +730,6 @@ items:
     data:
       subject_to_future_refactor: true
       type: SYSTEM
-    content: Given a file path process the `Item`s within a file.
     key: SYSTEM-3-3-1
     parent: SYSTEM-3-3
   SYSTEM-3-3-2:
@@ -1007,8 +748,6 @@ items:
       - SYSTEM-3-3-1
       subject_to_future_refactor: true
       type: SYSTEM
-    content: Used to convert a New Item object, which holds a kb path, filepath,
-      and the raw markdown, into fully processable items.
     key: SYSTEM-3-3-2
     parent: SYSTEM-3-3
   SYSTEM-3-3-3:
@@ -1021,8 +760,6 @@ items:
       `data` block and the Item's `title`\n\n"
     title: SYSTEM-3-3-3 `get_item_content()`
     data:
-    content: Used to extract `Item.content`, which is everything in the Item 
-      except for the Item's `data` block and the Item's `title`
     key: SYSTEM-3-3-3
     parent: SYSTEM-3-3
   SYSTEM-3-4:
@@ -1032,7 +769,6 @@ items:
     markdown: '## SYSTEM-3-4'
     title: SYSTEM-3-4
     data:
-    content: ''
     key: SYSTEM-3-4
     parent: SYSTEM-3
   SYSTEM-1:
@@ -1053,8 +789,6 @@ items:
       depends_on:
       - SYSTEM-3
       type: SYSTEM
-    content: Use a `typer` CLI, so that Users can work with docs from the 
-      command-line, enabling scripting, and automation with structured output.
     key: SYSTEM-1
     parent:
   SYSTEM-1-1:
@@ -1070,9 +804,6 @@ items:
     data:
       status: done
       type: SYSTEM
-    content: "For working with the Knowledge Base\n- Setting the Knowledge Base Path
-      (`kb set`)\n- Getting the current Knowledge Base Path (`kb get`)\n- Updating
-      the state of the Knowledge base (`kb update`)"
     key: SYSTEM-1-1
     parent: SYSTEM-1
   SYSTEM-1-2:
@@ -1087,8 +818,6 @@ items:
     data:
       status: done
       type: SYSTEM
-    content: "For viewing Data of multiple items\n- Getting a List of All items (`items
-      list`)\n- Querying the items (`items query`)"
     key: SYSTEM-1-2
     parent: SYSTEM-1
   SYSTEM-1-2-1:
@@ -1113,18 +842,6 @@ items:
     data:
       status: done
       type: SYSTEM
-    content: "Recall from DESIGN-2-1 that each item has a data field for saving structured
-      data.\n\nWe can query the items based on that structure data with `shelly-docs
-      items query` with a Mongo-DB inspired syntax, written as YAML (and therefore,
-      also can work as JSON).\n\nCan query the Knowledge base for values of certain
-      types\n```yaml\n# get the items with 'status: done'\nstatus: done\n```\n\n\n\
-      Keywords are prefixed with a `$` symbol.\n```yaml\n# non_done_items.yaml\n#
-      get the items with a 'status' field that is not equal to done.\nstatus:\n  $ne:
-      done\n```\n\nThen we can reference a file to actually run ths query from YAML.\n\
-      ```bash\nshelly-docs items query --query \"$(cat non_done_items.yaml)\"\n```\n\
-      \nCan make individual queries (a mapping) or can make query pipelines ( a sequence).\n\
-      \nAggregations are kinds of keywords used to get scalar results (number or string).\n\
-      \nAggregation Keywords include:\n- `$count`\n- `$sum`\n- `$concat`"
     key: SYSTEM-1-2-1
     parent: SYSTEM-1-2
   SYSTEM-1-3:
@@ -1137,9 +854,6 @@ items:
       - delete an item (`item delete`)\n"
     title: SYSTEM-1-3 `shelly-docs item`
     data:
-    content: "For working with a specific item, given its item key\n- get an item
-      (`item get`)\n- put an item (`item put`)\n  - Still recommended to write files
-      directly, but can write them programmatically.\n- delete an item (`item delete`)"
     key: SYSTEM-1-3
     parent: SYSTEM-1
   SYSTEM-2:
@@ -1160,10 +874,6 @@ items:
       depends_on:
       - SYSTEM-3
       type: SYSTEM
-    content: "Provides a `textual` TUI for the user to interact with.\n\nPrimarily
-      intended for HUmans, since Agents will be more efficient interacting with Shelly
-      Docs via the CLI (`shelly-docs`)\n\nAllows user to view and edit the items in
-      the knowledge base."
     key: SYSTEM-2
     parent:
   SYSTEM-2-1:
@@ -1175,8 +885,6 @@ items:
       to open the app with respect to.\n\n"
     title: SYSTEM-2-1 Home Screen
     data:
-    content: Lets the user specify a Knowledge Base Path to open the app with 
-      respect to.
     key: SYSTEM-2-1
     parent: SYSTEM-2
   SYSTEM-2-2:
@@ -1189,9 +897,6 @@ items:
       as select items to update/delete, or create New Items.\n\n"
     title: SYSTEM-2-2 Knowledge Base Screen
     data:
-    content: Lets the user view their Items in the Knowledge Base, see the 
-      current config of the Knowledge Base, as well as select items to 
-      update/delete, or create New Items.
     key: SYSTEM-2-2
     parent: SYSTEM-2
   SYSTEM-2-3:
@@ -1205,9 +910,6 @@ items:
       its siblings.\n"
     title: SYSTEM-2-3 Create New Item Screen
     data:
-    content: "Lets user write A new item with a basic markdown editor and specify
-      a filepath to locate the item. \n- if the path is an existing file, then SHelly
-      DOcs tries to place it in order amongst its siblings."
     key: SYSTEM-2-3
     parent: SYSTEM-2
   SYSTEM-2-4:
@@ -1219,8 +921,6 @@ items:
       asking them to confirm if they want to delete an item.\n"
     title: SYSTEM-2-4 Delete Item Screen
     data:
-    content: Gives the User a confirmation screen asking them to confirm if they
-      want to delete an item.
     key: SYSTEM-2-4
     parent: SYSTEM-2
   SYSTEM-2-5:
@@ -1231,8 +931,6 @@ items:
       to update the contents of a specific item.\n"
     title: SYSTEM-2-5 Update Item Screen
     data:
-    content: Gives the User a basic markdown editor to update the contents of a 
-      specific item.
     key: SYSTEM-2-5
     parent: SYSTEM-2
   ACTOR-3:
@@ -1245,7 +943,6 @@ items:
     data:
       status: todo
       type: ACTOR
-    content: I have some content here
     key: ACTOR-3
     parent:
   ACTOR-1:
@@ -1257,8 +954,6 @@ items:
       but can also use CLI commands.\n"
     title: ACTOR-1 `Human`
     data:
-    content: A Human user. Primarily expected to use the TUI, but can also use 
-      CLI commands.
     key: ACTOR-1
     parent:
   ACTOR-2:
@@ -1268,7 +963,6 @@ items:
     markdown: "# ACTOR-2 `Agent`\nAn AI Agent. Primarily expected to use the CLI.\n"
     title: ACTOR-2 `Agent`
     data:
-    content: An AI Agent. Primarily expected to use the CLI.
     key: ACTOR-2
     parent:
   USECASE-18:
@@ -1281,8 +975,6 @@ items:
       \n"
     title: USECASE-18 `shelly_docs` Python Library
     data:
-    content: Make a `shelly_docs` Python library so people can programmatically 
-      work with items outside of just the CLI.
     key: USECASE-18
     parent:
   USECASE-18-1:
@@ -1296,7 +988,6 @@ items:
     data:
       status: in_progress
       type: USECASE
-    content: ''
     key: USECASE-18-1
     parent: USECASE-18
   USECASE-18-1-1:
@@ -1308,7 +999,6 @@ items:
       \n\n"
     title: USECASE-18-1-1 Create an Item
     data:
-    content: Create an Item in the KnowledgeBase.
     key: USECASE-18-1-1
     parent: USECASE-18-1
   USECASE-18-1-2:
@@ -1319,7 +1009,6 @@ items:
     markdown: "### USECASE-18-1-2 Read/Get an Item\n\n"
     title: USECASE-18-1-2 Read/Get an Item
     data:
-    content: ''
     key: USECASE-18-1-2
     parent: USECASE-18-1
   USECASE-18-1-3:
@@ -1330,7 +1019,6 @@ items:
     markdown: "### USECASE-18-1-3 Update an Item\n"
     title: USECASE-18-1-3 Update an Item
     data:
-    content: ''
     key: USECASE-18-1-3
     parent: USECASE-18-1
   USECASE-18-1-4:
@@ -1341,7 +1029,6 @@ items:
     markdown: "### USECASE-18-1-4 Delete an Item\n"
     title: USECASE-18-1-4 Delete an Item
     data:
-    content: ''
     key: USECASE-18-1-4
     parent: USECASE-18-1
   USECASE-18-1-5:
@@ -1352,7 +1039,6 @@ items:
     markdown: "### USECASE-18-1-5 Reparent an Item\n"
     title: USECASE-18-1-5 Reparent an Item
     data:
-    content: ''
     key: USECASE-18-1-5
     parent: USECASE-18-1
   USECASE-18-1-6:
@@ -1363,7 +1049,6 @@ items:
     markdown: "### USECASE-18-1-6 Query the KnowledgeBase\n"
     title: USECASE-18-1-6 Query the KnowledgeBase
     data:
-    content: ''
     key: USECASE-18-1-6
     parent: USECASE-18-1
   USECASE-18-2:
@@ -1376,7 +1061,6 @@ items:
     data:
       status: todo
       type: USECASE
-    content: ''
     key: USECASE-18-2
     parent: USECASE-18
   USECASE-18-2-1:
@@ -1387,7 +1071,6 @@ items:
     markdown: "### USECASE-18-2-1 Read `Item.data`\n"
     title: USECASE-18-2-1 Read `Item.data`
     data:
-    content: ''
     key: USECASE-18-2-1
     parent: USECASE-18-2
   USECASE-18-2-2:
@@ -1398,7 +1081,6 @@ items:
     markdown: "### USECASE-18-2-2 Read `Item.content`\n"
     title: USECASE-18-2-2 Read `Item.content`
     data:
-    content: ''
     key: USECASE-18-2-2
     parent: USECASE-18-2
   USECASE-18-2-3:
@@ -1410,7 +1092,6 @@ items:
       of an item aside from `data` and `content`\n"
     title: USECASE-18-2-3 Read All other Item Metadata
     data:
-    content: '- All other fields of an item aside from `data` and `content`'
     key: USECASE-18-2-3
     parent: USECASE-18-2
   USECASE-18-2-4:
@@ -1421,7 +1102,6 @@ items:
     markdown: "### USECASE-18-2-4 Set `Item.data`\n"
     title: USECASE-18-2-4 Set `Item.data`
     data:
-    content: ''
     key: USECASE-18-2-4
     parent: USECASE-18-2
   USECASE-18-2-5:
@@ -1431,7 +1111,6 @@ items:
     markdown: '### USECASE-18-2-5 Set `Item.content`'
     title: USECASE-18-2-5 Set `Item.content`
     data:
-    content: ''
     key: USECASE-18-2-5
     parent: USECASE-18-2
   USECASE-1:
@@ -1445,7 +1124,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: Human uses the TUI to view the Items in their Knowledge Base.
     key: USECASE-1
     parent:
   USECASE-2:
@@ -1459,7 +1137,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: Human uses the TUI to view a specific Item in the Knowledge Base.
     key: USECASE-2
     parent:
   USECASE-3:
@@ -1476,10 +1153,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "Human opens a project in the TUI by specifying the directory for the
-      Knowledge Base.\nHuman sets the configuration for the Knowledge base using a
-      `shellydocs.yaml` file.\n```yaml\nitem_tags: # tags to recognize as items\n\
-      \  - INPUT\n  - DESIGN\n  - REQ\n```\nItem Tags are used to detect items."
     key: USECASE-3
     parent:
   USECASE-4:
@@ -1493,7 +1166,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: Human uses the TUI to create a new Item
     key: USECASE-4
     parent:
   USECASE-5:
@@ -1507,7 +1179,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: Human uses the TUI to update an existing Item
     key: USECASE-5
     parent:
   USECASE-6:
@@ -1521,7 +1192,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: Human uses TUI to delete an Item
     key: USECASE-6
     parent:
   USECASE-7:
@@ -1535,7 +1205,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "```bash\nshelly-docs items list --path \"path\"\n```"
     key: USECASE-7
     parent:
   USECASE-8:
@@ -1549,7 +1218,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "```bash\nshelly-docs item get \"item_key\"\n```"
     key: USECASE-8
     parent:
   USECASE-9:
@@ -1565,9 +1233,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "```bash\nshelly-docs kb set --path \"path_to_kb_directory\" # reads
-      the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base
-      config\n# defaults to the current directory if no directory is provided\n```"
     key: USECASE-9
     parent:
   USECASE-10:
@@ -1586,13 +1251,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "Generally, we'd expect an agent to write Items by using markdown, but
-      we should also allow a way to update items using json. \n```bash\nshelly-docs
-      item put \"file.md\" \"# DESIGN-3 Capture Data\nCapture Data from user input\"\
-      \ \n# put an item to the KB using JSON\n```\nFormat of an item\n- filepath is
-      relative to the Knowledge Base Path\n```json\n{\n  \"filepath\": \"file.md\"\
-      ,\n  \"markdown\": \"# DESIGN-3 Capture Data \\n Capture Data from user input\"\
-      \n}\n```"
     key: USECASE-10
     parent:
   USECASE-11:
@@ -1608,7 +1266,6 @@ items:
       status: done
       depends_on: USECASE-15
       type: USECASE
-    content: "```bash\nshelly-docs item delete \"item_key\"\n```"
     key: USECASE-11
     parent:
   USECASE-12:
@@ -1629,12 +1286,6 @@ items:
       status: done
       related_to: DESIGN-2-2
       type: USECASE
-    content: "As seen above, allow Items to have structured data that can be analyzed
-      and queried.\n\nData on a given item is provided using a yaml `data` code block.\n\
-      \nData is then saved in the state of the knowledge base, where the item has
-      a field called `\"data\"`, which contains the object defined from the yaml code
-      block.\n\nBy default, at least the 'type' will be added to the data object,
-      but it can be overwritten by a type specified in the code fence."
     key: USECASE-12
     parent:
   USECASE-13:
@@ -1655,14 +1306,6 @@ items:
     data:
       status: in_progress
       type: USECASE
-    content: "Search for Items based on their `data` field.\nAn Item object has data
-      from codefences stored in the 'data' object in the state file.\n\nWe can then
-      query that data from the state file by iterating through the items and checking
-      logical conditions\n\nA query can be formatted with mongodb-like objects\n```yaml\n\
-      # format\n<field>: <query_obj> # scalar for a single value, or a mapping for
-      checking several conditions\n\n# query for status of done\nstatus: done\n# ...\n\
-      # query conditionals\npoints:\n  $gte: 3\n  $lte: 8\n$or:\n  - status: drafting\n\
-      \  - winner: true\n```"
     key: USECASE-13
     parent:
   USECASE-13-1:
@@ -1683,14 +1326,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "We allow searching for values in an array\nWhen a query criteria applies
-      to an array, it needs to check for the value.\n\n```yaml\n# example 'Item.data'\n\
-      days: # days array\n- DAY-19\n- DAY-20\n- DAY-21\n```\n\n```yaml\n# query to
-      get items that have 'DAY-20' in their 'days' array\ndays: DAY-20\n# field: value\n\
-      ```\n\nIf the 'field' we're querying is an array, but the 'value' we're checking
-      for is not an array, then we search return items with that 'value' in the array\n\
-      - this makes it so we can still search for exact match arrays, AND we can also
-      search for specific values in an array."
     key: USECASE-13-1
     parent: USECASE-13
   USECASE-14:
@@ -1705,8 +1340,6 @@ items:
     data:
       status: future
       type: USECASE
-    content: Search for Items based on semantic similarity to a question. 
-      (effectively do RAG)
     key: USECASE-14
     parent:
   USECASE-15:
@@ -1721,8 +1354,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "Read all the Items in the Knowledge Base.\n```bash\nshelly-docs kb update\n\
-      ```"
     key: USECASE-15
     parent:
   USECASE-16:
@@ -1736,7 +1367,6 @@ items:
     data:
       status: done
       type: USECASE
-    content: "Enter the TUI from a CLI Command\n\n\n```bash\nshelly-docs tui\n```"
     key: USECASE-16
     parent:
   USECASE-17:
@@ -1756,12 +1386,5 @@ items:
       status: done
       related_to: DESIGN-2-2
       type: USECASE
-    content: "Given a user has queried some items, let them aggregate that data.\n\
-      \nFor example, if the user wants to know how many items are of a certain \"\
-      status\" value.\n\nHow about we enable \"pipelines\", where each part of the
-      query is run in sequence.\n\n```yaml\n# status_query.yaml\n- status: done #
-      gets the items that have a status done\n- $count # then, counts those items\n\
-      ```\n\n```bash\n# query the items\nshelly-docs items query --query \"$(cat status_query.yaml)\"\
-      \n\n```"
     key: USECASE-17
     parent:

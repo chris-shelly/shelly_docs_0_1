@@ -1,11 +1,12 @@
 from pathlib import Path
 import sys
+from rich import print
 
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
-from ..be.crud.crud import put_item, write_items_to_state
-from ..be.crud.shelly_doc_processing import get_tag_from_title
+from ..be.crud import crud as crud
+from ..be.crud import shelly_doc_processing as sdoc
 
 
 class MyYAML(YAML):
@@ -28,7 +29,7 @@ class KnowledgeBase:
     self.path_str = kb_path
     shelly_docs_file = self.path / "shellydocs.yaml"
     self.shelly_docs_obj = self.yaml.load(shelly_docs_file.read_text())
-    print(self.shelly_docs_obj)
+    #print(self.shelly_docs_obj)
     self.state_file = self.path / "state.yaml"
     self.state = self.yaml.load(self.state_file.read_text())
   
@@ -48,7 +49,7 @@ class KnowledgeBase:
       if parent_key:
         # check the parent type is the same as the child type
         parent_item = self.state.get('items').get(parent_key)
-        if get_tag_from_title(parent_item.get("title")) != item_type:
+        if sdoc.get_tag_from_title(parent_item.get("title")) != item_type:
           return None
         # get keys that start with the item key
         
@@ -93,29 +94,80 @@ class KnowledgeBase:
     #print(item_dict)
     if valid_item_type():
       print("creating item")
-      put_item(self.path_str, item_key, item_dict, self.shelly_docs_obj)
+      crud.put_item(self.path_str, item_key, item_dict, self.shelly_docs_obj)
 
     # update state after writing
-    write_items_to_state(self.path_str)
+    crud.write_items_to_state(self.path_str)
     self.state = self.yaml.load(self.state_file.read_text())
 
   def get_item(self, item_key: str) -> dict:
     """
     Given the item key (ex. 'TASK-11'), get an existing Item from the KB
     """
-    return self.state.get('items').get(item_key)
+    return self.state.get('items',{}).get(item_key,None)
 
     
   
-  def update_item(self, item_key, item_data, item_content):
+  def update_item(self, item_key, item_data=None, item_content=None):
     """
     Used to update an entire item
+    - implemented by preparing new item markdown to be passed to `crud.put_item()`
 
     If wanting to update specific keys in the data block: recommended to use `Item.set_data()`
 
     If wanting to add to the item content: recommended to use `Item.set_content()`
     """
-    pass
+    #TODO: In the future, make it so 'item_content' templating can specify where the structured data can be placed
+    old_item = self.get_item(item_key)
+    def item_exists():
+      if old_item:
+        return True
+      else:
+        return False
+    def update_item_data() -> str:
+      """
+      return a string with the yaml (data) block
+      """
+      pass
+    def update_item_content() -> str:
+      """
+      return a string with the updated content
+      - note that item.content does not include the title
+      """
+      pass
+    def form_updated_item_markdown(new_item_data: str, new_item_content: str) -> str:
+      """
+      return the updated markdown string to be passed into the item.
+      
+      markdown = "#"*level + title + new_item_data + new_item_content
+      """
+      return f"{'#'*old_item['level']} {old_item['title']}\n{new_item_data}\n{new_item_content}"
+    # validate item exists
+    if item_exists():
+      print(f"\nitem {item_key} exists")
+      print("update_item::old_item",old_item)
+      new_item = {"title": old_item['title'], "markdown": old_item['markdown'], "path": old_item['path']}
+      if item_data is not None:
+        print("update_item_data::item_data", item_data)
+        # update the structured data of the item
+          # find the structured data block token
+          # replace the old data content with the new data content
+        # open the markdown of the existing item, find the structured data block, and replace the content
+        new_item_data = sdoc.set_codefenced_data(new_item, item_data)
+        print("update_item::new_item_data", new_item_data)
+        pass
+      if item_content is None:
+        new_item_content = "" 
+      else:
+        new_item_content = item_content
+      
+      new_item['markdown'] = form_updated_item_markdown(new_item_data,new_item_content)
+      print("update_item::new_item", new_item)
+      crud.put_item(self.path_str, item_key, new_item, self.shelly_docs_obj)
+      self.state = self.yaml.load(self.state_file.read_text())
+
+    else:
+      raise ValueError(f"Item {item_key} does not exist")
   
   def delete_item(self, item_key):
     pass
