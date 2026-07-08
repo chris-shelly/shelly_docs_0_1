@@ -105,3 +105,18 @@ class TestKnowledgeBaseUpdateItem:
     #print("kb_state", kb.state)
     assert updated_item.get("content") == "I updated the text here."
     assert updated_item.get("data") == {"status": "updated", 'type': 'ABC'}
+
+class TestKnowledgeBaseDeleteItem:
+  def test_delete_item_existing_file(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    kb.delete_item("ABC-2")
+    assert kb.get_item("ABC-2") == None
+
+class TestKnowledgeBaseReparentItem:
+  pass
+
+class TestQuery:
+  def test_query(self, kb_with_state):
+    pass
+  def test_query_pipeline(self, kb_with_state):
+    pass

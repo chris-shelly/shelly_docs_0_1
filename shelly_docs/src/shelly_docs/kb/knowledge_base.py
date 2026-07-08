@@ -124,17 +124,6 @@ class KnowledgeBase:
         return True
       else:
         return False
-    def update_item_data() -> str:
-      """
-      return a string with the yaml (data) block
-      """
-      pass
-    def update_item_content() -> str:
-      """
-      return a string with the updated content
-      - note that item.content does not include the title
-      """
-      pass
     def form_updated_item_markdown(new_item_data: str, new_item_content: str) -> str:
       """
       return the updated markdown string to be passed into the item.
@@ -144,17 +133,17 @@ class KnowledgeBase:
       return f"{'#'*old_item['level']} {old_item['title']}\n{new_item_data}\n{new_item_content}"
     # validate item exists
     if item_exists():
-      print(f"\nitem {item_key} exists")
-      print("update_item::old_item",old_item)
+      #print(f"\nitem {item_key} exists")
+      #print("update_item::old_item",old_item)
       new_item = {"title": old_item['title'], "markdown": old_item['markdown'], "path": old_item['path']}
       if item_data is not None:
-        print("update_item_data::item_data", item_data)
+        #print("update_item_data::item_data", item_data)
         # update the structured data of the item
           # find the structured data block token
           # replace the old data content with the new data content
         # open the markdown of the existing item, find the structured data block, and replace the content
         new_item_data = sdoc.set_codefenced_data(new_item, item_data)
-        print("update_item::new_item_data", new_item_data)
+        #print("update_item::new_item_data", new_item_data)
         pass
       if item_content is None:
         new_item_content = "" 
@@ -170,9 +159,12 @@ class KnowledgeBase:
       raise ValueError(f"Item {item_key} does not exist")
   
   def delete_item(self, item_key):
-    pass
+    crud.delete_item(self.path_str, item_key)
+    self.state = self.yaml.load(self.state_file.read_text())
 
   def reparent_item(self, item_key, new_parent_item_key):
+    # update the item's parent field and the item's key
+    # recursively update children
     pass
 
   def query(self, query_obj):
