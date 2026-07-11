@@ -171,6 +171,21 @@ class TestKnowledgeBaseReparentItem:
     assert item_in_state.get('title') == 'ABC-3-1 Beta - Bruh'
     assert item_in_state.get('key') == 'ABC-3-1'
 
+class TestKnowledgeBaseRenameItem:
+  def test_rename_item(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    item = kb.get_item('ABC-2-1')
+    item.rename("Super Sonic Speed")
+    print("test_reparent_item::item.markdown",item.markdown)
+    actual_file=kb.path / "input_a.md"
+    print("test_reparent_item::actual_file\n", actual_file.read_text())
+    state = kb.state
+    print("test_reparent_item::kb.state",state)
+    item_in_state = state.get('items').get('ABC-2-1')
+    assert item_in_state.get('title') == 'ABC-2-1 Super Sonic Speed'
+    assert item_in_state.get('key') == 'ABC-2-1'
+
+
 class TestQuery:
   def test_query(self, kb_with_state):
     pass

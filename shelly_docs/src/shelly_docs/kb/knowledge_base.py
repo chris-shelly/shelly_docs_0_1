@@ -278,13 +278,27 @@ class Item:
     }
     self.kb.delete_item(self.title.split(" ")[0])
     self.title = f"{new_item_key} {self.title.split(" ",1)[1]}"
-    self.key = self.title.split(" ")[0]
+    key = self.title.split(" ")[0]
+    self.heading = f"{'#'*determine_item_level()} {new_title}"
     self.markdown = f"{new_title}\n{"\n".join(self.markdown.splitlines()[1:])}"
     self.parent_key = new_parent_key
     print("Item.reparent()::item_copy_dict",item_copy_dict)
-    crud.put_item(str(self.kb.path),self.key,item_copy_dict,self.kb.shelly_docs_obj)
+    crud.put_item(str(self.kb.path),key,item_copy_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()
   
   def rename(self, new_name: str):
     # updates the 'name' of this item (does not impact the item key. for ex. renaming 'ABC-1 X' to 'ABC-1 Y')
-    pass
+    new_title = f"{self.title.split(" ")[0]} {new_name}"
+    item_copy_dict = {
+      "title": new_title,
+      "markdown": f"{self.heading.split(" ")[0]} {new_title}\n{"\n".join(self.markdown.splitlines()[1:])}",
+      "path": str(self.file).split("#")[0]
+    }
+    self.kb.delete_item(self.title.split(" ")[0])
+    self.title = new_title
+    key = self.title.split(" ")[0]
+    self.heading = f"{self.heading.split(" ")[0]} {new_title}"
+    self.markdown = f"{key}\n{"\n".join(self.markdown.splitlines()[1:])}"
+    print("Item.reparent()::item_copy_dict",item_copy_dict)
+    crud.put_item(str(self.kb.path),key,item_copy_dict,self.kb.shelly_docs_obj)
+    self.kb.update_state()
