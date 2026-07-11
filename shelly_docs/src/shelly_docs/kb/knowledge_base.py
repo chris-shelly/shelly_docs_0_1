@@ -33,12 +33,12 @@ class KnowledgeBase:
     self.state_file = self.path / "state.yaml"
     self.state = self.yaml.load(self.state_file.read_text())
   
-  def create_item(self, file, item_type, item_name: str, item_data, item_content, parent_key=None):
+  def create_item(self, file, item_type, item_name: str, item_data, item_content, parent_key=None) -> Item:
     """
     Create an Item, adding it to the Knowledge Base
     """
     # given the item type (and parent) determine what the key should be
-    def make_item_key():
+    def make_item_key() -> str:
       """
       Determine the correct key for this item to prevent key overlap
       """
@@ -79,10 +79,22 @@ class KnowledgeBase:
       - 'markdown' ()
       - 'path' (target .md file)
       """
+      # if there's a parent item in the same file, must add the appropriate number of hashtags to the heading
+        # check if there's a parent
+        # if so, check if it's in the same file
+        # the level of this item will be one deeper than that of its parent
+          # recall that 'level' referes to depth in a file, not about the number of parents it has.
+      level = 1
+      if (parent_key is not None):
+        parent = self.state.get('items',{}).get(parent_key,None)
+        print("parent.get('path')", parent.get('path'))
+        print("file",file)
+        if parent.get('path').split("#")[0] == file:
+          level = parent.get('level') + 1
       # build the correct title
       return {
         "title": f"{item_key} {item_name.strip("\n")}", # strip new lines
-        "markdown": f"# {item_key} {item_name.strip("\n")}\n```yaml (data)\n{self.yaml.dump(item_data)}```\n{item_content}", # raw content
+        "markdown": f"{"#"*level} {item_key} {item_name.strip("\n")}\n```yaml (data)\n{self.yaml.dump(item_data)}```\n{item_content}", # raw content
         "path": file
         } 
     def valid_item_type():
@@ -99,17 +111,23 @@ class KnowledgeBase:
     # update state after writing
     crud.write_items_to_state(self.path_str)
     self.state = self.yaml.load(self.state_file.read_text())
+    return self.get_item(item_key)
 
-  def get_item(self, item_key: str) -> dict:
+  def get_item(self, item_key: str) -> Item:
     """
     Given the item key (ex. 'TASK-11'), get an existing Item from the KB
     """
-    return self.state.get('items',{}).get(item_key,None)
+    item_dict = self.state.get('items',{}).get(item_key,None)
+    if item_dict:
+      return Item(item_dict, self.path)
+    else:
+      return None
 
     
   
   def update_item(self, item_key, item_data=None, item_content=None):
     """
+    DEPRECATED
     Used to update an entire item
     - implemented by preparing new item markdown to be passed to `crud.put_item()`
 
@@ -162,10 +180,6 @@ class KnowledgeBase:
     crud.delete_item(self.path_str, item_key)
     self.state = self.yaml.load(self.state_file.read_text())
 
-  def reparent_item(self, item_key, new_parent_item_key):
-    # update the item's parent field and the item's key
-    # recursively update children
-    pass
 
   def query(self, query_obj):
     """
@@ -175,7 +189,27 @@ class KnowledgeBase:
     pass
   
 class Item:
-  def __init__(self, key):
-    self.key = key
-    self.data
-    self.content
+  def __init__(self, item_state_dict, kb):
+    # we know the markdown must be the first line
+    self.heading: str = item_state_dict.get('markdown','').splitlines()[0] # the Markdown Heading that triggers the start of the item
+    self.data: dict = item_state_dict.get('data',None) # structured data that we can query
+    self.content: str = item_state_dict.get('content','') # other 'unstructured' content
+    self.file: Path = Path(item_state_dict.get('path',''))
+    self.parent_key = item_state_dict.get('parent', None)
+    self.kb_path: Path = Path(kb)
+  def set_data(self, new_data: dict):
+    # overwrites the data block for the item
+    pass
+  def set_content(self, new_content: str):
+    # overwrites the content for the item
+    pass
+  def set_file(self, new_file: str):
+    # moves the item to this file (append to the end of the file by default, recalculates heading level based on parent presence)
+    pass
+  def reparent(self, new_parent_key: str):
+    # reparents this item, updating this item's key and keys of the children
+    pass
+  
+  def rename(self, new_name: str):
+    # updates the 'name' of this item (does not impact the item key. for ex. renaming 'ABC-1 X' to 'ABC-1 Y')
+    pass
