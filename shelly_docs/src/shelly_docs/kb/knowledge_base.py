@@ -20,6 +20,40 @@ class MyYAML(YAML):
     if inefficient:
       return stream.getvalue()
 
+def make_item_key(kb: KnowledgeBase, parent_key: str, item_type: str) -> str:
+  """
+  Determine the correct key for this item to prevent key overlap
+  """
+  # if the item has a parent, find the next available item key under that parent
+  print('checking/making item key')
+  next_key_num = 1
+  keys = kb.state.get('items').keys()
+  if parent_key:
+    # check the parent type is the same as the child type
+    parent_item = kb.state.get('items').get(parent_key)
+    if sdoc.get_tag_from_title(parent_item.get("title")) != item_type:
+      return None
+    # get keys that start with the item key
+    
+    
+    for key in keys:
+      if (key[:len(parent_key)] == parent_key) and (key != parent_key):
+        print(key, "matched to parent", parent_key)
+        print("key num", key.split("-")[-1])
+        if int(key.split("-")[-1]) == next_key_num:
+          next_key_num += 1
+    print(next_key_num)
+    return f"{parent_key}-{next_key_num}"
+  else:
+    # no parent, check for next available key num of that type
+    for key in keys:
+      if (key[:len(item_type)] == item_type):
+        if int(key.split("-")[-1]) == next_key_num:
+          next_key_num += 1
+    return f"{item_type}-{next_key_num}"
+
+
+
 class KnowledgeBase:
   """
   A knowledge base for a given directory
@@ -39,38 +73,6 @@ class KnowledgeBase:
     Create an Item, adding it to the Knowledge Base
     """
     # given the item type (and parent) determine what the key should be
-    def make_item_key() -> str:
-      """
-      Determine the correct key for this item to prevent key overlap
-      """
-      # if the item has a parent, find the next available item key under that parent
-      print('checking/making item key')
-      next_key_num = 1
-      keys = self.state.get('items').keys()
-      if parent_key:
-        # check the parent type is the same as the child type
-        parent_item = self.state.get('items').get(parent_key)
-        if sdoc.get_tag_from_title(parent_item.get("title")) != item_type:
-          return None
-        # get keys that start with the item key
-        
-        
-        for key in keys:
-          if (key[:len(parent_key)] == parent_key) and (key != parent_key):
-            print(key, "matched to parent", parent_key)
-            print("key num", key.split("-")[-1])
-            if int(key.split("-")[-1]) == next_key_num:
-              next_key_num += 1
-        print(next_key_num)
-        return f"{parent_key}-{next_key_num}"
-      else:
-        # no parent, check for next available key num of that type
-        for key in keys:
-          if (key[:len(item_type)] == item_type):
-            if int(key.split("-")[-1]) == next_key_num:
-              next_key_num += 1
-        return f"{item_type}-{next_key_num}"
-
     def make_item_dict(item_key):
       """
       to create the item, we need to make a python dictionary out of the data
@@ -102,7 +104,7 @@ class KnowledgeBase:
       return (item_type in self.shelly_docs_obj.get('item_tags'))
     # config refers to the shellydocs.yaml we use to verify item types
     
-    item_key = make_item_key()
+    item_key = make_item_key(self,parent_key,item_type)
     item_dict = make_item_dict(item_key)
     #print(item_dict)
     if valid_item_type():
@@ -229,16 +231,59 @@ class Item:
       # add to the new file
     item_copy_dict = {
       "title": self.title,
-      "markdown": self.markdown,
+      "markdown": self.markdown.strip(),
       "path": new_file
     }
     self.kb.delete_item(self.title.split(" ")[0])
     crud.put_item(str(self.kb.path),self.title.split(" ")[0],item_copy_dict,self.kb.shelly_docs_obj)
     self.file = new_file
     self.kb.update_state()
-  def reparent(self, new_parent_key: str):
+  def reparent(self, new_parent_key: str|None, new_item_type: str|None):
     # reparents this item, updating this item's key and keys of the children
-    pass
+    # determine new item key
+    new_item_key = ""
+    if new_parent_key:
+      new_item_key = make_item_key(self.kb, new_parent_key, new_parent_key.split("-")[0])
+    else:
+      new_item_key = make_item_key(self.kb, None, new_item_type)
+    new_title = f"{new_item_key} {self.title.split(" ",1)[1]}"
+    def determine_item_level():
+      """
+      to create the item, we need to make a python dictionary out of the data
+
+      needs:
+      - 'title' (includes key and name, ex. "ABC-99 Brand New")
+      - 'markdown' ()
+      - 'path' (target .md file)
+      """
+      # if there's a parent item in the same file, must add the appropriate number of hashtags to the heading
+        # check if there's a parent
+        # if so, check if it's in the same file
+        # the level of this item will be one deeper than that of its parent
+          # recall that 'level' referes to depth in a file, not about the number of parents it has.
+      level = 1
+      if (new_parent_key is not None):
+        parent = self.kb.state.get('items',{}).get(new_parent_key,None)
+        print("parent.get('path')", parent.get('path'))
+        print("file",str(self.file))
+        if parent.get('path').split("#")[0] == str(self.file).split("#")[0]:
+          level = parent.get('level') + 1
+      # build the correct title
+      print(level)
+      return level
+    item_copy_dict = {
+      "title": f"{new_item_key} {self.title.split(" ",1)[1]}",
+      "markdown": f"{'#'*determine_item_level()} {new_title}\n{"\n".join(self.markdown.splitlines()[1:])}",
+      "path": str(self.file).split("#")[0]
+    }
+    self.kb.delete_item(self.title.split(" ")[0])
+    self.title = f"{new_item_key} {self.title.split(" ",1)[1]}"
+    self.key = self.title.split(" ")[0]
+    self.markdown = f"{new_title}\n{"\n".join(self.markdown.splitlines()[1:])}"
+    self.parent_key = new_parent_key
+    print("Item.reparent()::item_copy_dict",item_copy_dict)
+    crud.put_item(str(self.kb.path),self.key,item_copy_dict,self.kb.shelly_docs_obj)
+    self.kb.update_state()
   
   def rename(self, new_name: str):
     # updates the 'name' of this item (does not impact the item key. for ex. renaming 'ABC-1 X' to 'ABC-1 Y')

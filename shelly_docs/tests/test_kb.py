@@ -140,8 +140,16 @@ class TestKnowledgeBaseUpdateItem:
     assert item.file == "input_b.md"
     assert str(kb.get_item('ABC-2').file).split("#")[0] == "input_b.md"
     actual_file=kb.path / "input_b.md"
-    print("test_move_item_to_existing_file::actual_file", actual_file.read_text())
-    
+    print("test_move_item_to_existing_file::actual_file\n", actual_file.read_text())
+  def test_move_item_to_new_file(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    item = kb.get_item('ABC-2')
+    item.set_file("input_c.md")
+    assert item.file == "input_c.md"
+    assert str(kb.get_item('ABC-2').file).split("#")[0] == "input_c.md"
+    actual_file=kb.path / "input_c.md"
+    print("test_move_item_to_existing_file::actual_file\n", actual_file.read_text())
+
 class TestKnowledgeBaseDeleteItem:
   def test_delete_item_existing_file(self, kb_with_state):
     kb = KnowledgeBase(kb_with_state)
@@ -149,7 +157,19 @@ class TestKnowledgeBaseDeleteItem:
     assert kb.get_item("ABC-2") == None
 
 class TestKnowledgeBaseReparentItem:
-  pass
+  def test_reparent_item(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    item = kb.get_item('ABC-2-1')
+    item.reparent("ABC-3",None)
+    print("test_reparent_item::item.markdown",item.markdown)
+    actual_file=kb.path / "input_a.md"
+    print("test_reparent_item::actual_file\n", actual_file.read_text())
+    state = kb.state
+    print("test_reparent_item::kb.state",state)
+    item_in_state = state.get('items').get('ABC-3-1')
+    assert item_in_state.get('parent') == 'ABC-3'
+    assert item_in_state.get('title') == 'ABC-3-1 Beta - Bruh'
+    assert item_in_state.get('key') == 'ABC-3-1'
 
 class TestQuery:
   def test_query(self, kb_with_state):
