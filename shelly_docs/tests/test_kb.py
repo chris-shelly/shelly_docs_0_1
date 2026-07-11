@@ -132,6 +132,16 @@ class TestKnowledgeBaseUpdateItem:
     updated_item = kb.get_item("ABC-2")
     print("updated_item", updated_item)
     assert updated_item.content == "I updated the text here."
+
+  def test_move_item_to_existing_file(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    item = kb.get_item('ABC-2')
+    item.set_file("input_b.md")
+    assert item.file == "input_b.md"
+    assert str(kb.get_item('ABC-2').file).split("#")[0] == "input_b.md"
+    actual_file=kb.path / "input_b.md"
+    print("test_move_item_to_existing_file::actual_file", actual_file.read_text())
+    
 class TestKnowledgeBaseDeleteItem:
   def test_delete_item_existing_file(self, kb_with_state):
     kb = KnowledgeBase(kb_with_state)

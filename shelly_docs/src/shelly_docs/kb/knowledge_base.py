@@ -6,6 +6,7 @@ from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
 from ..be.crud import crud as crud
+from ..be.crud import md_handling as mdh
 from ..be.crud import shelly_doc_processing as sdoc
 
 
@@ -119,11 +120,13 @@ class KnowledgeBase:
     """
     item_dict = self.state.get('items',{}).get(item_key,None)
     if item_dict:
-      return Item(item_dict, self.path)
+      return Item(item_dict, self)
     else:
       return None
 
-    
+  def update_state(self):
+    crud.write_items_to_state(self.path_str)
+    self.state = self.yaml.load(self.state_file.read_text())
   
   def update_item(self, item_key, item_data=None, item_content=None):
     """
@@ -194,18 +197,45 @@ class Item:
     self.heading: str = item_state_dict.get('markdown','').splitlines()[0] # the Markdown Heading that triggers the start of the item
     self.data: dict = item_state_dict.get('data',None) # structured data that we can query
     self.content: str = item_state_dict.get('content','') # other 'unstructured' content
+    self.markdown: str = item_state_dict.get('markdown')
+    self.title: str = item_state_dict.get('title')
     self.file: Path = Path(item_state_dict.get('path',''))
     self.parent_key = item_state_dict.get('parent', None)
-    self.kb_path: Path = Path(kb)
+    self.kb: KnowledgeBase = kb
   def set_data(self, new_data: dict):
-    # overwrites the data block for the item
-    pass
+    updated_item_markdown = mdh.set_data_block(self.markdown, new_data)
+    updated_item_dict = {
+      "title":  self.title,
+      "markdown": updated_item_markdown,
+      "path": str(self.file)
+    }
+    print(updated_item_dict)
+    crud.put_item(str(self.kb.path),self.title.split(" ")[0],updated_item_dict,self.kb.shelly_docs_obj)
+    self.kb.update_state()
   def set_content(self, new_content: str):
-    # overwrites the content for the item
-    pass
+    updated_item_markdown = mdh.set_content(self.markdown, new_content)
+    updated_item_dict = {
+      "title":  self.title,
+      "markdown": updated_item_markdown,
+      "path": str(self.file)
+    }
+    print(updated_item_dict)
+    crud.put_item(str(self.kb.path),self.title.split(" ")[0],updated_item_dict,self.kb.shelly_docs_obj)
+    self.kb.update_state()
   def set_file(self, new_file: str):
     # moves the item to this file (append to the end of the file by default, recalculates heading level based on parent presence)
-    pass
+      # copy the item dict
+      # delete the item from the original file
+      # add to the new file
+    item_copy_dict = {
+      "title": self.title,
+      "markdown": self.markdown,
+      "path": new_file
+    }
+    self.kb.delete_item(self.title.split(" ")[0])
+    crud.put_item(str(self.kb.path),self.title.split(" ")[0],item_copy_dict,self.kb.shelly_docs_obj)
+    self.file = new_file
+    self.kb.update_state()
   def reparent(self, new_parent_key: str):
     # reparents this item, updating this item's key and keys of the children
     pass
