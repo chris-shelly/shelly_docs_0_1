@@ -186,8 +186,34 @@ class TestKnowledgeBaseRenameItem:
     assert item_in_state.get('key') == 'ABC-2-1'
 
 
-class TestQuery:
-  def test_query(self, kb_with_state):
-    pass
+class TestKnowledgeBaseQuery:
+  def test_query_yaml_str(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    query="""field1: 5
+"""
+    query_out = kb.query(query)
+    print("test_query_yaml_str::query_out\n",query_out)
+    assert query_out.get('results')[0].get('key') == 'XYZ-1'
+  def test_query_logic_yaml_str(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    query="""
+$or:
+- field1: 5
+- field1: 8
+"""
+    query_out = kb.query(query)
+    print("test_query_yaml_str::query_out\n",query_out)
+    assert len(query_out.get('results')) == 2 # ABC-2 and XYZ-1
+  def test_query_dict(self, kb_with_state):
+    kb = KnowledgeBase(kb_with_state)
+    query={"field1": 5}
+    query_out = kb.query(query)
+    print("test_query_dict::query_out\n",query_out)
   def test_query_pipeline(self, kb_with_state):
-    pass
+    kb = KnowledgeBase(kb_with_state)
+    query=[{'field2': 'value'},{'type':'ABC'}]
+    query_out = kb.query(query)
+    print("test_query_pipeline::query_out\n",query_out)
+    keys = [x.get('key') for x in query_out.get('results')]
+    print("test_query_pipeline::keys\n",keys)
+    assert 'ABC-3' in keys

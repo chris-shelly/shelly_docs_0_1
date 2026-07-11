@@ -8,6 +8,7 @@ from ruamel.yaml.compat import StringIO
 from ..be.crud import crud as crud
 from ..be.crud import md_handling as mdh
 from ..be.crud import shelly_doc_processing as sdoc
+from ..be.crud import query as qry
 
 
 class MyYAML(YAML):
@@ -191,7 +192,18 @@ class KnowledgeBase:
     Run a shelly docs query. uses the mongodb like syntax
     Accepts a string (formatted as YAML), python list, or python dict
     """
-    pass
+    if isinstance(query_obj, str):
+      parsed_query = self.yaml.load(query_obj)
+    else:
+      parsed_query = query_obj
+    try:
+      if isinstance(parsed_query, dict):
+        results = qry.query_items(self.state.get("items"), parsed_query)
+      elif isinstance(parsed_query, list):
+        results = qry.query_pipeline(self.state.get("items"), parsed_query)
+    except ValueError as e:
+      print(f"Error: {e}")
+    return {"results": results, "query": parsed_query}
   
 class Item:
   def __init__(self, item_state_dict, kb):
