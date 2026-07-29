@@ -2,12 +2,14 @@ from shelly_docs.kb import KnowledgeBase, Item
 import os
 from pathlib import Path
 from rich import print
+import pytest
+
 
 class TestKnowledgeBaseGetItem:
-  def test_get_item(self, kb_with_state):
-    print("kb_path", kb_with_state)
-    print("kb_path::contents (ls)", os.listdir(kb_with_state))
-    kb = KnowledgeBase(kb_with_state)
+  def test_get_item(self, kb_a):
+    print("kb_path", kb_a)
+    print("kb_path::contents (ls)", os.listdir(kb_a))
+    kb = KnowledgeBase(kb_a)
     
     item = kb.get_item("ABC-2")
     print("retrieved item", item)
@@ -18,10 +20,10 @@ class TestKnowledgeBaseGetItem:
     assert str(item.file).split("#")[0] == str(Path('input_a.md'))
     assert item.parent_key == None
 
-  def test_get_item_with_parent(self, kb_with_state):
-    print("kb_path", kb_with_state)
-    print("kb_path::contents (ls)", os.listdir(kb_with_state))
-    kb = KnowledgeBase(kb_with_state)
+  def test_get_item_with_parent(self, kb_a):
+    print("kb_path", kb_a)
+    print("kb_path::contents (ls)", os.listdir(kb_a))
+    kb = KnowledgeBase(kb_a)
     
     item = kb.get_item("ABC-2-1")
     print("retrieved item", item)
@@ -34,9 +36,9 @@ class TestKnowledgeBaseGetItem:
 
 
 class TestKnowledgeBaseCreateItem:
-  def test_create_item_existing_file(self, kb_with_state):
-    print("kb_path", kb_with_state)
-    kb = KnowledgeBase(kb_with_state)
+  def test_create_item_existing_file(self, kb_a):
+    print("kb_path", kb_a)
+    kb = KnowledgeBase(kb_a)
     # create item as ABC-4
     kb.create_item(
       "input_a.md",
@@ -53,9 +55,9 @@ class TestKnowledgeBaseCreateItem:
     print("kb_state", kb.state)
     assert created_item.heading == "# ABC-4 Making stuff"
 
-  def test_create_item_existing_file_same_as_prev_sibling(self, kb_with_state):
-      print("kb_path", kb_with_state)
-      kb = KnowledgeBase(kb_with_state)
+  def test_create_item_existing_file_same_as_prev_sibling(self, kb_a):
+      print("kb_path", kb_a)
+      kb = KnowledgeBase(kb_a)
       # create item as ABC-4
       kb.create_item(
         "input_b.md",
@@ -72,9 +74,9 @@ class TestKnowledgeBaseCreateItem:
       print("kb_state", kb.state)
       assert created_item.heading == "# ABC-4 Making stuff"
 
-  def test_create_item_with_sibling_gap(self, kb_with_state):
-        print("kb_path", kb_with_state)
-        kb = KnowledgeBase(kb_with_state)
+  def test_create_item_with_sibling_gap(self, kb_b):
+        print("kb_path", kb_b)
+        kb = KnowledgeBase(kb_b)
         # create item as ABC-4
         kb.create_item(
           "input_b.md",
@@ -91,9 +93,9 @@ class TestKnowledgeBaseCreateItem:
         print("kb_state", kb.state)
         assert created_item.heading == "# DOC-6 Silver"
 
-  def test_create_item_new_file(self, kb_with_state):
-    print("kb_path", kb_with_state)
-    kb = KnowledgeBase(kb_with_state)
+  def test_create_item_new_file(self, kb_a):
+    print("kb_path", kb_a)
+    kb = KnowledgeBase(kb_a)
     # create item as ABC-4
     kb.create_item(
       "test_a.md",
@@ -110,9 +112,9 @@ class TestKnowledgeBaseCreateItem:
     print("kb_state", kb.state)
     assert created_item.heading == "# ABC-4 Making stuff"
 
-  def test_create_item_as_child_existing_file(self, kb_with_state):
-    print("kb_path", kb_with_state)
-    kb = KnowledgeBase(kb_with_state)
+  def test_create_item_as_child_existing_file(self, kb_a):
+    print("kb_path", kb_a)
+    kb = KnowledgeBase(kb_a)
     # create item as ABC-4
     kb.create_item(
       "input_b.md",
@@ -129,9 +131,9 @@ class TestKnowledgeBaseCreateItem:
     print("kb_state", kb.state)
     assert created_item.heading == "## ABC-3-1 Making stuff"
 
-  def test_create_item_as_child_new_file(self, kb_with_state):
-    print("kb_path", kb_with_state)
-    kb = KnowledgeBase(kb_with_state)
+  def test_create_item_as_child_new_file(self, kb_a):
+    print("kb_path", kb_a)
+    kb = KnowledgeBase(kb_a)
     # create item as ABC-4
     kb.create_item(
       "input_a.md",
@@ -149,9 +151,9 @@ class TestKnowledgeBaseCreateItem:
   
 
 class TestKnowledgeBaseUpdateItem:
-  def test_set_data_existing_file(self, kb_with_state):
-    #print("kb_path", kb_with_state)
-    kb = KnowledgeBase(kb_with_state)
+  def test_set_data_existing_file(self, kb_a):
+    #print("kb_path", kb_a)
+    kb = KnowledgeBase(kb_a)
     # Update Item 'ABC-2'
     item = kb.get_item('ABC-2')
     item.set_data({"status": "updated"})
@@ -160,9 +162,9 @@ class TestKnowledgeBaseUpdateItem:
     print("updated_item", updated_item)
     assert updated_item.data == {"status": "updated", 'type': 'ABC'}
  
-  def test_set_content_existing_file(self, kb_with_state):
-    #print("kb_path", kb_with_state)
-    kb = KnowledgeBase(kb_with_state)
+  def test_set_content_existing_file(self, kb_a):
+    #print("kb_path", kb_a)
+    kb = KnowledgeBase(kb_a)
     # Update Content of Item 'ABC-2'
     item = kb.get_item('ABC-2')
     item.set_content("I updated the text here.")
@@ -171,16 +173,16 @@ class TestKnowledgeBaseUpdateItem:
     print("updated_item", updated_item)
     assert updated_item.content == "I updated the text here."
 
-  def test_move_item_to_existing_file(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_move_item_to_existing_file(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     item = kb.get_item('ABC-2')
     item.set_file("input_b.md")
     assert item.file == "input_b.md"
     assert str(kb.get_item('ABC-2').file).split("#")[0] == "input_b.md"
     actual_file=kb.path / "input_b.md"
     print("test_move_item_to_existing_file::actual_file\n", actual_file.read_text())
-  def test_move_item_to_new_file(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_move_item_to_new_file(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     item = kb.get_item('ABC-2')
     item.set_file("input_c.md")
     assert item.file == "input_c.md"
@@ -189,14 +191,14 @@ class TestKnowledgeBaseUpdateItem:
     print("test_move_item_to_existing_file::actual_file\n", actual_file.read_text())
 
 class TestKnowledgeBaseDeleteItem:
-  def test_delete_item_existing_file(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_delete_item_existing_file(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     kb.delete_item("ABC-2")
     assert kb.get_item("ABC-2") == None
 
 class TestKnowledgeBaseReparentItem:
-  def test_reparent_item(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_reparent_item(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     item = kb.get_item('ABC-2-1')
     item.reparent("ABC-3",None)
     print("test_reparent_item::item.markdown",item.markdown)
@@ -210,8 +212,8 @@ class TestKnowledgeBaseReparentItem:
     assert item_in_state.get('key') == 'ABC-3-1'
 
 class TestKnowledgeBaseRenameItem:
-  def test_rename_item(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_rename_item(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     item = kb.get_item('ABC-2-1')
     item.rename("Super Sonic Speed")
     print("test_reparent_item::item.markdown",item.markdown)
@@ -225,15 +227,15 @@ class TestKnowledgeBaseRenameItem:
 
 
 class TestKnowledgeBaseQuery:
-  def test_query_yaml_str(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_query_yaml_str(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     query="""field1: 5
 """
     query_out = kb.query(query)
     print("test_query_yaml_str::query_out\n",query_out)
     assert query_out.get('results')[0].get('key') == 'XYZ-1'
-  def test_query_logic_yaml_str(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_query_logic_yaml_str(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     query="""
 $or:
 - field1: 5
@@ -242,13 +244,13 @@ $or:
     query_out = kb.query(query)
     print("test_query_yaml_str::query_out\n",query_out)
     assert len(query_out.get('results')) == 2 # ABC-2 and XYZ-1
-  def test_query_dict(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_query_dict(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     query={"field1": 5}
     query_out = kb.query(query)
     print("test_query_dict::query_out\n",query_out)
-  def test_query_pipeline(self, kb_with_state):
-    kb = KnowledgeBase(kb_with_state)
+  def test_query_pipeline(self, kb_a):
+    kb = KnowledgeBase(kb_a)
     query=[{'field2': 'value'},{'type':'ABC'}]
     query_out = kb.query(query)
     print("test_query_pipeline::query_out\n",query_out)
