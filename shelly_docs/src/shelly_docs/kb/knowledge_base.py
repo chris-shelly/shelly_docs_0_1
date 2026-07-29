@@ -27,8 +27,10 @@ def make_item_key(kb: KnowledgeBase, parent_key: str, item_type: str) -> str:
   """
   # if the item has a parent, find the next available item key under that parent
   print('checking/making item key')
+  print('HI!')
   next_key_num = 1
   keys = kb.state.get('items').keys()
+  print("make_item_key::keys", list(keys))
   if parent_key:
     # check the parent type is the same as the child type
     parent_item = kb.state.get('items').get(parent_key)
