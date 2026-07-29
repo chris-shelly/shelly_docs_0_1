@@ -53,6 +53,44 @@ class TestKnowledgeBaseCreateItem:
     print("kb_state", kb.state)
     assert created_item.heading == "# ABC-4 Making stuff"
 
+  def test_create_item_existing_file_same_as_prev_sibling(self, kb_with_state):
+      print("kb_path", kb_with_state)
+      kb = KnowledgeBase(kb_with_state)
+      # create item as ABC-4
+      kb.create_item(
+        "input_b.md",
+        "ABC",
+        "Making stuff",
+        {"status": "todo"},
+        "I have some content here",
+        #"PROCESS-1"
+      )
+  
+      # check for the item after creating it
+      created_item = kb.get_item("ABC-4")
+      print("created_item", created_item)
+      print("kb_state", kb.state)
+      assert created_item.heading == "# ABC-4 Making stuff"
+
+  def test_create_item_with_sibling_gap(self, kb_with_state):
+        print("kb_path", kb_with_state)
+        kb = KnowledgeBase(kb_with_state)
+        # create item as ABC-4
+        kb.create_item(
+          "input_b.md",
+          "DOC",
+          "Silver",
+          {"status": "todo"},
+          "I have some content here",
+          #"PROCESS-1"
+        )
+    
+        # check for the item after creating it
+        created_item = kb.get_item("DOC-6")
+        print("created_item", created_item)
+        print("kb_state", kb.state)
+        assert created_item.heading == "# DOC-6 Silver"
+
   def test_create_item_new_file(self, kb_with_state):
     print("kb_path", kb_with_state)
     kb = KnowledgeBase(kb_with_state)

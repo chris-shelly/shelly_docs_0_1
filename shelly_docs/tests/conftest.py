@@ -4,6 +4,17 @@ import pytest
 
 
 TEMPLATES_DIR = Path(__file__).parent / "templates" / "a"
+TEMPLATES_DIR_2 = Path(__file__).parent / "templates" / "b"
+
+def set_template_kb(template_key: str) -> Path:
+    """
+    Choose a shelly-docs knowledge base to execute the test on
+    """
+    
+    template_dir = Path(__file__).parent / "templates" / template_key
+    if template_dir.is_dir():
+        return template_dir
+    raise ValueError("Template KB Issue, incorrect template kb directory")
 
 
 @pytest.fixture
