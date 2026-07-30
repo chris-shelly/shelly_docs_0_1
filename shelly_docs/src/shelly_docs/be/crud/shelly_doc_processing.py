@@ -3,6 +3,7 @@ Module for processing Shelly Docs Items in a Document
 """
 from pathlib import Path
 import re
+import uuid
 import json
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
@@ -291,7 +292,7 @@ def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: 
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
-      
+      item['uuid'] = str(uuid.uuid4())
       item['data'] = get_codefenced_data(item)
       item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)
@@ -300,7 +301,8 @@ def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: 
       # heading object no longer needed
       del item['heading']
       processed_items.append(item)
-      
+    else:
+      print(f"Item {item['title']} has item type {get_tag_from_title(item['title'])} not found in 'shellydocs.yaml::item_tags'\n{item['title']} will not be added to state")
   return processed_items
 
 def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
@@ -326,6 +328,7 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
+      item['uuid'] = str(uuid.uuid4())
       item['data'] = get_codefenced_data(item)
       item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)

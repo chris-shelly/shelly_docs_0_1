@@ -23,38 +23,15 @@ class MyYAML(YAML):
 
 def make_item_key(kb: KnowledgeBase, parent_key: str, item_type: str) -> str:
   """
-  Determine the correct key for this item to prevent key overlap
+  Determine the correct key for a new item being created that does not yet have a key
   """
-  # if the item has a parent, find the next available item key under that parent
-  print('checking/making item key')
-  print('HI!')
-  next_key_num = 1
-  keys = kb.state.get('items').keys()
-  print("make_item_key::keys", list(keys))
+  ids = kb.state.get('ids')
   if parent_key:
-    # check the parent type is the same as the child type
-    parent_item = kb.state.get('items').get(parent_key)
-    if sdoc.get_tag_from_title(parent_item.get("title")) != item_type:
-      return None
-    # get keys that start with the item key
-    
-    
-    for key in keys:
-      if (key[:len(parent_key)] == parent_key) and (key != parent_key):
-        print(key, "matched to parent", parent_key)
-        print("key num", key.split("-")[-1])
-        if int(key.split("-")[-1]) == next_key_num:
-          next_key_num += 1
-    print(next_key_num)
-    return f"{parent_key}-{next_key_num}"
+    # check for the parent in 'ids' and find `ids.{{item_type}}.{{parent_key}}.next`
+    return ids.get(item_type).get(parent_key).get("next")
   else:
-    # no parent, check for next available key num of that type
-    for key in keys:
-      if (key[:len(item_type)] == item_type):
-        if int(key.split("-")[-1]) == next_key_num:
-          next_key_num += 1
-    return f"{item_type}-{next_key_num}"
-
+    # check for the next available under that item type (`ids.{{item_type}}.next`)
+    return ids.get(item_type).get("next")
 
 
 class KnowledgeBase:

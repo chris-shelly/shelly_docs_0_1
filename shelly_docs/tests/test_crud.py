@@ -2,6 +2,7 @@ from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
 from rich import print
+import sys
 
 import src.shelly_docs.be.crud.crud as crud
 
@@ -79,7 +80,8 @@ class TestWriteItemsToState:
         assert "ABC-3" in item_keys
         assert state['ids']['ABC']['next'] == "ABC-4"
         assert state['ids']['ABC']['ABC-1']['next'] == "ABC-1-1"
-        assert state['ids']['ABC']['ABC-2']['ABC-2-1']['next'] == "ABC-2-1-1"
+        assert state['ids']['ABC']['ABC-2']['next'] == "ABC-2-2"
+        assert state['ids']['ABC']['ABC-2-1']['next'] == "ABC-2-1-1"
 
         assert state['ids']['XYZ']['next'] == "XYZ-3"
 
@@ -90,17 +92,20 @@ class TestWriteItemsToState:
         print("\ntest_state_ids_assignment_out_of_order()")
         crud.write_items_to_state(kb_b)
         state = yaml.load((Path(kb_b) / "state.yaml").read_text())
-        print("\ntest_state_ids_assignment_out_of_order()::state", state)
+        print("\ntest_state_ids_assignment_out_of_order()::state")
+        yaml.dump(state, sys.stdout)
 
         item_keys = list(state["items"].keys())
         assert "DOC-1" in item_keys
         assert "DOC-2" in item_keys
         assert "DOC-4" in item_keys
         assert "DOC-5" in item_keys
-        assert state['ids']['DOC']['DOC-1']['next'] == "DOC-1-1"
-        assert state['ids']['DOC']['DOC-2']['next'] == "DOC-2-1"
+        assert state['ids']['DOC']['DOC-1']['next'] == "DOC-1-2"
+        assert state['ids']['DOC']['DOC-2-1']['next'] == "DOC-2-1-4"
+        assert state['ids']['DOC']['DOC-2']['next'] == "DOC-2-2"
         assert state['ids']['DOC']['DOC-4']['next'] == "DOC-4-1"
         assert state['ids']['DOC']['DOC-5']['next'] == "DOC-5-1"
+        assert state['ids']['DOC']['next'] == "DOC-6"
 
     def test_overwrites_existing_state(self, kb_a):
         crud.write_items_to_state(kb_a)

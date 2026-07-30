@@ -27,6 +27,9 @@ def write_items_to_state(path: str) -> None:
 
   
   """
+  
+    
+  print("write_items_to_state()::")
   state = {"items":{}, "ids": {}}
   
   state_path = Path(f"{path}/state.yaml")
@@ -38,27 +41,89 @@ def write_items_to_state(path: str) -> None:
   items = get_items(path, config)
   # given an array of items, write them to state
   state["ids"] = ids
+  def add_item_id(item_title: str, item_uuid: str):
+      """
+      Add an Item to `ids` in `state.yaml`
+  
+      Items must bring their own IDs
+      - check for availability
+      - insert into the `ids` object
+      - updates the appropriate 'next'
+        - if top level, updates the `{{item_type}}.next`
+        - else, updates the `{{item_parent}}.next`
+      - create a 'next' for the prospective child
+      """
+      # extract the important pieces of the item (ex. 'ABC-2-1-1 Hello')
+        # item key (ex. 'ABC-2-1-1')
+          # the key used to refer to the item
+        # item prefix (ex. 'ABC-2-1')
+          # everything before the last part of the item, 
+          # used to determine if the item has a parent and which `next` field should be updated
+        # item type (ex. 'ABC')
+          # used to determine where in the `state.yaml::ids` the item ID lives
+      item_key = item_title.split(' ')[0]
+      print("add_item_id()::item_key", item_key)
+      item_head = "-".join(item_key.split('-')[:-1])
+      item_tail = item_key.split('-')[-1]
+      item_type = item_key.split('-')[0]
+      has_parent = (item_type != item_head)
+  
+      # check for availability
+        # doesn't conflict with existing IDs (i.e. is not already found in `state.yaml::ids` and not already added to 'state.yaml::items')
+      id_available = (state.get("ids").get(item_type).get(item_key) is None)
+  
+      if id_available:
+        # insert into the IDs object
+        state.get("ids").get(item_type).update({item_key: {"next": f"{item_key}-1"}})
+        # update the 'next' (if no parent, update `ids.{{item_type}}.next` else, update `ids.{{item_type}}.{{item_parent.next}}`)
+        old_next = None
+        if has_parent:
+          # check the current 'next'
+          print("add_item_id()::item_head", item_head)
+          print("add_item_id()::state.get('ids').get(item_type)", state.get("ids").get(item_type))
+          print("add_item_id()::state.get('ids').get(item_type).get(item_head)", state.get("ids").get(item_type).get(item_head))
+          # if the child has a parent that has not had its ID registered?
+          # recursively add the item ID of the parent
+          #add_item_id(item_head)
+          parent_id_added = (state.get("ids").get(item_type).get(item_head) is not None)
+          if not parent_id_added:
+            print(f"add_item_id()::recursively adding parent {item_head} of item {item_key}")
+            def get_item_uuid_from_candidates(item_key_to_check) -> str:
+              for item in items:
+                if item['title'].split(' ')[0] == item_key_to_check:
+                  return item['uuid']
+            add_item_id(item_head, get_item_uuid_from_candidates(item_head))
+          old_next = state.get("ids").get(item_type).get(item_head).get("next")
+          old_next_head = "-".join(old_next.split('-')[:-1])
+          # if the tail of the old next is lte the tail of the inserted key, the new next should be 1 greater than the tail of the inserted key
+          old_next_tail = old_next.split('-')[-1]
+          if int(old_next_tail) <= int(item_tail):
+            new_next_tail = str(int(item_tail) + 1)
+            new_next = f"{old_next_head}-{new_next_tail}"
+            state.get("ids").get(item_type).get(item_head).update({"next": new_next})
+        else:
+          print("add_item_id()::no_parent::state.get('ids).get(item_type)", state.get("ids").get(item_type))
+          old_next = state.get("ids").get(item_type).get("next")
+          old_next_head = "-".join(old_next.split('-')[:-1])
+          # if the tail of the old next is lte the tail of the inserted key, the new next should be 1 greater than the tail of the inserted key
+          old_next_tail = old_next.split('-')[-1]
+          if int(old_next_tail) <= int(item_tail):
+            new_next_tail = str(int(item_tail) + 1)
+            new_next = f"{old_next_head}-{new_next_tail}"
+            state.get("ids").get(item_type).update({"next": new_next})
+        pass
+      else:
+        # check the UUID if the same item has already been added
+        uuid_according_to_items = state.get("items").get(item_key).get("uuid")
+        if ((uuid_according_to_items is not None) and (uuid_according_to_items == item_uuid)):
+          print(f"item {item_key} was already added due to child being discovered first")
+        else:
+          raise ValueError(f"ID {item_key} is not available according to the state.")
   for item in items:
     item_key = item['title'].split(' ')[0] # item titles are in the form of "ABC-1 Hello", so splitting like this gives us the item key
     state["items"][item_key] = item # add the item under the item key
-    # populate against the ids map
-    item_key_pref = item_key.split('-')[0]
-    next_available = state["ids"][item_key_pref]['next']
-    # confirm if the proposed item key is available
-    key_available = (state["ids"].get(item_key_pref).get(item_key)) is None
-    print("write_items_to_state()::item_key", item_key)
-    print("write_items_to_state()::next available",next_available)
-    if (item_key == next_available): # item key is accepted:
-      #print("write_items_to_state()::item key accepted into ids hierarchy")
-      # increment the next available key
-      state["ids"][item_key_pref]['next'] = f"{next_available.split('-')[0]}-{int(next_available.split('-')[1]) + 1}"
-      # add a branch to the map hierarchy
-      state["ids"][item_key_pref][item_key] = {"next": f"{item_key}-1"}
-    elif key_available:
-      # increment the next available key
-      #state["ids"][item_key_pref]['next'] = f"{next_available.split('-')[0]}-{int(next_available.split('-')[1]) + 1}"
-      # add a branch to the map hierarchy
-      state["ids"][item_key_pref][item_key] = {"next": f"{item_key}-1"}
+    add_item_id(item['title'], item['uuid'])
+    print("---")
   yaml.dump(state, state_path)
 
 def get_state(path: str) -> dict:

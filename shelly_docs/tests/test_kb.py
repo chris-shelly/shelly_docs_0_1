@@ -134,7 +134,7 @@ class TestKnowledgeBaseCreateItem:
   def test_create_item_as_child_new_file(self, kb_a):
     print("kb_path", kb_a)
     kb = KnowledgeBase(kb_a)
-    # create item as ABC-4
+    # create item as ABC-3-1
     kb.create_item(
       "input_a.md",
       "ABC",
