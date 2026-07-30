@@ -70,8 +70,8 @@ class KnowledgeBase:
       level = 1
       if (parent_key is not None):
         parent = self.state.get('items',{}).get(parent_key,None)
-        print("parent.get('path')", parent.get('path'))
-        print("file",file)
+        #print("parent.get('path')", parent.get('path'))
+        #print("file",file)
         if parent.get('path').split("#")[0] == file:
           level = parent.get('level') + 1
       # build the correct title
@@ -88,7 +88,7 @@ class KnowledgeBase:
     item_dict = make_item_dict(item_key)
     #print(item_dict)
     if valid_item_type():
-      print("creating item")
+      #print("creating item")
       crud.put_item(self.path_str, item_key, item_dict, self.shelly_docs_obj)
 
     # update state after writing
@@ -255,12 +255,12 @@ class Item:
       level = 1
       if (new_parent_key is not None):
         parent = self.kb.state.get('items',{}).get(new_parent_key,None)
-        print("parent.get('path')", parent.get('path'))
-        print("file",str(self.file))
+        #print("parent.get('path')", parent.get('path'))
+        #print("file",str(self.file))
         if parent.get('path').split("#")[0] == str(self.file).split("#")[0]:
           level = parent.get('level') + 1
       # build the correct title
-      print(level)
+      ##print(level)
       return level
     item_copy_dict = {
       "title": f"{new_item_key} {self.title.split(" ",1)[1]}",
@@ -290,6 +290,6 @@ class Item:
     key = self.title.split(" ")[0]
     self.heading = f"{self.heading.split(" ")[0]} {new_title}"
     self.markdown = f"{key}\n{"\n".join(self.markdown.splitlines()[1:])}"
-    print("Item.reparent()::item_copy_dict",item_copy_dict)
+    #print("Item.reparent()::item_copy_dict",item_copy_dict)
     crud.put_item(str(self.kb.path),key,item_copy_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()

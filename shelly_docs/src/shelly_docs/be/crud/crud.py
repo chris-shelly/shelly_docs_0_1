@@ -29,7 +29,7 @@ def write_items_to_state(path: str) -> None:
   """
   
     
-  print("write_items_to_state()::")
+  #print("write_items_to_state()::")
   state = {"items":{}, "ids": {}}
   
   state_path = Path(f"{path}/state.yaml")
@@ -62,7 +62,7 @@ def write_items_to_state(path: str) -> None:
         # item type (ex. 'ABC')
           # used to determine where in the `state.yaml::ids` the item ID lives
       item_key = item_title.split(' ')[0]
-      print("add_item_id()::item_key", item_key)
+      #print("add_item_id()::item_key", item_key)
       item_head = "-".join(item_key.split('-')[:-1])
       item_tail = item_key.split('-')[-1]
       item_type = item_key.split('-')[0]
@@ -79,15 +79,15 @@ def write_items_to_state(path: str) -> None:
         old_next = None
         if has_parent:
           # check the current 'next'
-          print("add_item_id()::item_head", item_head)
-          print("add_item_id()::state.get('ids').get(item_type)", state.get("ids").get(item_type))
-          print("add_item_id()::state.get('ids').get(item_type).get(item_head)", state.get("ids").get(item_type).get(item_head))
+          #print("add_item_id()::item_head", item_head)
+          #print("add_item_id()::state.get('ids').get(item_type)", state.get("ids").get(item_type))
+          #print("add_item_id()::state.get('ids').get(item_type).get(item_head)", state.get("ids").get(item_type).get(item_head))
           # if the child has a parent that has not had its ID registered?
           # recursively add the item ID of the parent
           #add_item_id(item_head)
           parent_id_added = (state.get("ids").get(item_type).get(item_head) is not None)
           if not parent_id_added:
-            print(f"add_item_id()::recursively adding parent {item_head} of item {item_key}")
+            #print(f"add_item_id()::recursively adding parent {item_head} of item {item_key}")
             def get_item_uuid_from_candidates(item_key_to_check) -> str:
               for item in items:
                 if item['title'].split(' ')[0] == item_key_to_check:
@@ -102,7 +102,7 @@ def write_items_to_state(path: str) -> None:
             new_next = f"{old_next_head}-{new_next_tail}"
             state.get("ids").get(item_type).get(item_head).update({"next": new_next})
         else:
-          print("add_item_id()::no_parent::state.get('ids).get(item_type)", state.get("ids").get(item_type))
+          #print("add_item_id()::no_parent::state.get('ids).get(item_type)", state.get("ids").get(item_type))
           old_next = state.get("ids").get(item_type).get("next")
           old_next_head = "-".join(old_next.split('-')[:-1])
           # if the tail of the old next is lte the tail of the inserted key, the new next should be 1 greater than the tail of the inserted key
@@ -116,14 +116,15 @@ def write_items_to_state(path: str) -> None:
         # check the UUID if the same item has already been added
         uuid_according_to_items = state.get("items").get(item_key).get("uuid")
         if ((uuid_according_to_items is not None) and (uuid_according_to_items == item_uuid)):
-          print(f"item {item_key} was already added due to child being discovered first")
+          #print(f"item {item_key} was already added due to child being discovered first")
+          pass
         else:
           raise ValueError(f"ID {item_key} is not available according to the state.")
   for item in items:
     item_key = item['title'].split(' ')[0] # item titles are in the form of "ABC-1 Hello", so splitting like this gives us the item key
     state["items"][item_key] = item # add the item under the item key
     add_item_id(item['title'], item['uuid'])
-    print("---")
+    #print("---")
   yaml.dump(state, state_path)
 
 def get_state(path: str) -> dict:
@@ -218,7 +219,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   else:
     # Add the item:
     # look up the parent in the state and check if its at the same path
-    print(item)
+    #print(item)
     parent = state_items.get(item.get('parent'))
     # if parent exists in the target path, write to the parent
     if parent:
