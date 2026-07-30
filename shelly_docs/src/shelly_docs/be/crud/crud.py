@@ -23,17 +23,42 @@ def get_items(path: str, config: dict) -> list[dict]:
 def write_items_to_state(path: str) -> None:
   """
   Checks the updated items and then updates the state.
-  Write `items` to the `state.yaml`
+  Write `items` and `ids`to the `state.yaml`
 
   
   """
-  state = {"items":{}}
+  state = {"items":{}, "ids": {}}
+  
   state_path = Path(f"{path}/state.yaml")
-  items = get_items(path, get_config(path))
+  config = get_config(path)
+  # start the ids tree based on the item tags
+  ids = {}
+  for item_tag in config['item_tags']:
+    ids[item_tag] = {"next": f"{item_tag}-1"}
+  items = get_items(path, config)
   # given an array of items, write them to state
+  state["ids"] = ids
   for item in items:
-    item_key = item['title'].split(' ')[0]
-    state["items"][item_key] = item
+    item_key = item['title'].split(' ')[0] # item titles are in the form of "ABC-1 Hello", so splitting like this gives us the item key
+    state["items"][item_key] = item # add the item under the item key
+    # populate against the ids map
+    item_key_pref = item_key.split('-')[0]
+    next_available = state["ids"][item_key_pref]['next']
+    # confirm if the proposed item key is available
+    key_available = (state["ids"].get(item_key_pref).get(item_key)) is None
+    print("write_items_to_state()::item_key", item_key)
+    print("write_items_to_state()::next available",next_available)
+    if (item_key == next_available): # item key is accepted:
+      #print("write_items_to_state()::item key accepted into ids hierarchy")
+      # increment the next available key
+      state["ids"][item_key_pref]['next'] = f"{next_available.split('-')[0]}-{int(next_available.split('-')[1]) + 1}"
+      # add a branch to the map hierarchy
+      state["ids"][item_key_pref][item_key] = {"next": f"{item_key}-1"}
+    elif key_available:
+      # increment the next available key
+      #state["ids"][item_key_pref]['next'] = f"{next_available.split('-')[0]}-{int(next_available.split('-')[1]) + 1}"
+      # add a branch to the map hierarchy
+      state["ids"][item_key_pref][item_key] = {"next": f"{item_key}-1"}
   yaml.dump(state, state_path)
 
 def get_state(path: str) -> dict:

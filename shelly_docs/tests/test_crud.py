@@ -1,6 +1,7 @@
 from pathlib import Path
 import pytest
 from ruamel.yaml import YAML
+from rich import print
 
 import src.shelly_docs.be.crud.crud as crud
 
@@ -64,14 +65,42 @@ class TestWriteItemsToState:
         crud.write_items_to_state(kb_a)
         assert (Path(kb_a) / "state.yaml").exists()
 
-    def test_state_contains_all_items(self, kb_a, config):
+    def test_state_contains_all_items(self, kb_a):
         crud.write_items_to_state(kb_a)
         state = yaml.load((Path(kb_a) / "state.yaml").read_text())
-        keys = list(state["items"].keys())
-        assert "ABC-1" in keys
-        assert "ABC-2" in keys
-        assert "XYZ-1" in keys
-        assert "ABC-3" in keys
+        print("\ntest_state_contains_all_items()::state", state)
+
+        item_keys = list(state["items"].keys())
+        assert "ABC-1" in item_keys
+        assert "ABC-2" in item_keys
+        assert "ABC-2-1" in item_keys
+        assert "XYZ-1" in item_keys
+        assert "XYZ-2" in item_keys
+        assert "ABC-3" in item_keys
+        assert state['ids']['ABC']['next'] == "ABC-4"
+        assert state['ids']['ABC']['ABC-1']['next'] == "ABC-1-1"
+        assert state['ids']['ABC']['ABC-2']['ABC-2-1']['next'] == "ABC-2-1-1"
+
+        assert state['ids']['XYZ']['next'] == "XYZ-3"
+
+    def test_state_ids_assignment_out_of_order(self, kb_b):
+        """
+        Check if ID assignment functions properly if the keys are added out of order
+        """
+        print("\ntest_state_ids_assignment_out_of_order()")
+        crud.write_items_to_state(kb_b)
+        state = yaml.load((Path(kb_b) / "state.yaml").read_text())
+        print("\ntest_state_ids_assignment_out_of_order()::state", state)
+
+        item_keys = list(state["items"].keys())
+        assert "DOC-1" in item_keys
+        assert "DOC-2" in item_keys
+        assert "DOC-4" in item_keys
+        assert "DOC-5" in item_keys
+        assert state['ids']['DOC']['DOC-1']['next'] == "DOC-1-1"
+        assert state['ids']['DOC']['DOC-2']['next'] == "DOC-2-1"
+        assert state['ids']['DOC']['DOC-4']['next'] == "DOC-4-1"
+        assert state['ids']['DOC']['DOC-5']['next'] == "DOC-5-1"
 
     def test_overwrites_existing_state(self, kb_a):
         crud.write_items_to_state(kb_a)
