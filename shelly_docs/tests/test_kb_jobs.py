@@ -35,3 +35,15 @@ class TestRunJobsItem:
         assert str(field1) == (output_path.read_text())
       else:
         assert "None" == (output_path.read_text())
+
+class TestRunJobsQuery:
+  def test_job_invocation(self, kb_c):
+    """
+    Invoke a job on the knowledgebase that runs a query and sums up 'field1.
+    """
+    print("")
+    kb = KnowledgeBase(kb_c)
+    kb.run_jobs()
+    print(f"test_job_invocation()::contents of {kb_c}", os.listdir(kb_c))
+    output_path = Path(kb_c) / "sum.txt"
+    assert str('13') == output_path.read_text()

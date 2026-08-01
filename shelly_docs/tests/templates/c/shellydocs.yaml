@@ -2,8 +2,12 @@ item_tags:
 - ABC
 - XYZ
 jobs:
-  - name: add_ABC_field1s
-    type: item
-    script: add_field1s.py
+  - name: get_ABC_field1s
+    job_type: item
+    script: get_field1s.py
     item_types:
     - ABC
+  - name: get_ABC_field1_sum
+    job_type: query
+    script: sum_field1s.py
+    query: sum_field1.yaml
