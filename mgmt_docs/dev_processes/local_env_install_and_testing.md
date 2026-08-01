@@ -18,5 +18,5 @@ uv build
 
 Install system-wide
 ```bash
-uv pip install $WHEEL_FILEPATH
+uv pip install $WHEEL_FILEPATH --system
 ```
