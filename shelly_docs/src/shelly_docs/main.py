@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.4"
+cli_version = "0.1.4.1"
 
 app = typer.Typer()
 
@@ -97,21 +97,54 @@ def kb_get(json: bool = True):
     typer.echo(kb_path)
 
 @kb_app.command("update")
-def kb_update(json: bool = True):
+def kb_update(json: bool = True, jobs: bool = True):
   """
   Update the the state of the Knowledge Base.
 
   Captures all items from the current Knowledge Base.
+
+  By default, jobs are run (set via `shellydocs.yaml::jobs` array), set `--jobs F` 
   """
   kb_path = get_kb_path()
   write_items_to_state(kb_path)
   from .kb import KnowledgeBase
   kb = KnowledgeBase(kb_path)
-  kb.run_jobs()
+  if jobs:
+    kb.run_jobs()
   if json:
     print(jsn.dumps({ "message": f"state updated for knowledge base {kb_path}"}))
   else:
     typer.echo(f"state updated for knowledge base {kb_path}")
+
+@kb_app.command("jobs")
+def run_jobs():
+  """
+  Run the jobs in a KnowledgeBase
+
+  jobs are scripts to be ran defined in a sequence of job objects in `shellydocs.yaml`
+  ```yaml
+  jobs:
+  - name: job_a
+    script: script_a.py
+    job_type: item
+    item_types:
+    - ABC
+  - name: job_b
+    script: script_b.py
+    job_type: query
+    query: query_for_b.yaml
+  ```
+  If a job has `active: false`, then it does not run.
+
+  Note that the KB state is not updated before running, and the item types and queries utilize the KB state to gather Items to run the job scripts
+  """
+  kb_path = get_kb_path()
+  from .kb import KnowledgeBase
+  kb = KnowledgeBase(kb_path)
+  kb.run_jobs()
+  typer.echo(f"jobs ran for knowledge base {kb_path}")
+
+
   
 @items_app.command("list")
 def items_list(path: str = "", json: bool = True):
