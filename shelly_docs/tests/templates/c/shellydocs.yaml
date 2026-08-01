@@ -1,0 +1,9 @@
+item_tags:
+- ABC
+- XYZ
+jobs:
+  - name: add_ABC_field1s
+    type: item
+    script: add_field1s.py
+    item_types:
+    - ABC

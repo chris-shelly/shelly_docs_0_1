@@ -105,6 +105,9 @@ def kb_update(json: bool = True):
   """
   kb_path = get_kb_path()
   write_items_to_state(kb_path)
+  from .kb import KnowledgeBase
+  kb = KnowledgeBase(kb_path)
+  kb.run_jobs()
   if json:
     print(jsn.dumps({ "message": f"state updated for knowledge base {kb_path}"}))
   else:

@@ -292,6 +292,7 @@ def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: 
     item['title'] = get_item_title(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
+      item['type'] = get_tag_from_title(item['title'])
       item['uuid'] = str(uuid.uuid4())
       item['data'] = get_codefenced_data(item)
       item['content'] = get_item_content(item)
@@ -329,6 +330,7 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
     # check the title to make sure its a valid item type, only continue parsing if that's the case
     if get_tag_from_title(item['title']) in config['item_tags']:
       item['uuid'] = str(uuid.uuid4())
+      item['type'] = get_tag_from_title(item['title'])
       item['data'] = get_codefenced_data(item)
       item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)

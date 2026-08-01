@@ -35,3 +35,7 @@ def kb_a(tmp_path):
 def kb_b(tmp_path):
     return setup_template_kb(tmp_path,"b")
 
+@pytest.fixture
+def kb_c(tmp_path):
+    return setup_template_kb(tmp_path,"c")
+

@@ -15,7 +15,8 @@ class TestKnowledgeBaseGetItem:
     print("retrieved item", item)
     assert isinstance(item, Item)
     assert item.heading == '# ABC-2 Beta'
-    assert item.data == {'field1': 8, 'field2': "value", 'type': "ABC"}
+    assert item.type == 'ABC'
+    assert item.data == {'field1': 8, 'field2': "value", 'type': 'ABC'}
     assert item.content == 'I have some more text here.\n\n## My Subheading\n\nyo'
     assert str(item.file).split("#")[0] == str(Path('input_a.md'))
     assert item.parent_key == None

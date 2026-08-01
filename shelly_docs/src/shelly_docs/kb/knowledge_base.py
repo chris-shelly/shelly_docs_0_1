@@ -1,5 +1,6 @@
+from contextlib import chdir
 from pathlib import Path
-import sys
+import runpy
 from rich import print
 
 from ruamel.yaml import YAML
@@ -165,6 +166,31 @@ class KnowledgeBase:
     crud.delete_item(self.path_str, item_key)
     self.state = self.yaml.load(self.state_file.read_text())
 
+  def run_jobs(self):
+    """
+    Run the jobs based on the job objects from `shellydocs.yaml`
+
+    Jobs run with the Knowledge Base directory as the working directory, so
+    relative paths inside a job script resolve against the KB rather than
+    against wherever `shelly-docs` was invoked. `kb_path` is also injected
+    into the script's globals for scripts that prefer absolute paths.
+    """
+    print("KnowledgeBase::running jobs")
+    jobs: list[dict] = self.shelly_docs_obj.get("jobs") or []
+    items: dict[str, dict] = self.state.get("items") or {}
+    # resolve up front: chdir would change what a relative KB path means
+    kb_dir = self.path.resolve()
+    for job in jobs:
+      script_path = (kb_dir / job.get("script")).resolve()
+      if not script_path.is_file():
+        raise FileNotFoundError(f"job '{job.get('name')}': script not found at {script_path}")
+      for item in items.values():
+        if item.get("type") not in job.get("item_types", []):
+          continue
+        init_globals = {"item": item, "kb_path": str(kb_dir)}
+        with chdir(kb_dir):
+          runpy.run_path(str(script_path), init_globals, job.get("name"))
+
 
   def query(self, query_obj):
     """
@@ -189,6 +215,7 @@ class Item:
     # we know the markdown must be the first line
     self.heading: str = item_state_dict.get('markdown','').splitlines()[0] # the Markdown Heading that triggers the start of the item
     self.data: dict = item_state_dict.get('data',None) # structured data that we can query
+    self.type: str = item_state_dict.get('type', '')
     self.content: str = item_state_dict.get('content','') # other 'unstructured' content
     self.markdown: str = item_state_dict.get('markdown')
     self.title: str = item_state_dict.get('title')
