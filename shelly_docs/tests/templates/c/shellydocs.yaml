@@ -11,3 +11,9 @@ jobs:
     job_type: query
     script: sum_field1s.py
     query: sum_field1.yaml
+  - name: some_job_i_dont_want
+    job_type: item
+    active: false # doesn't run
+    script: get_field1s.py
+    item_types:
+    - XYZ

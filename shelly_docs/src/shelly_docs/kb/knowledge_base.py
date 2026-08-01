@@ -181,6 +181,8 @@ class KnowledgeBase:
     # resolve up front: chdir would change what a relative KB path means
     kb_dir = self.path.resolve()
     for job in jobs:
+      if job.get("active") == False:
+        continue
       script_path = (kb_dir / job.get("script")).resolve()
       if not script_path.is_file():
         raise FileNotFoundError(f"job '{job.get('name')}': script not found at {script_path}")

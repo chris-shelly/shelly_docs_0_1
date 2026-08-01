@@ -47,3 +47,16 @@ class TestRunJobsQuery:
     print(f"test_job_invocation()::contents of {kb_c}", os.listdir(kb_c))
     output_path = Path(kb_c) / "sum.txt"
     assert str('13') == output_path.read_text()
+
+class TestJobActive:
+  """
+  if a job is set to `active: false` it shall not run
+  """
+  def test_job_invocation(self, kb_c):
+    print("")
+    kb = KnowledgeBase(kb_c)
+    kb.run_jobs()
+    print(f"test_job_invocation()::contents of {kb_c}", os.listdir(kb_c))
+    # confirm the job didn't run by seeing that no output file was written
+    output_path = Path(kb_c) / "XYZ-1.txt"
+    assert output_path.exists() == False
