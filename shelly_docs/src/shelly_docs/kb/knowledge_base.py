@@ -200,6 +200,32 @@ class KnowledgeBase:
           query = self.query(Path(job.get("query")).read_text())
           init_globals = {"query": query, "kb_path": str(kb_dir)}
           runpy.run_path(str(script_path), init_globals, job.get("name"))
+  def run_job(self, job_name: str):
+    
+    jobs: list[dict] = self.shelly_docs_obj.get("jobs") or []
+    items: dict[str, dict] = self.state.get("items") or {}
+    # resolve up front: chdir would change what a relative KB path means
+    kb_dir = self.path.resolve()
+    for job in jobs:
+      if job.get("name") == job_name:
+        script_path = (kb_dir / job.get("script")).resolve()
+        print(f"KnowledgeBase::running job - {job_name}")
+        if not script_path.is_file():
+          raise FileNotFoundError(f"job '{job.get('name')}': script not found at {script_path}")
+        if job.get("job_type") == "item":
+          for item in items.values():
+            if item.get("type") not in job.get("item_types", []):
+              continue
+            init_globals = {"item": item, "kb_path": str(kb_dir)}
+            with chdir(kb_dir):
+              runpy.run_path(str(script_path), init_globals, job.get("name"))
+        elif job.get("job_type") == "query":
+          # get the query based on the path provided in the job object
+          
+          with chdir(kb_dir):
+            query = self.query(Path(job.get("query")).read_text())
+            init_globals = {"query": query, "kb_path": str(kb_dir)}
+            runpy.run_path(str(script_path), init_globals, job.get("name"))
 
   def query(self, query_obj):
     """

@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.4.1"
+cli_version = "0.1.4.3"
 
 app = typer.Typer()
 
@@ -22,6 +22,9 @@ app.add_typer(items_app, name="items")
 
 item_app = typer.Typer()
 app.add_typer(item_app, name ="item")
+
+jobs_app = typer.Typer()
+app.add_typer(jobs_app, name="jobs")
 
 APP_NAME = "shelly_docs"
 
@@ -116,8 +119,8 @@ def kb_update(json: bool = True, jobs: bool = True):
   else:
     typer.echo(f"state updated for knowledge base {kb_path}")
 
-@kb_app.command("jobs")
-def run_jobs():
+@jobs_app.command("run_all")
+def run_all():
   """
   Run the jobs in a KnowledgeBase
 
@@ -144,7 +147,13 @@ def run_jobs():
   kb.run_jobs()
   typer.echo(f"jobs ran for knowledge base {kb_path}")
 
-
+@jobs_app.command("run")
+def run(job_name: str):
+  kb_path = get_kb_path()
+  from .kb import KnowledgeBase
+  kb = KnowledgeBase(kb_path)
+  kb.run_job(job_name)
+  typer.echo(f"ran job - {job_name}")
   
 @items_app.command("list")
 def items_list(path: str = "", json: bool = True):

@@ -60,3 +60,16 @@ class TestJobActive:
     # confirm the job didn't run by seeing that no output file was written
     output_path = Path(kb_c) / "XYZ-1.txt"
     assert output_path.exists() == False
+
+class TestRunSpecificJob:
+  def test_job_invocation(self, kb_c):
+    """
+    invoke a specific job
+    """
+    print("")
+    kb = KnowledgeBase(kb_c)
+    kb.run_job("get_ABC_field1_sum")
+    output_path = Path(kb_c) / "sum.txt"
+    assert str('13') == output_path.read_text()
+    unwanted_path = Path(kb_c) / "ABC_1.txt"
+    assert (not unwanted_path.exists())

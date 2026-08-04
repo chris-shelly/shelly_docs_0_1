@@ -79,7 +79,7 @@ def set_data_block(item_markdown: str, data: dict) -> str:
       if isinstance(child, CodeFence) and child.info_string == "yaml (data)":
         new_data_block_content = yaml.dump(data)
         update_block(child, new_data_block_content)
-    new_item_markdown = renderer.render(document)
+    new_item_markdown = renderer.render(document)[:-1]
     print(new_item_markdown)
     return new_item_markdown
   
