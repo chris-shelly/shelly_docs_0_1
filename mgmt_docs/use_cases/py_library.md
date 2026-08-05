@@ -3,7 +3,7 @@ Make a `shelly_docs` Python library so people can programmatically work with ite
 
 ## USECASE-18-1 `KnowledgeBase`
 ```yaml (data)
-status: in_progress
+status: done
 ```
 ### USECASE-18-1-1 Create an Item
 Create an Item in the KnowledgeBase.
@@ -17,7 +17,7 @@ Create an Item in the KnowledgeBase.
 ### USECASE-18-1-6 Query the KnowledgeBase
 ## USECASE-18-2 `Item`
 ```yaml (data)
-status: todo
+status: done
 ```
 ### USECASE-18-2-1 Read `Item.data`
 ### USECASE-18-2-2 Read `Item.content`

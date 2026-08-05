@@ -14,8 +14,30 @@ Get a List of items
 ```yaml (data)
 depends_on:
   - SYSTEM-3-1-1
+relates_to:
+  - SYSTEM-5-2
 ```
 Get the Items and then write the updates to `state.yaml`
+#### SYSTEM-3-1-2-1 `add_item_id()`
+```yaml (data)
+component_type: function
+scope: crud.py::write_items_to_state
+depends_on:
+- SYSTEM-4-2
+```
+Add an Item to the `ids` in `state.yaml` based on availability of IDs.
+
+Items must bring their own IDs (within their `title`)
+- example title: `ABC-1 Alpha`
+
+This function:
+- checks IDs for availability
+- inserts the Item ID into the `state.yaml::ids` object
+  - creates a `next` field for prospective children
+- Updates the appropriate `next`:
+  - if top level, within `state.yaml::ids.{item_type}.next`
+  - else, within `state.yaml::ids.{item_type}.{item_parent}.next`
+
 ### SYSTEM-3-1-3 `get_state()`
 Read the state file to get a python dict of the item state
 ### SYSTEM-3-1-4 `get_item()`
@@ -98,4 +120,3 @@ Used to convert a New Item object, which holds a kb path, filepath, and the raw 
 ```
 Used to extract `Item.content`, which is everything in the Item except for the Item's `data` block and the Item's `title`
 
-## SYSTEM-3-4
