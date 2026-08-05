@@ -24,8 +24,8 @@ def write_items_to_state(path: str) -> None:
   """
   Checks the updated items and then updates the state.
   Write `items` and `ids`to the `state.yaml`
-
   
+  used to support querying and item CRUD
   """
   
     
@@ -128,10 +128,16 @@ def write_items_to_state(path: str) -> None:
   yaml.dump(state, state_path)
 
 def get_state(path: str) -> dict:
+  """
+  Return the dictionary that lives in `state.yaml`
+  """
   state_path = Path(f"{path}/state.yaml")
   state = yaml.load(state_path.read_text())
   return state
 def get_item(path: str, item_key: str):
+  """
+  Get a specific item within the state by `item_key`
+  """
   # given an Item Key (the first part of the Title), get a specific item
   state = get_state(path)
   return state["items"][item_key]
@@ -329,6 +335,10 @@ def delete_item(path: str, item_key: str):
   yaml.dump(state,state_path)
 
 def get_md_docs_in_dir(dir: Path) -> list[Path]:
+  """
+  Recursively retrieve all markdown documents in a directory
+  - used for us to check for items in the KnowledgeBase
+  """
   docs = []
   for child in dir.iterdir():
     if child.suffix == ".md":
@@ -350,6 +360,9 @@ def convert_new_item_md(new_item_obj: dict) -> dict:
   return prep_new_shelly_doc_items_from_document_update(new_item_obj)
 
 def parse_md_text(md_text: str) -> dict:
+  """
+  Use Mistletoe to get the `dict` AST of a Markdown document (passed in as a string)
+  """
   md_doc_tree = Document(md_text)
   with ASTRenderer() as renderer:
     rendered = renderer.render(md_doc_tree)

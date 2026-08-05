@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.4.3"
+cli_version = "0.1.4.4"
 
 app = typer.Typer()
 
@@ -149,6 +149,11 @@ def run_all():
 
 @jobs_app.command("run")
 def run(job_name: str):
+  """
+  Run a specific named job in a Knowledge Base.
+
+  Note that this will run all jobs found in the `state.yaml::jobs` that have a `name` field matching `job_name`
+  """
   kb_path = get_kb_path()
   from .kb import KnowledgeBase
   kb = KnowledgeBase(kb_path)

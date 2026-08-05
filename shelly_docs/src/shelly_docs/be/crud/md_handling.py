@@ -11,6 +11,10 @@ from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
 class MyYAML(YAML):
+  """
+  wrapper around ruamel.yaml::YAML so that we can capture the string output of the YAML
+  - from https://yaml.dev/doc/ruamel.yaml/example/#Output_of_%60dump()%60_as_a_string
+  """
   def dump(self, data, stream=None, **kw):
     inefficient = False
     if stream is None:
@@ -56,6 +60,18 @@ def parse_item(item_markdown: str):
       print(child.content)
       
 def get_data_block(item_markdown: str) -> dict:
+  """
+  Retrieve the structured data from an Item's Data Block, given the markdown of that Item.
+  `````md
+  # ABC-1 Alpha
+  ```yaml (data)
+  field1: abc
+  field2: 33
+  ```
+  `````
+  The data block stores structured data associated with that specific item.
+  A data block must have an info string of exactly `"yaml (data)"`
+  """
   document = Document(item_markdown)
   for child in document.children:
     if isinstance(child, CodeFence) and child.info_string == "yaml (data)":
@@ -63,6 +79,9 @@ def get_data_block(item_markdown: str) -> dict:
   return None
 
 def get_data_block_str(item_markdown: str) -> str:
+  """
+  Retrieve the string content of an Item's Data Block, given the item Markdown
+  """
   document = Document(item_markdown)
   for child in document.children:
     if isinstance(child, CodeFence) and child.info_string == "yaml (data)":
@@ -71,7 +90,7 @@ def get_data_block_str(item_markdown: str) -> str:
 
 def set_data_block(item_markdown: str, data: dict) -> str:
   """
-  Update the data block and return the new item markdown
+  Update an Item's data block with the new `data` and return the new item markdown string
   """
   with MarkdownRenderer() as renderer:
     document = Document(item_markdown)

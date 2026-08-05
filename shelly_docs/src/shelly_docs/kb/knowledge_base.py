@@ -108,6 +108,9 @@ class KnowledgeBase:
       return None
 
   def update_state(self):
+    """
+    Update the Knowledge Base State, so that queries and item CRUD use up-to-date data
+    """
     crud.write_items_to_state(self.path_str)
     self.state = self.yaml.load(self.state_file.read_text())
   
@@ -163,6 +166,9 @@ class KnowledgeBase:
       raise ValueError(f"Item {item_key} does not exist")
   
   def delete_item(self, item_key):
+    """
+    Delete an Item, letting us remove it from the Knowledge Base and State
+    """
     crud.delete_item(self.path_str, item_key)
     self.state = self.yaml.load(self.state_file.read_text())
 
@@ -201,7 +207,11 @@ class KnowledgeBase:
           init_globals = {"query": query, "kb_path": str(kb_dir)}
           runpy.run_path(str(script_path), init_globals, job.get("name"))
   def run_job(self, job_name: str):
-    
+    """
+    Run a specific job within the knowledge base.
+
+    Runs every job that matches `job_name` within the `state.yaml::jobs` array
+    """
     jobs: list[dict] = self.shelly_docs_obj.get("jobs") or []
     items: dict[str, dict] = self.state.get("items") or {}
     # resolve up front: chdir would change what a relative KB path means
@@ -258,6 +268,9 @@ class Item:
     self.parent_key = item_state_dict.get('parent', None)
     self.kb: KnowledgeBase = kb
   def set_data(self, new_data: dict):
+    """
+    Sets the Item's data block
+    """
     updated_item_markdown = mdh.set_data_block(self.markdown, new_data)
     updated_item_dict = {
       "title":  self.title,
@@ -268,6 +281,9 @@ class Item:
     crud.put_item(str(self.kb.path),self.title.split(" ")[0],updated_item_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()
   def set_content(self, new_content: str):
+    """
+    Sets the Item's content
+    """
     updated_item_markdown = mdh.set_content(self.markdown, new_content)
     updated_item_dict = {
       "title":  self.title,
@@ -278,6 +294,9 @@ class Item:
     crud.put_item(str(self.kb.path),self.title.split(" ")[0],updated_item_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()
   def set_file(self, new_file: str):
+    """
+    Moves the Item to a new file
+    """
     # moves the item to this file (append to the end of the file by default, recalculates heading level based on parent presence)
       # copy the item dict
       # delete the item from the original file
@@ -292,6 +311,11 @@ class Item:
     self.file = new_file
     self.kb.update_state()
   def reparent(self, new_parent_key: str|None, new_item_type: str|None):
+    """
+    Moves an Item to be a child of a different item
+
+    When the Knowledge Base state gets updated this child's items (i.e. the new grandchildren of the new parent item) shall get updated automatically
+    """
     # reparents this item, updating this item's key and keys of the children
     # determine new item key
     new_item_key = ""
@@ -340,6 +364,10 @@ class Item:
     self.kb.update_state()
   
   def rename(self, new_name: str):
+    """
+    Update the 'name' of an item
+    - does not change the item key
+    """
     # updates the 'name' of this item (does not impact the item key. for ex. renaming 'ABC-1 X' to 'ABC-1 Y')
     new_title = f"{self.title.split(" ")[0]} {new_name}"
     item_copy_dict = {

@@ -14,7 +14,7 @@ def query_pipeline(items: dict, query_pipeline: list[Union[dict, str]]) -> list[
   return pipeline_results
 
 def query_items(items: dict, query: Union[dict,str]) -> list[dict]:
-  """Filter state items by matching their `data` field against a query.
+  """Filter Items (from the `state.yaml`) by matching their `data` field against a query.
   Args:
     items: dict of item_key -> item_dict (from state['items'])
     query: MongoDB-like query dict (e.g. {"status": "done"} or {"priority": {"$gt": 3}})
@@ -63,6 +63,12 @@ def match_item(data: dict, query: dict) -> bool:
   return True
 
 def aggregate_items(items: list, query: Union[str, dict]):
+  """
+  Run Item Aggregations
+  - `$sum`
+  - `$count`
+  - `$concat`
+  """
   if isinstance(query, str):
     if query == "$count":
       return len(items)

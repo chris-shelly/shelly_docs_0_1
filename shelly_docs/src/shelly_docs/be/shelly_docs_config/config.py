@@ -4,7 +4,14 @@ from ruamel.yaml import YAML
 
 yaml = YAML()
 
-def get_config(path: str):
+def get_config(path: str) -> dict:
+  """
+  Get the config of a Knowledge Base by reading the `shellydocs.yaml` file
+  
+  `shellydocs.yaml` specifies:
+  - `item_tags`, valid item types that we use to declare Items and their keys
+  - `jobs`, scripts that can be run automatically or invoked via `KnwoledgeBase.run_job()`
+  """
   # a project is initialized in a directory by reading from a shellydocs.yaml file
   # that yaml file provides
     # the path to read from to search for docs

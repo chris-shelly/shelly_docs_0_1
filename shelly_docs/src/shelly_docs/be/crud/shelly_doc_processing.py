@@ -98,6 +98,15 @@ def parse_token_dict(token_dict: dict, filepath: Path, kb_path: Union[str, Path]
   return items
 
 def title_is_valid_item_decl(potential_title: str, tags: list[str]) -> Union[re.Match, None]:
+  """
+  Confirm if an Item's title meets the valid Item format.
+  
+  ex. `# ABC-1 Alpha` is a valid Item, because it has:
+  - a heading (`#`)
+  - an Item Key (`ABC-1`) that is a valid ID
+    - must be a valid Item Type (one of the string values in `state.yaml::item_tags`),
+    - dash separated sequence of integers
+  """
   for tag in tags:
     title_pattern_base = r'^(#{1,6})\s+(ABC-\d+.*)\s*$'
     title_pattern = title_pattern_base.replace('ABC',tag)
@@ -118,7 +127,10 @@ def get_raw_shelly_docs_items_from_path(filepath: Path, kb_path: Union[str, Path
   return parse_token_dict(token_dict, filepath, kb_path, tags)
 
 
-def get_item_markdown(item: dict, kb_path: Union[Path, str], markdown_string: Union[str, None] = None ):
+def get_item_markdown(item: dict, kb_path: Union[Path, str], markdown_string: Union[str, None] = None ) -> str:
+  """
+  Get the markdown from an Item given that we know where the item starts and ends in a document
+  """
   start = item.get("start_line")
   end = item.get("end_line")
   if markdown_string:
@@ -130,6 +142,11 @@ def get_item_markdown(item: dict, kb_path: Union[Path, str], markdown_string: Un
     return item_markdown
 
 def get_item_title(item: dict) -> str:
+  """
+  Extract an item title from the Item's markdown
+  - ex. `# ABC-1 Alpha` -> ABC-1 Alpha
+  - we know that the Item title must be in the first line of the Item's markdown
+  """
   markdown: str = item.get("markdown")
   if markdown:
     title_pattern = r'^(#{1,6})\s+(.*?)(?:\s+#+\s*)?$'
@@ -212,6 +229,10 @@ def set_codefenced_data(item: dict, new_data: dict) -> str:
 
 # needed to separate content 
 def get_item_content(item: dict):
+  """
+  Retrieve the content of an item from the markdown
+  - includes anything that is not in the first line or in a data block codefence
+  """
   # parse the item to a mistletoe document
   item_document = parse_md_doc_from_string(item['markdown'])
   # iterate through children of the item, returning all content aside from the codefenced data
@@ -275,6 +296,9 @@ def get_item_parent(item: dict):
     return None
 
 def heading_to_anchor(title: str) -> str:
+  """
+  Create filepath anchors from an Item's title to help quick navigation to specific Items
+  """
   anchor = title.lower()
   anchor = re.sub(r'[^\w\s-]', '', anchor)
   anchor = re.sub(r'\s+', '-', anchor.strip())
