@@ -104,7 +104,7 @@ By default, at least the 'type' will be added to the data object, but it can be 
 
 # USECASE-13 Query Items based on `Item.data`
 ```yaml (data)
-status: in_progress
+status: done
 ```
 Search for Items based on their `data` field.
 An Item object has data from codefences stored in the 'data' object in the state file.

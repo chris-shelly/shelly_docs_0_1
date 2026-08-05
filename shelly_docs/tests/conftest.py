@@ -5,7 +5,7 @@ import pytest
 
 TEMPLATES_DIR = Path(__file__).parent / "templates"
 
-def setup_template_kb(pytest_temp_path,template_key: str) -> Path:
+def setup_template_kb(pytest_temp_path,template_key: str) -> str:
     """
     Choose a shelly-docs knowledge base to execute the test on
     """

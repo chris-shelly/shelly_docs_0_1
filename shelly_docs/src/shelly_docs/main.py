@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.4.4"
+cli_version = "0.1.5"
 
 app = typer.Typer()
 
@@ -25,6 +25,9 @@ app.add_typer(item_app, name ="item")
 
 jobs_app = typer.Typer()
 app.add_typer(jobs_app, name="jobs")
+
+skill_app = typer.Typer()
+app.add_typer(skill_app, name="skill")
 
 APP_NAME = "shelly_docs"
 
@@ -254,3 +257,24 @@ def item_delete(item_key: str, json: bool = True):
     print(jsn.dumps({"message": f"deleted item {item_key}"}))
   else:
     print(f"{item_key} deleted from Knowledge Base {kb_path}")
+
+@skill_app.command("load")
+def skill_load(path: str):
+  """
+  Load the Skill to the directory at `path`
+  """
+  kb_path_str = get_kb_path()
+  
+  # retrieve the resource folder
+  from importlib import resources as impresources
+  from .skill import shelly_docs
+  with impresources.path(shelly_docs) as skill_folder:
+    # copy the folder to the specified path _str
+    kb_path = Path(kb_path_str)
+    # make the folder path if it doesnt exist
+    skill_folder = skill_folder.rename(skill_folder.parent / "shelly-docs")
+    skill_path = kb_path / path
+    if not skill_path.exists():
+      skill_path.mkdir(parents=True)
+    if skill_folder.is_dir():
+      skill_folder.copy_into(skill_path)
