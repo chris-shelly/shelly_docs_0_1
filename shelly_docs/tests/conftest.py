@@ -39,3 +39,19 @@ def kb_b(tmp_path):
 def kb_c(tmp_path):
     return setup_template_kb(tmp_path,"c")
 
+
+import sqlite3
+@pytest.fixture(scope="function")
+def test_db(tmp_path):
+    """
+    Initialize the DB for the Knowledge Base with 4 tables:
+    - items
+    - item_ids
+    - item_types
+    - jobs
+    """
+    db_path = tmp_path / "kb.db"
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    yield conn
+    conn.close()

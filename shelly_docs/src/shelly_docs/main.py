@@ -66,6 +66,8 @@ def tui():
 def kb_set(path: str = "", json: bool = True):
   """
   Set a directory to read the knowledge base from.
+
+  If the Database for the KB has not been initialized yet, we create it
   """
   if not json:
     typer.echo("setting Knowledge Base Path")
