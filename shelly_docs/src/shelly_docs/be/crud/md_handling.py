@@ -94,12 +94,30 @@ def set_data_block(item_markdown: str, data: dict) -> str:
   """
   with MarkdownRenderer() as renderer:
     document = Document(item_markdown)
+    already_has_data_block = False
+    for child in document.children:
+      if isinstance(child, CodeFence) and child.info_string == "yaml (data)":
+        already_has_data_block = True
+    if not already_has_data_block:
+      lines = item_markdown.splitlines()
+      # get idx of line after first non-blank-line
+      ii = 1
+      for line in lines:
+        if line.strip() != "":
+          break
+        else:
+          ii+=1
+      data_block_scaffold = ["```yaml (data)","```"]
+      lines[ii:ii] = data_block_scaffold # merge the data block scaffold into the liens
+      item_markdown = "\n".join(lines)
+      document = Document(item_markdown)
     for child in document.children:
       if isinstance(child, CodeFence) and child.info_string == "yaml (data)":
         new_data_block_content = yaml.dump(data)
         update_block(child, new_data_block_content)
+    
     new_item_markdown = renderer.render(document)[:-1]
-    print(new_item_markdown)
+    print("new_item_markdown", new_item_markdown)
     return new_item_markdown
   
 def get_content(item_markdown: str) -> str:

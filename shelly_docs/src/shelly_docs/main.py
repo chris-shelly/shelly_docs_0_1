@@ -242,6 +242,9 @@ def item_put(path: str, markdown: str, json: bool = True):
     item_key = item['key']
     put_item(kb_path, item_key, item, get_config(kb_path))
     added_item_keys.append(item_key)
+  # put_item writes to the database only, so refresh state.yaml for the readers
+  # that still go through it (item queries, the KnowledgeBase)
+  write_items_to_state(kb_path)
   if json:
     print(jsn.dumps({"added_items": added_item_keys}))
   else:

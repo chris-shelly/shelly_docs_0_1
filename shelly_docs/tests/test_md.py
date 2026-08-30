@@ -40,6 +40,29 @@ yo
     new_md = mdh.set_data_block(item_markdown, {'status': 'updated'})
     data = mdh.get_data_block(new_md)
     assert data == {'status': 'updated'}
+  def test_add_data_block(self):
+    item_markdown="""
+# ABC-2 Beta
+I have some more text here.
+
+## My Subheading
+
+yo
+    """
+    new_md = mdh.set_data_block(item_markdown, {'status': 'updated'})
+    data = mdh.get_data_block(new_md)
+    assert data == {'status': 'updated'}
+    assert new_md.strip() =="""
+# ABC-2 Beta
+```yaml (data)
+status: updated
+```
+I have some more text here.
+
+## My Subheading
+
+yo
+    """.strip()
 
 class TestGetContent:
   def test_get_content(self):

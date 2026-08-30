@@ -6,6 +6,9 @@ import sys
 
 import src.shelly_docs.be.crud.crud as crud
 
+from src.shelly_docs.db.kb import get_kb_db
+from src.shelly_docs.db import execute_query, execute_query_many
+
 yaml = YAML()
 
 
@@ -152,9 +155,18 @@ class TestPutItem:
         crud.put_item(path, "ABC-99", new_item, config)
         text = (Path(path) / "input_a.md").read_text()
         assert "ABC-99 Brand New" in text
-        # Verify state updated
-        state = crud.get_state(path)
-        assert "ABC-99" in state["items"]
+        # Verify the database was updated
+        conn = get_kb_db(Path(kb_a))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-99"})
+        assert len(results) == 1
+        assert results[0]["key"] == "ABC-99"
+        assert results[0]["name"] == "Brand New"
+        assert results[0]["parent"] is None
+        assert results[0]["level"] == 1
+        assert results[0]["document"] == "input_a.md#abc-99-brand-new"
+        # input_a.md is 16 lines, plus a blank separator line
+        assert results[0]["start_line"] == 18
+        assert results[0]["end_line"] == 20
 
     def test_update_existing_item(self, kb_a, config):
         path = kb_a
@@ -168,6 +180,16 @@ class TestPutItem:
         text = (Path(path) / "input_a.md").read_text()
         assert "Alpha Updated" in text
         assert "New content for ABC-1." in text
+        # the existing row is updated in place, not duplicated
+        conn = get_kb_db(Path(path))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-1"})
+        assert len(results) == 1
+        assert results[0]["name"] == "Alpha Updated"
+        assert results[0]["content"] == "New content for ABC-1."
+        assert results[0]["document"] == "input_a.md#abc-1-alpha-updated"
+        assert results[0]["level"] == 1
+        assert results[0]["start_line"] == 1
+        assert results[0]["end_line"] == 3
 
     def test_create_new_file(self, kb_a, config):
         path = kb_a
@@ -181,6 +203,14 @@ class TestPutItem:
         assert (Path(path) / "brand_new.md").exists()
         text = (Path(path) / "brand_new.md").read_text()
         assert "ABC-50 Fresh" in text
+        # a brand new document used to skip the database entirely
+        conn = get_kb_db(Path(path))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-50"})
+        assert len(results) == 1
+        assert results[0]["document"] == "brand_new.md#abc-50-fresh"
+        assert results[0]["level"] == 1
+        assert results[0]["start_line"] == 1
+        assert results[0]["end_line"] == 3
 
     def test_invalid_tag_raises(self, kb_a, config):
         path = kb_a
@@ -217,8 +247,54 @@ class TestPutItem:
         crud.put_item(path, "ABC-2-2", child_item, config)
         text = (Path(path) / "input_a.md").read_text()
         assert "ABC-2-2 New Child" in text
+        conn = get_kb_db(Path(path))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-2-2"})
+        assert len(results) == 1
+        assert results[0]["parent"] == "ABC-2"
+        assert results[0]["level"] == 2
+        assert results[0]["document"] == "input_a.md#abc-2-2-new-child"
 
-    def test_state_updated_after_put(self, kb_a, config):
+    def test_insert_child_no_siblings(self, kb_a, config):
+        path = kb_a
+        # XYZ-1 occupies lines 1-4 of input_b.md and has no children, so the new child goes
+        # directly after the parent. 'level' is deliberately omitted, so put_item has to
+        # derive it from the markdown.
+        child_item = {
+            "path": "input_b.md",
+            "markdown": "## XYZ-1-1 Only Child\nChild content.\n",
+            "title": "XYZ-1-1 Only Child",
+            "parent": "XYZ-1",
+        }
+        crud.put_item(path, "XYZ-1-1", child_item, config)
+        lines = (Path(path) / "input_b.md").read_text().splitlines()
+        assert lines[4] == "## XYZ-1-1 Only Child"
+        conn = get_kb_db(Path(path))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "XYZ-1-1"})
+        assert len(results) == 1
+        assert results[0]["level"] == 2
+        assert results[0]["start_line"] == 5
+
+    def test_insert_child_of_last_item_in_file(self, kb_a, config):
+        path = kb_a
+        # ABC-3 is the last Item in input_b.md, so its end_line is NULL and the child has to
+        # be appended. input_b.md also has no trailing newline.
+        child_item = {
+            "path": "input_b.md",
+            "markdown": "## ABC-3-1 Tail Child\nTail content.\n",
+            "title": "ABC-3-1 Tail Child",
+            "parent": "ABC-3",
+        }
+        crud.put_item(path, "ABC-3-1", child_item, config)
+        text = (Path(path) / "input_b.md").read_text()
+        # the new block starts on its own line, rather than welded onto the last one
+        assert "\n## ABC-3-1 Tail Child\n" in text
+        conn = get_kb_db(Path(path))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-3-1"})
+        assert len(results) == 1
+        assert results[0]["parent"] == "ABC-3"
+        assert results[0]["start_line"] == 13
+
+    def test_db_updated_after_put(self, kb_a, config):
         path = kb_a
         new_item = {
             "path": "input_a.md",
@@ -227,33 +303,57 @@ class TestPutItem:
             "parent": None,
         }
         crud.put_item(path, "ABC-77", new_item, config)
-        state = crud.get_state(path)
-        assert "ABC-77" in state["items"]
+        conn = get_kb_db(Path(path))
+        results = execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-77"})
+        assert len(results) == 1
+        # put_item writes to the database only. state.yaml is refreshed by the caller.
+        assert "ABC-77" not in crud.get_state(path)["items"]
+        crud.write_items_to_state(path)
+        assert "ABC-77" in crud.get_state(path)["items"]
 
 
 class TestGetSiblingPositioning:
-    def test_finds_sibling_end_line(self, kb_a):
-        state = crud.get_state(kb_a)
-        # ABC-2-1 is a child of ABC-2; inserting a new ABC-2-2 should find sibling position
+    def test_sibling_at_end_of_file_returns_append(self, kb_a):
+        conn = get_kb_db(Path(kb_a))
+        # ABC-2-1 is a child of ABC-2 and the last Item in input_a.md, so it has no end_line
+        # and a new ABC-2-2 has to be appended
         new_item = {
             "parent": "ABC-2",
             "path": "input_a.md",
             "level": 2,
         }
-        pos = crud.get_sibling_positioning(state, new_item)
-        assert pos is not None
-        assert isinstance(pos, int)
+        assert crud.get_sibling_positioning(conn, new_item) == -1
+
+    def test_returns_sibling_end_line(self, kb_b):
+        conn = get_kb_db(Path(kb_b))
+        # in input_b.md, DOC-1-1 is the only child of DOC-1 and ends on line 5
+        new_item = {
+            "parent": "DOC-1",
+            "path": "input_b.md",
+            "level": 2,
+        }
+        assert crud.get_sibling_positioning(conn, new_item) == 5
 
     def test_no_siblings_returns_none(self, kb_a):
-        state = crud.get_state(kb_a)
+        conn = get_kb_db(Path(kb_a))
         # XYZ-1 has no children, so a new XYZ-1-1 should find no siblings
         new_item = {
             "parent": "XYZ-1",
             "path": "input_b.md",
             "level": 2,
         }
-        pos = crud.get_sibling_positioning(state, new_item)
-        assert pos is None
+        assert crud.get_sibling_positioning(conn, new_item) is None
+
+    def test_ignores_non_direct_children(self, kb_b):
+        conn = get_kb_db(Path(kb_b))
+        # DOC-2-1-1/-2/-3 are children of DOC-2-1, not of DOC-2. Matching on the `parent`
+        # column keeps them out; the old substring test ("DOC-2" in "DOC-2-1-3") did not.
+        new_item = {
+            "parent": "DOC-2",
+            "path": "input_a.md",
+            "level": 3,
+        }
+        assert crud.get_sibling_positioning(conn, new_item) is None
 
 
 class TestDeleteItem:
@@ -262,6 +362,10 @@ class TestDeleteItem:
         crud.delete_item(path, "ABC-1")
         text = (Path(path) / "input_a.md").read_text()
         assert "ABC-1 Alpha" not in text
+        # the row has to go too, or put_item would read it back as a cross-file duplicate
+        conn = get_kb_db(Path(path))
+        assert execute_query(conn, "SELECT * FROM items WHERE key = :key", {"key": "ABC-1"}) == []
+        assert execute_query(conn, "SELECT * FROM item_keys WHERE key = :key", {"key": "ABC-1"}) == []
 
     def test_state_updated(self, kb_a):
         path = kb_a

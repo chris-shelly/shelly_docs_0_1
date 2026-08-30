@@ -399,6 +399,9 @@ class ShellyDocs(App):
       for new_item in new_items:
         item_key = new_item['key']
         put_item(self.kb_path,item_key, new_item, get_config(self.kb_path))
+      # put_item writes to the database only, so refresh state.yaml for the readers
+      # that still go through it (item queries, the KnowledgeBase)
+      write_items_to_state(self.kb_path)
     self.push_screen(CreateNewItemScreen(), create_new_item) # call `create_new_item()` once we `dismiss` the Create New Item Screen
 
   def on_knowledge_base_menu_delete_item(self, msg: KnowledgeBaseMenu.DeleteItem) -> None:
@@ -423,6 +426,9 @@ class ShellyDocs(App):
       for updated_item in updated_items:
         item_key = updated_item['key']
         put_item(self.kb_path,item_key, updated_item, get_config(self.kb_path))
+      # put_item writes to the database only, so refresh state.yaml for the readers
+      # that still go through it (item queries, the KnowledgeBase)
+      write_items_to_state(self.kb_path)
       # calling the function automatically pops the screen, no need to pop again
     self.push_screen(UpdateItemScreen(item, self.kb_path), handle_update)
 

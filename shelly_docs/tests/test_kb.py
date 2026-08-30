@@ -4,6 +4,20 @@ from pathlib import Path
 from rich import print
 import pytest
 
+from shelly_docs.db import execute_query
+from shelly_docs.db.kb import get_kb_db
+
+
+def item_row(kb, item_key: str) -> dict:
+  """The `items` row for a key, so tests can check what put_item actually wrote."""
+  rows = execute_query(
+    get_kb_db(kb.path),
+    "SELECT * FROM items WHERE key = :key",
+    {"key": item_key},
+  )
+  assert len(rows) == 1
+  return rows[0]
+
 
 class TestKnowledgeBaseGetItem:
   def test_get_item(self, kb_a):
@@ -169,6 +183,9 @@ class TestKnowledgeBaseUpdateItem:
     updated_item = kb.get_item("ABC-2")
     print("updated_item", updated_item)
     assert updated_item.data == {"status": "updated", 'type': 'ABC'}
+    # `set_data` hands put_item a path that already carries an anchor, which must not be
+    # appended a second time (and must not be used to open the file)
+    assert item_row(kb, "ABC-2")["document"].count("#") == 1
  
   def test_set_content_existing_file(self, kb_a):
     #print("kb_path", kb_a)
@@ -180,6 +197,7 @@ class TestKnowledgeBaseUpdateItem:
     updated_item = kb.get_item("ABC-2")
     print("updated_item", updated_item)
     assert updated_item.content == "I updated the text here."
+    assert item_row(kb, "ABC-2")["document"].count("#") == 1
 
   def test_move_item_to_existing_file(self, kb_a):
     kb = KnowledgeBase(kb_a)
@@ -233,6 +251,7 @@ class TestKnowledgeBaseRenameItem:
     item_in_state = state.get('items').get('ABC-2-1')
     assert item_in_state.get('name') == 'Super Sonic Speed'
     assert item_in_state.get('key') == 'ABC-2-1'
+    assert item_row(kb, 'ABC-2-1')["name"] == 'Super Sonic Speed'
 
 
 class TestKnowledgeBaseQuery:

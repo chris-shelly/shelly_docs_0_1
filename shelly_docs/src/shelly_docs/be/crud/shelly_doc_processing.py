@@ -157,6 +157,23 @@ def _get_item_title(item: dict) -> str:
   else:
     raise ValueError("item markdown has not been retrieved. Cannot determine title.")
   
+def get_item_level(item: dict) -> int:
+  """
+  Determine an Item's heading depth from its markdown
+  - ex. `## ABC-2-1 Beta` -> 2
+
+  `parse_token_dict` reads this off the Markdown AST, but Items built by hand (the
+  `KnowledgeBase`, the TUI, the CLI) only carry markdown, so derive it from the leading
+  `#` run of the first line.
+  """
+  markdown: str = item.get("markdown")
+  if not markdown:
+    raise ValueError("item markdown has not been retrieved. Cannot determine level.")
+  level_match = re.match(r'^(#{1,6})\s', markdown.splitlines()[0].strip())
+  if not level_match:
+    raise ValueError(f"item markdown does not start with a heading. Cannot determine level: {markdown.splitlines()[0]!r}")
+  return len(level_match.group(1))
+
 def get_item_type(item: dict):
   """
   Determine the Item Tag from a title string ("ABC-2-1 Johnathan")
@@ -304,6 +321,26 @@ def heading_to_anchor(title: str) -> str:
   anchor = re.sub(r'[^\w\s-]', '', anchor)
   anchor = re.sub(r'\s+', '-', anchor.strip())
   return anchor
+
+def process_shelly_doc_item(item: dict, kb_path: Union[str, Path], config: dict) -> dict:
+  item['markdown'] = get_item_markdown(item, kb_path)
+  item['name'] = get_item_name(item)
+  # check the title to make sure its a valid item type, only continue parsing if that's the case
+  if get_item_type(item) in config['item_tags']:
+    item['type'] = get_item_type(item)
+    item['uuid'] = str(uuid.uuid4())
+    item['data'] = get_codefenced_data(item)
+    item['content'] = get_item_content(item)
+    item['key'] = get_item_key(item)
+    item['parent'] = get_item_parent(item)
+    item.setdefault('level', get_item_level(item))
+    item['path'] += "#" + heading_to_anchor(_get_item_title(item))
+    # heading object no longer needed
+    if item.get('heading'):
+      del item['heading']
+  else:
+    print(f"Item {item['title']} has item type {get_item_type(item['title'])} not found in 'shellydocs.yaml::item_tags'\n{item['title']} will not be added to state")
+  return item
 
 def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: dict) -> list[dict]:
   """
