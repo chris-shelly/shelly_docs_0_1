@@ -5,6 +5,8 @@ from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
+from rich import print
+
 from ..shelly_docs_config.config import get_config
 
 from .shelly_doc_processing import process_shelly_docs_items, prep_new_shelly_doc_items_from_document_update
@@ -145,8 +147,76 @@ def write_items_to_state(path: str) -> None:
   from ...db import execute_query, execute_query_many
   conn = get_kb_db(Path(path))
   # clear the existing table of items
-  delete_qry = "DELETE FROM items"
-  execute_query(conn, delete_qry)
+  delete_items_qry = "DELETE FROM items"
+  execute_query(conn, delete_items_qry)
+  # clear the existing table of item_keys
+  delete_item_keys_qry = "DELETE FROM item_keys"
+  execute_query(conn, delete_item_keys_qry)
+
+  # for each item, build out the item_keys table
+  for item in items:
+    #print(item)
+    # check that the key is valid
+      # (a) key is not already in item_keys
+      # (we have already confirmed that the item type is valid)
+    # make sure the next available programmatically created item is valid.
+      # (b) set next available child key of parent (key.next) to be AT LEAST f"{item_stem}-{item_tail + 1}"
+        # if an item being processed here is less than f"{item_stem}-{item_tail + 1}", it can still be valid as long as the key does not already exist
+    
+    # (a) - check key uniqueness
+    key_valid_qry = "SELECT * FROM item_keys WHERE key = :key"
+
+    results = execute_query(conn, key_valid_qry, item)
+    if len(results) > 0:
+      print("key_valid_qry::results", results)
+      print("current item", item)
+
+      raise ValueError("write_items_to_state::key already found")
+   
+    # (b) - setup key stems so we can programmatically create valid child keys
+    item_stem = "-".join(item['key'].split('-')[:-1])
+    item_tail = int(item['key'].split('-')[-1])
+    # check if the stem exists
+    stem_dict = {"stem": item_stem}
+    stem_exists_qry = "SELECT stem, next FROM item_stems WHERE stem =:stem"
+    results = execute_query(conn, stem_exists_qry, stem_dict)
+    # if so, check if the key is greater than or equal to stem.next
+    if len(results) == 1:
+      #print("stem_exists_qry_results",results)
+      #print("item", item)
+      #print("item_tail", item_tail)
+      stem_next_stem = "-".join(results[0]['next'].split('-')[:-1])
+      stem_next_tail = int(results[0]['next'].split('-')[-1])
+      if (item_stem == stem_next_stem):
+        update_qry ="""
+          UPDATE item_stems
+            SET next = :new_next
+            WHERE stem = :stem
+          """
+        if (item_tail >= stem_next_tail):
+          #print("_increase stem.next to be one greater than item_tail_")
+          update_stem_dict = {"stem": item_stem, "new_next": f"{item_stem}-{item_tail + 1}"}
+          execute_query(conn, update_qry, update_stem_dict)
+        # else, continue, nothing else needed
+    else: # stem doesn't exist, we need to create it
+      insert_stem_dict = {"stem": item_stem, "new_next": f"{item_stem}-{item_tail + 1}"}
+      execute_query(conn, "INSERT INTO item_stems VALUES(:stem, :new_next)", insert_stem_dict)  
+    
+
+
+    item_key_record = {"key": item["key"], "stem": item_stem, "next": f"{item_stem}-{item_tail+1}"}
+    item_stem_record = {
+      "key": item["key"],
+      "next": f"{item["key"]}-{1}"
+    }
+    # given a unique item, we also need to add a stem for it
+    stem_insert_qry = "INSERT INTO item_stems VALUES(:key, :next)"
+    execute_query(conn, stem_insert_qry, item_stem_record)
+    key_insert_qry = "INSERT INTO item_keys VALUES(:key)"
+    execute_query(conn, key_insert_qry, item_key_record)
+
+  # we want an item_keys table so that we can add valid items programmatically without having to read the entire existing knowledge base
+
   # insert each of the items into the items table
   qry = "INSERT INTO items VALUES(:key, :name, :parent, :data_block, :content, :document, :type, :uuid, :start_line)"
   execute_query_many(conn, qry, items)

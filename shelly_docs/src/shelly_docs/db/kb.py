@@ -24,8 +24,15 @@ def init_kb(path: Path):
   try:
     execute_query(
       conn,
-      "CREATE TABLE item_ids(stem, next)"
+      "CREATE TABLE item_keys(key)"
     )
+  except sqlite3.OperationalError as e:
+    print(f"{e}, continuing to next part of 'init_kb'")
+  try:
+      execute_query(
+        conn,
+        "CREATE TABLE item_stems(stem, next)"
+      )
   except sqlite3.OperationalError as e:
     print(f"{e}, continuing to next part of 'init_kb'")
   try:

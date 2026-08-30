@@ -41,6 +41,7 @@ class TestKnowledgeBaseCreateItem:
     print("kb_path", kb_a)
     kb = KnowledgeBase(kb_a)
     # create item as ABC-4
+    print("creating item")
     kb.create_item(
       "input_a.md",
       "ABC",
@@ -49,7 +50,6 @@ class TestKnowledgeBaseCreateItem:
       "I have some content here",
       #"PROCESS-1"
     )
-
     # check for the item after creating it
     created_item = kb.get_item("ABC-4")
     print("created_item", created_item)
@@ -135,6 +135,7 @@ class TestKnowledgeBaseCreateItem:
   def test_create_item_as_child_new_file(self, kb_a):
     print("kb_path", kb_a)
     kb = KnowledgeBase(kb_a)
+    print("creating item")
     # create item as ABC-3-1
     kb.create_item(
       "input_a.md",
@@ -149,6 +150,12 @@ class TestKnowledgeBaseCreateItem:
     print("created_item", created_item)
     print("kb_state", kb.state)
     assert created_item.heading == "# ABC-3-1 Making stuff"
+    from shelly_docs.db import execute_query
+    from shelly_docs.db.kb import init_kb, get_kb_db
+    conn = get_kb_db(Path(kb_a))
+    keys = execute_query(conn, "SELECT * FROM item_keys")
+    print("keys", keys)
+
   
 
 class TestKnowledgeBaseUpdateItem:

@@ -41,6 +41,9 @@ def kb_b(tmp_path):
 def kb_c(tmp_path):
     return setup_template_kb(tmp_path,"c")
 
+@pytest.fixture
+def kb_d(tmp_path):
+    return setup_template_kb(tmp_path, "d")
 
 import sqlite3
 @pytest.fixture(scope="function")
