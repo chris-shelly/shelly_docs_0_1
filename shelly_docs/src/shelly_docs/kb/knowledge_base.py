@@ -22,6 +22,7 @@ class MyYAML(YAML):
     if inefficient:
       return stream.getvalue()
 
+yaml = MyYAML()
 def make_item_key(kb: KnowledgeBase, parent_key: str, item_type: str) -> str:
   """
   Determine the correct key for a new item being created that does not yet have a key
@@ -263,7 +264,8 @@ class Item:
     self.type: str = item_state_dict.get('type', '')
     self.content: str = item_state_dict.get('content','') # other 'unstructured' content
     self.markdown: str = item_state_dict.get('markdown')
-    self.title: str = item_state_dict.get('title')
+    self.key: str = item_state_dict.get('key')
+    self.name: str = item_state_dict.get('name')
     self.file: Path = Path(item_state_dict.get('path',''))
     self.parent_key = item_state_dict.get('parent', None)
     self.kb: KnowledgeBase = kb
@@ -273,12 +275,12 @@ class Item:
     """
     updated_item_markdown = mdh.set_data_block(self.markdown, new_data)
     updated_item_dict = {
-      "title":  self.title,
+      "title": f"{self.key} {self.name}",
       "markdown": updated_item_markdown,
       "path": str(self.file)
     }
     print(updated_item_dict)
-    crud.put_item(str(self.kb.path),self.title.split(" ")[0],updated_item_dict,self.kb.shelly_docs_obj)
+    crud.put_item(str(self.kb.path),self.key,updated_item_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()
   def set_content(self, new_content: str):
     """
@@ -286,12 +288,12 @@ class Item:
     """
     updated_item_markdown = mdh.set_content(self.markdown, new_content)
     updated_item_dict = {
-      "title":  self.title,
+      "title": f"{self.key} {self.name}",
       "markdown": updated_item_markdown,
       "path": str(self.file)
     }
     print(updated_item_dict)
-    crud.put_item(str(self.kb.path),self.title.split(" ")[0],updated_item_dict,self.kb.shelly_docs_obj)
+    crud.put_item(str(self.kb.path),self.key,updated_item_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()
   def set_file(self, new_file: str):
     """
@@ -302,12 +304,12 @@ class Item:
       # delete the item from the original file
       # add to the new file
     item_copy_dict = {
-      "title": self.title,
+      "title": f"{self.key} {self.name}",
       "markdown": self.markdown.strip(),
       "path": new_file
     }
-    self.kb.delete_item(self.title.split(" ")[0])
-    crud.put_item(str(self.kb.path),self.title.split(" ")[0],item_copy_dict,self.kb.shelly_docs_obj)
+    self.kb.delete_item(self.key)
+    crud.put_item(str(self.kb.path),self.key,item_copy_dict,self.kb.shelly_docs_obj)
     self.file = new_file
     self.kb.update_state()
   def reparent(self, new_parent_key: str|None, new_item_type: str|None):
@@ -323,7 +325,7 @@ class Item:
       new_item_key = make_item_key(self.kb, new_parent_key, new_parent_key.split("-")[0])
     else:
       new_item_key = make_item_key(self.kb, None, new_item_type)
-    new_title = f"{new_item_key} {self.title.split(" ",1)[1]}"
+    new_title = f"{new_item_key} {self.name}"
     def determine_item_level():
       """
       to create the item, we need to make a python dictionary out of the data
@@ -349,18 +351,17 @@ class Item:
       ##print(level)
       return level
     item_copy_dict = {
-      "title": f"{new_item_key} {self.title.split(" ",1)[1]}",
+      "title": f"{new_item_key} {self.name}",
       "markdown": f"{'#'*determine_item_level()} {new_title}\n{"\n".join(self.markdown.splitlines()[1:])}",
       "path": str(self.file).split("#")[0]
     }
-    self.kb.delete_item(self.title.split(" ")[0])
-    self.title = f"{new_item_key} {self.title.split(" ",1)[1]}"
-    key = self.title.split(" ")[0]
+    self.kb.delete_item(self.key)
+    self.key = new_item_key
     self.heading = f"{'#'*determine_item_level()} {new_title}"
     self.markdown = f"{new_title}\n{"\n".join(self.markdown.splitlines()[1:])}"
     self.parent_key = new_parent_key
     print("Item.reparent()::item_copy_dict",item_copy_dict)
-    crud.put_item(str(self.kb.path),key,item_copy_dict,self.kb.shelly_docs_obj)
+    crud.put_item(str(self.kb.path),self.key,item_copy_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()
   
   def rename(self, new_name: str):
@@ -369,17 +370,16 @@ class Item:
     - does not change the item key
     """
     # updates the 'name' of this item (does not impact the item key. for ex. renaming 'ABC-1 X' to 'ABC-1 Y')
-    new_title = f"{self.title.split(" ")[0]} {new_name}"
+    new_title = f"{self.key} {new_name}"
     item_copy_dict = {
       "title": new_title,
       "markdown": f"{self.heading.split(" ")[0]} {new_title}\n{"\n".join(self.markdown.splitlines()[1:])}",
       "path": str(self.file).split("#")[0]
     }
-    self.kb.delete_item(self.title.split(" ")[0])
+    self.kb.delete_item(self.key)
     self.title = new_title
-    key = self.title.split(" ")[0]
     self.heading = f"{self.heading.split(" ")[0]} {new_title}"
-    self.markdown = f"{key}\n{"\n".join(self.markdown.splitlines()[1:])}"
+    self.markdown = f"{self.key}\n{"\n".join(self.markdown.splitlines()[1:])}"
     #print("Item.reparent()::item_copy_dict",item_copy_dict)
-    crud.put_item(str(self.kb.path),key,item_copy_dict,self.kb.shelly_docs_obj)
+    crud.put_item(str(self.kb.path),self.key,item_copy_dict,self.kb.shelly_docs_obj)
     self.kb.update_state()

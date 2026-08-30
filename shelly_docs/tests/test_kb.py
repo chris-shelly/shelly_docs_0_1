@@ -198,6 +198,7 @@ class TestKnowledgeBaseDeleteItem:
     assert kb.get_item("ABC-2") == None
 
 class TestKnowledgeBaseReparentItem:
+  
   def test_reparent_item(self, kb_a):
     kb = KnowledgeBase(kb_a)
     item = kb.get_item('ABC-2-1')
@@ -209,7 +210,7 @@ class TestKnowledgeBaseReparentItem:
     print("test_reparent_item::kb.state",state)
     item_in_state = state.get('items').get('ABC-3-1')
     assert item_in_state.get('parent') == 'ABC-3'
-    assert item_in_state.get('title') == 'ABC-3-1 Beta - Bruh'
+    assert item_in_state.get('name') == 'Beta - Bruh'
     assert item_in_state.get('key') == 'ABC-3-1'
 
 class TestKnowledgeBaseRenameItem:
@@ -223,7 +224,7 @@ class TestKnowledgeBaseRenameItem:
     state = kb.state
     print("test_reparent_item::kb.state",state)
     item_in_state = state.get('items').get('ABC-2-1')
-    assert item_in_state.get('title') == 'ABC-2-1 Super Sonic Speed'
+    assert item_in_state.get('name') == 'Super Sonic Speed'
     assert item_in_state.get('key') == 'ABC-2-1'
 
 

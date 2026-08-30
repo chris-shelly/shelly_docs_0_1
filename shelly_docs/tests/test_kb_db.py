@@ -7,7 +7,7 @@ import pytest
 from rich import print
 
 from shelly_docs.db import execute_query
-from shelly_docs.db.kb import init_kb
+from shelly_docs.db.kb import init_kb, get_kb_db
 
 
 class TestInitializeKBDB:
@@ -52,8 +52,11 @@ class TestInitializeKBDB:
     test_db.close()
 
 class TestStateUpdateETL:
-  def test_state_update(self, kb_a, test_db):
+  def test_state_update(self, kb_a):
     """
     Test how we update the state of a knowledge base, reflecting the updates in the Database
     """
-    pass
+    print("\n--test_state_update--")
+    test_db = get_kb_db(Path(kb_a))
+    items = execute_query(test_db, "SELECT key FROM items")
+    print(items)

@@ -39,7 +39,7 @@ class TestGetMDDocsInDir:
 class TestGetItems:
     def test_returns_items_from_all_files(self, kb_a, config):
         items = crud.get_items(kb_a, config)
-        keys = [i['title'].split(' ')[0] for i in items]
+        keys = [i['key'] for i in items]
         # template has ABC-1, ABC-2, ABC-2-1 in input_a.md and XYZ-1, XYZ-2, ABC-3 in input_b.md
         assert "ABC-1" in keys
         assert "XYZ-1" in keys
@@ -47,7 +47,7 @@ class TestGetItems:
 
     def test_filters_by_config_tags(self, kb_a):
         items = crud.get_items(kb_a, {"item_tags": ["ABC"]})
-        keys = [i['title'].split(' ')[0] for i in items]
+        keys = [i['key'] for i in items]
         assert "ABC-1" in keys
         assert "XYZ-1" not in keys
         assert "XYZ-2" not in keys
@@ -133,7 +133,7 @@ class TestGetState:
 class TestGetItem:
     def test_gets_existing_item(self, kb_a):
         item = crud.get_item(kb_a, "ABC-1")
-        assert "Alpha" in item["title"]
+        assert "Alpha" == item["name"]
 
     def test_missing_item_raises(self, kb_a):
         with pytest.raises(KeyError):

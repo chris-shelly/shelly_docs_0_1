@@ -2,13 +2,24 @@ from pathlib import Path
 import re
 import json
 from ruamel.yaml import YAML
+from ruamel.yaml.compat import StringIO
 from mistletoe import Document
 from mistletoe.ast_renderer import ASTRenderer
 from ..shelly_docs_config.config import get_config
 
 from .shelly_doc_processing import process_shelly_docs_items, prep_new_shelly_doc_items_from_document_update
 
-yaml = YAML()
+class MyYAML(YAML):
+  def dump(self, data, stream=None, **kw):
+    inefficient = False
+    if stream is None:
+      inefficient = True
+      stream = StringIO()
+    YAML.dump(self, data, stream, **kw)
+    if inefficient:
+      return stream.getvalue()
+
+yaml = MyYAML()
 def get_items(path: str, config: dict) -> list[dict]:
   """Check the directory for items"""
   dir = Path(path)
@@ -41,7 +52,7 @@ def write_items_to_state(path: str) -> None:
   items = get_items(path, config)
   # given an array of items, write them to state
   state["ids"] = ids
-  def add_item_id(item_title: str, item_uuid: str):
+  def add_item_id(item_key: str, item_uuid: str):
       """
       Add an Item to `ids` in `state.yaml`
   
@@ -61,7 +72,6 @@ def write_items_to_state(path: str) -> None:
           # used to determine if the item has a parent and which `next` field should be updated
         # item type (ex. 'ABC')
           # used to determine where in the `state.yaml::ids` the item ID lives
-      item_key = item_title.split(' ')[0]
       #print("add_item_id()::item_key", item_key)
       item_head = "-".join(item_key.split('-')[:-1])
       item_tail = item_key.split('-')[-1]
@@ -90,7 +100,7 @@ def write_items_to_state(path: str) -> None:
             #print(f"add_item_id()::recursively adding parent {item_head} of item {item_key}")
             def get_item_uuid_from_candidates(item_key_to_check) -> str:
               for item in items:
-                if item['title'].split(' ')[0] == item_key_to_check:
+                if item['key'] == item_key_to_check:
                   return item['uuid']
             add_item_id(item_head, get_item_uuid_from_candidates(item_head))
           old_next = state.get("ids").get(item_type).get(item_head).get("next")
@@ -121,10 +131,27 @@ def write_items_to_state(path: str) -> None:
         else:
           raise ValueError(f"ID {item_key} is not available according to the state.")
   for item in items:
-    item_key = item['title'].split(' ')[0] # item titles are in the form of "ABC-1 Hello", so splitting like this gives us the item key
+    item_key = item['key'] # item titles are in the form of "ABC-1 Hello", so splitting like this gives us the item key
     state["items"][item_key] = item # add the item under the item key
-    add_item_id(item['title'], item['uuid'])
+    add_item_id(item_key, item['uuid'])
+    item["document"] = item['path']
+    item["data_block"] = yaml.dump((item["data"]))
     #print("---")
+  
+  # database ETL
+  # write items to the 'items' table
+  # get the database_connection
+  from ...db.kb import get_kb_db
+  from ...db import execute_query, execute_query_many
+  conn = get_kb_db(Path(path))
+  # clear the existing table of items
+  delete_qry = "DELETE FROM items"
+  execute_query(conn, delete_qry)
+  # insert each of the items into the items table
+  qry = "INSERT INTO items VALUES(:key, :name, :parent, :data_block, :content, :document, :type, :uuid, :start_line)"
+  execute_query_many(conn, qry, items)
+  conn.commit()
+
   yaml.dump(state, state_path)
 
 def get_state(path: str) -> dict:
@@ -172,7 +199,7 @@ def put_item(path: str, item_key: str, item: dict, config: dict):
   existing_items = get_items(path, config)
   item_path_resolved = (Path(path) / item['path'].split('#')[0]).resolve()
   for existing in existing_items:
-    existing_key = existing['title'].split(' ')[0]
+    existing_key = existing['key']
     existing_file_resolved = (Path(path) / existing['path'].split('#')[0]).resolve()
     if existing_key == item_key and existing_file_resolved != item_path_resolved:
       raise ValueError(

@@ -62,8 +62,7 @@ def get_item_key(item: dict):
   """
   Given an Item Title (ex. "ABC-2 Hi `there`"), get the item key ("ABC-2")
   """
-  title: str = item.get("title")
-  return title.split(' ')[0]
+  return _get_item_title(item).split(" ")[0]
 
 
 def get_raw_shelly_docs_items_from_md(md: str, filepath: str, kb_path: Union[str, Path],  tags: list[str]):
@@ -141,12 +140,15 @@ def get_item_markdown(item: dict, kb_path: Union[Path, str], markdown_string: Un
     item_markdown = get_string_section_from_path(Path(kb_path) / Path(path) , start, end)
     return item_markdown
 
-def get_item_title(item: dict) -> str:
+def get_item_name(item: dict) -> str:
   """
-  Extract an item title from the Item's markdown
-  - ex. `# ABC-1 Alpha` -> ABC-1 Alpha
-  - we know that the Item title must be in the first line of the Item's markdown
+  Extract an item name from the Item's markdown
+  - ex. `# ABC-1 Alpha` -> Alpha
+  - we know that the Item name must be in the first line of the Item's markdown
   """
+  return " ".join(_get_item_title(item).split(" ")[1:])
+  
+def _get_item_title(item: dict) -> str:
   markdown: str = item.get("markdown")
   if markdown:
     title_pattern = r'^(#{1,6})\s+(.*?)(?:\s+#+\s*)?$'
@@ -155,14 +157,13 @@ def get_item_title(item: dict) -> str:
   else:
     raise ValueError("item markdown has not been retrieved. Cannot determine title.")
   
-
-def get_tag_from_title(title: str):
+def get_item_type(item: dict):
   """
   Determine the Item Tag from a title string ("ABC-2-1 Johnathan")
   """
   item_tag_connector = "-"
-  item_tag = title.split(item_tag_connector)[0]
-  return item_tag
+  item_type = _get_item_title(item).split(item_tag_connector)[0]
+  return item_type
 
 def get_string_section_from_md(markdown: str, start: int= 1, end: Union[int, None] = None) -> str:
   """
@@ -205,7 +206,7 @@ def get_codefenced_data(item: dict):
       if child.info_string == "yaml (data)":
         fenced_data = yaml.load(child.content)
         if isinstance(fenced_data, dict) and (not fenced_data.get("type")): # only overwrites the item type if it doesnt already exist
-          fenced_data["type"] = get_tag_from_title(item['title'])
+          fenced_data["type"] = get_item_type(item)
         return fenced_data
 
 def set_codefenced_data(item: dict, new_data: dict) -> str:
@@ -313,21 +314,21 @@ def process_shelly_docs_items(filepath: str, kb_path: Union[str, Path], config: 
   processed_items = []
   for item in items:
     item['markdown'] = get_item_markdown(item, kb_path)
-    item['title'] = get_item_title(item)
+    item['name'] = get_item_name(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
-    if get_tag_from_title(item['title']) in config['item_tags']:
-      item['type'] = get_tag_from_title(item['title'])
+    if get_item_type(item) in config['item_tags']:
+      item['type'] = get_item_type(item)
       item['uuid'] = str(uuid.uuid4())
       item['data'] = get_codefenced_data(item)
       item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)
       item['parent'] = get_item_parent(item)
-      item['path'] += "#" + heading_to_anchor(item['title'])
+      item['path'] += "#" + heading_to_anchor(_get_item_title(item))
       # heading object no longer needed
       del item['heading']
       processed_items.append(item)
     else:
-      print(f"Item {item['title']} has item type {get_tag_from_title(item['title'])} not found in 'shellydocs.yaml::item_tags'\n{item['title']} will not be added to state")
+      print(f"Item {item['title']} has item type {get_item_type(item['title'])} not found in 'shellydocs.yaml::item_tags'\n{item['title']} will not be added to state")
   return processed_items
 
 def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
@@ -350,16 +351,16 @@ def prep_new_shelly_doc_items_from_document_update(new_item_obj: dict):
   semi_processed_items = []
   for item in raw_new_items:
     item['markdown'] = get_item_markdown(item, kb_path ,new_item_obj['markdown'])
-    item['title'] = get_item_title(item)
+    item['name'] = get_item_name(item)
     # check the title to make sure its a valid item type, only continue parsing if that's the case
-    if get_tag_from_title(item['title']) in config['item_tags']:
+    if get_item_type(item) in config['item_tags']:
       item['uuid'] = str(uuid.uuid4())
-      item['type'] = get_tag_from_title(item['title'])
+      item['type'] = get_item_type(item)
       item['data'] = get_codefenced_data(item)
       item['content'] = get_item_content(item)
       item['key'] = get_item_key(item)
       item['parent'] = get_item_parent(item)
-      item['path'] += "#" + heading_to_anchor(item['title'])
+      item['path'] += "#" + heading_to_anchor(_get_item_title(item))
       # heading object no longer needed
       del item['heading']
       semi_processed_items.append(item)

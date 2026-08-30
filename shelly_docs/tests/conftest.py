@@ -14,6 +14,8 @@ def setup_template_kb(pytest_temp_path,template_key: str) -> str:
     if template_dir.is_dir():
         shutil.copytree(template_dir, dest)
         kb_path = str(dest)
+        from src.shelly_docs.db.kb import init_kb
+        init_kb(Path(kb_path))
         import src.shelly_docs.be.crud.crud as crud
         crud.write_items_to_state(kb_path)
         return kb_path
