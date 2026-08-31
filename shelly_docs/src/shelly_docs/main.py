@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.5"
+cli_version = "0.1.6"
 
 app = typer.Typer()
 
