@@ -30,7 +30,7 @@ class TestKnowledgeBaseGetItem:
     assert isinstance(item, Item)
     assert item.heading == '# ABC-2 Beta'
     assert item.type == 'ABC'
-    assert item.data == {'field1': 8, 'field2': "value", 'type': 'ABC'}
+    assert item.data == {'field1': 8, 'field2': "value"}
     assert item.content == 'I have some more text here.\n\n## My Subheading\n\nyo'
     assert str(item.file).split("#")[0] == str(Path('input_a.md'))
     assert item.parent_key == None
@@ -182,7 +182,7 @@ class TestKnowledgeBaseUpdateItem:
     # check for the item after creating it
     updated_item = kb.get_item("ABC-2")
     print("updated_item", updated_item)
-    assert updated_item.data == {"status": "updated", 'type': 'ABC'}
+    assert updated_item.data == {"status": "updated"}
     # `set_data` hands put_item a path that already carries an anchor, which must not be
     # appended a second time (and must not be used to open the file)
     assert item_row(kb, "ABC-2")["document"].count("#") == 1
@@ -279,9 +279,7 @@ $or:
     print("test_query_dict::query_out\n",query_out)
   def test_query_pipeline(self, kb_a):
     kb = KnowledgeBase(kb_a)
-    query=[{'field2': 'value'},{'type':'ABC'}]
+    query=[{'field2': 'value'},'$count']
     query_out = kb.query(query)
     print("test_query_pipeline::query_out\n",query_out)
-    keys = [x.get('key') for x in query_out.get('results')]
-    print("test_query_pipeline::keys\n",keys)
-    assert 'ABC-3' in keys
+    assert query_out.get('results') == 2

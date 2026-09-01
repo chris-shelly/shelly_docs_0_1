@@ -45,6 +45,10 @@ def kb_c(tmp_path):
 def kb_d(tmp_path):
     return setup_template_kb(tmp_path, "d")
 
+@pytest.fixture
+def kb_e(tmp_path):
+    return setup_template_kb(tmp_path, "e")
+
 import sqlite3
 @pytest.fixture(scope="function")
 def test_db(tmp_path):

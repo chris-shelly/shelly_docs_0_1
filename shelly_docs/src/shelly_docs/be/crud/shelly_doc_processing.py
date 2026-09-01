@@ -222,8 +222,6 @@ def get_codefenced_data(item: dict):
     if isinstance(child, CodeFence):
       if child.info_string == "yaml (data)":
         fenced_data = yaml.load(child.content)
-        if isinstance(fenced_data, dict) and (not fenced_data.get("type")): # only overwrites the item type if it doesnt already exist
-          fenced_data["type"] = get_item_type(item)
         return fenced_data
 
 def set_codefenced_data(item: dict, new_data: dict) -> str:

@@ -1,3 +1,4 @@
+from rich import print
 from src.shelly_docs.be.crud.query import match_item
 class TestMatchItem:
   def test_positive(self):
@@ -90,16 +91,75 @@ class TestQueryPipeline:
     actual_results = query_pipeline(items, query)
     assert actual_results == "hithere"
 
+def confirm_results(expecteds: list, actuals: list):
+  for expected_result in expecteds:
+    assert expected_result in actuals
+
+from shelly_docs.db.query import sql_query
+from pathlib import Path
 class TestSQLQuery:
-  def test_one_value_condition(self, kb_e):
+  """
+  Test that SQL queries can be run against a knowledgebase, returning a list of dicts.
+  """
+  def test_basic_query(self, kb_e):
     """
     Confirm that we can use SQL to run queries
     """
-    pass
+    print(f"\n--test_basic_query()--")
+    qry = """SELECT * FROM items"""
+    results = sql_query(Path(kb_e), qry)
+    # get keys from each result
+    expected_results = ['ABC-1', 'ABC-2','ABC-2-1','ABC-3', 'XYZ-1', 'XYZ-2']
+    # confirm that all items are there
+    out = []
+    for result in results:
+      out.append(result.get("key"))
+    confirm_results(expected_results, out)
+      
+  def test_one_value_condition(self, kb_e):
+    print("\n--test_one_value_condition()--")
+    qry = """SELECT * FROM items WHERE parent = 'ABC-2'"""
+    results = sql_query(Path(kb_e), qry)
+    # get keys from each result
+    expected_results = ['ABC-2-1']
+    # confirm that all items are there
+    out = []
+    for result in results:
+      out.append(result.get("key"))
+    confirm_results(expected_results, out)
+    assert expected_results == out # in this case, we know there should only be exactly one item 'ABC-2-1', so we can check for equality
+  
   def test_multiple_value_conditions(self, kb_e):
-    pass
+    print("\n--test_multiple_value_conditions()--")
+    qry = """SELECT * FROM items WHERE (parent = 'ABC-2') OR  (type = 'XYZ')"""
+    results = sql_query(Path(kb_e), qry)
+    # get keys from each result
+    expected_results = ['ABC-2-1', 'XYZ-1', 'XYZ-2']
+    # confirm that all items are there
+    out = []
+    for result in results:
+      out.append(result.get("key"))
+    confirm_results(expected_results, out)
+  def test_collections_in_results(self, kb_e):
+    """
+    item.data is stored in the DB as a string, we confirm that
+    """
+    print(f"\n--test_collections_in_results()--")
+    qry = """SELECT * FROM items"""
+    results = sql_query(Path(kb_e), qry)
+    # get keys from each result
+    expected_results = "days:\n- DAY-19\n- DAY-20\n- DAY-21"
+    # confirm that all items are there
+    out_found = False
+    for result in results:
+      if result.get("key") == 'XYZ-2':
+        out_found = True
+        assert result.get("data").strip() == expected_results.strip()
+    assert out_found == True
+
   def test_val_in_array(self, kb_e):
-    pass
+    """
+    """
   def test_sum(self, kb_e):
     pass
   def test_concat(self, kb_e):
