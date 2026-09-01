@@ -255,7 +255,12 @@ class KnowledgeBase:
     except ValueError as e:
       print(f"Error: {e}")
     return {"results": results, "query": parsed_query}
-  
+
+  def sql_query(self, query: str):
+    from ..db.query import sql_query as sql
+    results = sql(self.path, query)
+    return {"results": results, "query": query}
+
 class Item:
   def __init__(self, item_state_dict, kb):
     # we know the markdown must be the first line

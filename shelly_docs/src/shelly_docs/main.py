@@ -10,7 +10,7 @@ from .be.crud.crud import get_items, get_item, get_state, put_item, convert_new_
 from .be.crud.query import query_items, query_pipeline
 from .be.shelly_docs_config.config import get_config
 
-cli_version = "0.1.6"
+cli_version = "0.1.7"
 
 app = typer.Typer()
 
@@ -176,6 +176,20 @@ def items_list(path: str = "", json: bool = True):
     print(jsn.dumps({"items": get_items(path=items_path,config=get_config(kb_path))}))
   else:
     print(get_items(path=items_path,config=get_config(kb_path)))
+
+@items_app.command("sql_query")
+def items_sql_query(query: str = typer.Option(..., help="SQL Query as a string, e.g. 'SELECT * FROM items'"), json: bool=True):
+  kb_path = get_kb_path()
+  try:
+    from .db.query import sql_query
+    results = sql_query(Path(kb_path), query)
+    if json:
+      print(jsn.dumps({"results": results, "query": query}, indent=2, default=str))
+    else:
+      print(results)
+  except Exception as e:
+    print(f"Error runnning SQL Query: {e}")
+    raise typer.Exit(code=1)
 
 @items_app.command("query")
 def items_query(query: str = typer.Option(..., help="YAML query string, e.g. 'status: done'"), json: bool = True):

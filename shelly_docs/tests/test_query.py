@@ -148,19 +148,62 @@ class TestSQLQuery:
     qry = """SELECT * FROM items"""
     results = sql_query(Path(kb_e), qry)
     # get keys from each result
-    expected_results = "days:\n- DAY-19\n- DAY-20\n- DAY-21"
-    # confirm that all items are there
+    expected_result = '{"days": ["DAY-19", "DAY-20", "DAY-21"]}'
     out_found = False
     for result in results:
       if result.get("key") == 'XYZ-2':
         out_found = True
-        assert result.get("data").strip() == expected_results.strip()
+        assert result.get("data").strip() == expected_result.strip()
     assert out_found == True
-
+  def test_extract_json(self, kb_e):
+    print(f"\n--test_extract_json()--")
+    qry = """SELECT * FROM items WHERE ((data ->> '$.field2') = 'hi') OR ((data ->> '$.field1') >= 5)"""
+    results = sql_query(Path(kb_e), qry)
+    #print(results)
+    expected_results = ['ABC-2', 'XYZ-1']
+    # confirm that all expected items are there
+    out = []
+    for result in results:
+      out.append(result.get("key"))
+    confirm_results(expected_results, out)
+    
   def test_val_in_array(self, kb_e):
+    print(f"\n--test_val_in_array()--")
+    qry = """
+      SELECT *
+      FROM items a, json_each(a.data, '$.days') b
+      WHERE b.value = 'DAY-20'
     """
-    """
+    results = sql_query(Path(kb_e), qry)
+    print(results)
+    expected_results = ['XYZ-2']
+    # confirm that all expected items are there
+    out = []
+    for result in results:
+      out.append(result.get("key"))
+    confirm_results(expected_results, out)
+    assert expected_results == out
   def test_sum(self, kb_e):
-    pass
+    print(f"\n--test_sum()--")
+    qry = """
+      SELECT sum(b.value) as my_sum
+      FROM items a, json_each(a.data, '$.field1') b
+    """
+    results = sql_query(Path(kb_e), qry)
+    print(results)
+    expected_results = [{'my_sum': 13}]
+    assert expected_results == results
   def test_concat(self, kb_e):
-    pass
+    print(f"\n--test_concat()--")
+    qry = """
+      SELECT STRING_AGG(a, '') as combined
+      FROM (
+        SELECT key, CONCAT(items.data ->> '$.field2') as a
+        FROM items
+        ORDER BY key ASC
+      )
+    """
+    results = sql_query(Path(kb_e), qry)
+    print(results)
+    expected_results = [{'combined': 'hithere'}]
+    assert expected_results == results

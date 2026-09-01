@@ -36,6 +36,14 @@ def get_items(path: str, config: dict) -> list[dict]:
     items = items + process_shelly_docs_items(doc, path, config)
   return items
 
+class JsonAdapter:
+    __slots__ = ("obj",)
+    def __init__(self, obj):
+        self.obj = obj
+    def __conform__(self, protocol):
+        if protocol is sqlite3.PrepareProtocol:
+            return json.dumps(self.obj)
+
 def write_items_to_state(path: str) -> None:
   """
   Checks the updated items and then updates the state.
@@ -140,7 +148,7 @@ def write_items_to_state(path: str) -> None:
     state["items"][item_key] = item # add the item under the item key
     add_item_id(item_key, item['uuid'])
     item["document"] = item['path']
-    item["data_block"] = yaml.dump((item["data"]))
+    item["data_block"] = JsonAdapter(item["data"])
     # `parse_token_dict` leaves `end_line` unset on the last Item in a document, since there is
     # no following heading to bound it. `executemany` needs every named placeholder present.
     item.setdefault("end_line", None)
@@ -232,7 +240,9 @@ def write_items_to_state(path: str) -> None:
   )
   execute_query_many(conn, qry, items)
   conn.commit()
-
+  # remove the JSON adapter 'data_block' field from each item
+  for item in items:
+    del item["data_block"]
   yaml.dump(state, state_path)
 
 def get_state(path: str) -> dict:

@@ -8,17 +8,17 @@ items:
       Base is the directory in which Shelly Docs is initialized.\n\nShelly Docs scans
       markdown documents within that directory to read, update, create and delete
       [`Item`s](#design-2-item).\n\n"
-    title: DESIGN-1 Knowledge Base
+    name: Knowledge Base
     type: DESIGN
-    uuid: bef07636-01c4-45f8-9a35-9321a2e9f53c
+    uuid: ccc7bbcc-1cb4-446e-ab78-df7f7114e850
     data:
       status: done
-      type: DESIGN
     content: "The Knowledge Base is the directory in which Shelly Docs is initialized.\n\
       \nShelly Docs scans markdown documents within that directory to read, update,
       create and delete [`Item`s](#design-2-item)."
     key: DESIGN-1
     parent:
+    document: design\kb_and_item.md#design-1-knowledge-base
   DESIGN-1-1:
     start_line: 9
     path: design\kb_and_item.md#design-1-1-knowledge-base-stateyaml
@@ -30,9 +30,9 @@ items:
       Retrieve Data\",\n    content: \"Retrieve data so we can display it to the user\"\
       ,\n    parent_title: \"\" #empty if there is no parent item\n  ABC-33:\n   \
       \ title: \"ABC-33 Display Data\"\n    # ...\n```\n\n"
-    title: DESIGN-1-1 Knowledge Base `state.yaml`
+    name: Knowledge Base `state.yaml`
     type: DESIGN
-    uuid: 6c822d67-0155-48dd-a35f-9ebb753bb965
+    uuid: 13cc62fc-bec3-40de-a15a-2c7363abf7a7
     data:
     content: "Within the Knowledge Base is a `state.yaml` file that stores the data
       on the `Item`s like a very simplistic kind of database collection.\n```yaml\n\
@@ -42,6 +42,7 @@ items:
       ```"
     key: DESIGN-1-1
     parent: DESIGN-1
+    document: design\kb_and_item.md#design-1-1-knowledge-base-stateyaml
   DESIGN-2:
     start_line: 22
     path: design\kb_and_item.md#design-2-item
@@ -50,15 +51,16 @@ items:
     markdown: "# DESIGN-2 `Item`\nAn `Item` is a piece of markdown documentation content
       within a [Knowledge Base](#design-1-knowledge-base).\n\nAn `Item` is defined
       as a markdown heading with content under it.\n"
-    title: DESIGN-2 `Item`
+    name: '`Item`'
     type: DESIGN
-    uuid: 7ce3edd4-d3a0-4571-9ee1-9cb63f816529
+    uuid: 56ba4cfa-2f33-4c15-9249-c0bf308c83d8
     data:
     content: "An `Item` is a piece of markdown documentation content within a [Knowledge
       Base](#design-1-knowledge-base).\n\nAn `Item` is defined as a markdown heading
       with content under it."
     key: DESIGN-2
     parent:
+    document: design\kb_and_item.md#design-2-item
   DESIGN-2-1:
     start_line: 26
     path: design\kb_and_item.md#design-2-1-item-example
@@ -72,9 +74,9 @@ items:
       of the same or higher level (which would indicate another `Item`), any sort
       of content can be within a given `Item`, including paragraphs, code blocks,
       images, etc.\n"
-    title: DESIGN-2-1 `Item` Example
+    name: '`Item` Example'
     type: DESIGN
-    uuid: 7a5244ce-d5c9-4c3f-9d5f-d0949d0335de
+    uuid: c7b33339-9eab-4b94-b8cc-9f4399dd180b
     data:
     content: "For example,\n```md\n<!-- Item starts with the Heading-->\n## ABC-32
       Retrieve Data\nRetrieve data so we can display itto the user\n<!-- Item ends
@@ -85,6 +87,7 @@ items:
       `Item`, including paragraphs, code blocks, images, etc."
     key: DESIGN-2-1
     parent: DESIGN-2
+    document: design\kb_and_item.md#design-2-1-item-example
   DESIGN-2-2:
     start_line: 39
     path: design\kb_and_item.md#design-2-2-itemdata
@@ -95,9 +98,9 @@ items:
       around it is then parsed and saved alongside the item in state.\n\nThis data
       can later be queried from the `state.yaml` to provide information to the user
       about the items.\n"
-    title: DESIGN-2-2 `Item.data`
+    name: '`Item.data`'
     type: DESIGN
-    uuid: 7beff116-49f9-41bc-bae3-dc468b29ef51
+    uuid: 69d58710-4958-4ad8-b260-158f5c1d80ea
     data:
     content: "An `Item` can have structured data attached to it within the markdown
       document.\n\nA yaml code block with the `yaml (data)` around it is then parsed
@@ -105,6 +108,7 @@ items:
       the `state.yaml` to provide information to the user about the items."
     key: DESIGN-2-2
     parent: DESIGN-2
+    document: design\kb_and_item.md#design-2-2-itemdata
   DESIGN-2-3:
     start_line: 45
     path: design\kb_and_item.md#design-2-3-itemdatatype
@@ -115,9 +119,9 @@ items:
       Item Tag of the Item's title/declaration, and then stored within the Item's
       `data` field so it can be queried.\n\nThe user can overide the ``type`` with
       whatever content they have in the fenced `yaml (data)` code block.\n"
-    title: DESIGN-2-3 `Item.data.type`
+    name: '`Item.data.type`'
     type: DESIGN
-    uuid: 44fc1441-5072-4cf4-93ae-df658578af26
+    uuid: 0c215af9-cc1a-4e84-8e18-a5b1dc05a958
     data:
       status: done
       type: whatever I want
@@ -127,6 +131,7 @@ items:
       they have in the fenced `yaml (data)` code block."
     key: DESIGN-2-3
     parent: DESIGN-2
+    document: design\kb_and_item.md#design-2-3-itemdatatype
   DESIGN-2-4:
     start_line: 53
     path: 
@@ -138,12 +143,11 @@ items:
       nested within DESIGN-2, indicated by the extra `-` in the Item Key number.\n\
       \nWithin the `state.yaml` of a knowledge base, an `Item` will have a `parent`
       field indicating the key of its parent `Item`"
-    title: DESIGN-2-4 Item Hierarchy - `Item.parent` and Child `Item`s
+    name: Item Hierarchy - `Item.parent` and Child `Item`s
     type: DESIGN
-    uuid: f634b233-b161-4bbb-b17d-7f3a27abd713
+    uuid: 41a33598-a323-40a5-81e6-886690341d19
     data:
       status: done
-      type: DESIGN
     content: "Items can be nested within eachother in a hierarchy based on their Item
       Key declarations. For example, this item (DESIGN-2-4) is nested within DESIGN-2,
       indicated by the extra `-` in the Item Key number.\n\nWithin the `state.yaml`
@@ -151,6 +155,9 @@ items:
       of its parent `Item`"
     key: DESIGN-2-4
     parent: DESIGN-2
+    document: 
+      design\kb_and_item.md#design-2-4-item-hierarchy---itemparent-and-child-items
+    end_line:
   PROCESS-1:
     start_line: 1
     path: 
@@ -158,13 +165,15 @@ items:
     level: 1
     end_line: 1
     markdown: "# PROCESS-1 Running the `env` version of `shelly-docs`\n"
-    title: PROCESS-1 Running the `env` version of `shelly-docs`
+    name: Running the `env` version of `shelly-docs`
     type: PROCESS
-    uuid: ab4de6b2-dc4a-4809-b4ca-61f1bd2022f0
+    uuid: 5e6d92bd-2cfe-433f-bbac-5fe604c554b0
     data:
     content: ''
     key: PROCESS-1
     parent:
+    document: 
+      dev_processes\local_env_install_and_testing.md#process-1-running-the-env-version-of-shelly-docs
   PROCESS-1-1:
     start_line: 2
     path: 
@@ -173,14 +182,16 @@ items:
     end_line: 6
     markdown: "## PROCESS-1-1 Activate Venv\nFirst, make sure you have the venv activated\n\
       ```bash\nsource .venv/Scripts/activate\n```\n"
-    title: PROCESS-1-1 Activate Venv
+    name: Activate Venv
     type: PROCESS
-    uuid: cda90ee8-e66a-48c0-a72c-6b602a6a6dca
+    uuid: 81ec86ab-a418-430a-a0f3-8d2b06257941
     data:
     content: "First, make sure you have the venv activated\n```bash\nsource .venv/Scripts/activate\n\
       ```"
     key: PROCESS-1-1
     parent: PROCESS-1
+    document: 
+      dev_processes\local_env_install_and_testing.md#process-1-1-activate-venv
   PROCESS-1-2:
     start_line: 7
     path: 
@@ -189,13 +200,15 @@ items:
     end_line: 9
     markdown: "## PROCESS-1-2 Update version in pyproject\nThen, update the version
       in the pyproject.toml\n\n"
-    title: PROCESS-1-2 Update version in pyproject
+    name: Update version in pyproject
     type: PROCESS
-    uuid: 6f9df425-5420-463c-a96a-4d863725643d
+    uuid: e2975be0-88a2-4251-9fca-2b89332be0b8
     data:
     content: Then, update the version in the pyproject.toml
     key: PROCESS-1-2
     parent: PROCESS-1
+    document: 
+      dev_processes\local_env_install_and_testing.md#process-1-2-update-version-in-pyproject
   PROCESS-1-3:
     start_line: 10
     path: 
@@ -204,14 +217,16 @@ items:
     end_line: 12
     markdown: "## PROCESS-1-3 Sync to the `uv` project\nRun `uv sync` with the venv
       activated, so that we now are running with the current version\n\n"
-    title: PROCESS-1-3 Sync to the `uv` project
+    name: Sync to the `uv` project
     type: PROCESS
-    uuid: e41ef3b3-de6d-4eca-9f25-aa718c1eb9d3
+    uuid: 5a54a8fd-2be8-4ffa-97ce-b48dfe96b5e1
     data:
     content: Run `uv sync` with the venv activated, so that we now are running 
       with the current version
     key: PROCESS-1-3
     parent: PROCESS-1
+    document: 
+      dev_processes\local_env_install_and_testing.md#process-1-3-sync-to-the-uv-project
   PROCESS-2:
     start_line: 13
     path: 
@@ -220,14 +235,17 @@ items:
     markdown: "# PROCESS-2 Installing to Rest of System\nBuild the wheel\n```bash\n\
       uv build\n```\n\nInstall system-wide\n```bash\nuv pip install $WHEEL_FILEPATH
       --system\n```"
-    title: PROCESS-2 Installing to Rest of System
+    name: Installing to Rest of System
     type: PROCESS
-    uuid: 3eb536fb-0367-4bad-a87d-ff517ffd3ace
+    uuid: 73c1bcb5-e766-48fd-9338-3fb273c5ead6
     data:
     content: "Build the wheel\n```bash\nuv build\n```\n\nInstall system-wide\n```bash\n\
       uv pip install $WHEEL_FILEPATH --system\n```"
     key: PROCESS-2
     parent:
+    document: 
+      dev_processes\local_env_install_and_testing.md#process-2-installing-to-rest-of-system
+    end_line:
   PROMPT-11:
     start_line: 1
     path: 
@@ -236,13 +254,15 @@ items:
     end_line: 2
     markdown: "# PROMPT-11 Build Unit Tests for `crud` functions\nWorking on Creating
       Unit Tests for our `be.crud` functions\n"
-    title: PROMPT-11 Build Unit Tests for `crud` functions
+    name: Build Unit Tests for `crud` functions
     type: PROMPT
-    uuid: 05054f16-e584-409b-98af-646a83786f86
+    uuid: aef424fd-643c-4b33-8b68-ff956c827392
     data:
     content: Working on Creating Unit Tests for our `be.crud` functions
     key: PROMPT-11
     parent:
+    document: 
+      prompts\building_unit_tests.md#prompt-11-build-unit-tests-for-crud-functions
   PROMPT-11-1:
     start_line: 3
     path: 
@@ -268,9 +288,9 @@ items:
       - `write_items_to_state()` is called with only `path`\n#### Changes since prompt
       was ran\n- `crud.heading_to_anchor()` has been deleted since it's not used and
       is a duplicates `shelly_doc_processing.heading_to_anchor()`\n\n"
-    title: PROMPT-11-1 Research how `crud` module is Used
+    name: Research how `crud` module is Used
     type: PROMPT
-    uuid: 3378ab50-bddc-4c7a-8bc6-9fcf42b60892
+    uuid: f21d6094-d2d1-47f3-a7ad-f95b6f0b57d6
     data:
     content: "### Role\nYou are Senior Python Engineer with extensive experience developing
       tests for Python applications using `pytest`.\n### Goal\nResearch how the functions
@@ -293,6 +313,8 @@ items:
       is a duplicates `shelly_doc_processing.heading_to_anchor()`"
     key: PROMPT-11-1
     parent: PROMPT-11
+    document: 
+      prompts\building_unit_tests.md#prompt-11-1-research-how-crud-module-is-used
   PROMPT-11-2:
     start_line: 41
     path: prompts\building_unit_tests.md#prompt-11-2-plan-testing-for-crud
@@ -316,9 +338,9 @@ items:
       ``main.py`` and ``tui.py``\n- `put_item()` is among the most complex functions\n\
       - `write_items_to_state()` is called with only `path`\n### Goal\nDevelop a plan
       for testing `crud.py` as a Markdown file.\n\n\n"
-    title: PROMPT-11-2 Plan Testing for `crud`
+    name: Plan Testing for `crud`
     type: PROMPT
-    uuid: 7e4e92a2-99e1-40d0-ade5-3fcc44a2f91a
+    uuid: 850ef796-a69f-4d9f-9605-a153d6470194
     data:
     content: "### Role\nYou are Senior Python Engineer with extensive experience developing
       tests for Python applications using `pytest`.\n### Background, Research from
@@ -339,6 +361,7 @@ items:
       for testing `crud.py` as a Markdown file."
     key: PROMPT-11-2
     parent: PROMPT-11
+    document: prompts\building_unit_tests.md#prompt-11-2-plan-testing-for-crud
   PROMPT-11-3:
     start_line: 78
     path: prompts\building_unit_tests.md#prompt-11-3-develop-tests-for-crud
@@ -347,15 +370,17 @@ items:
       discovered during testing\nBug fixes in shelly_doc_processing.py\n- Missing
       `tags` argument\n- Off-by-one in heading validation\n- Config ordering, we need
       to call get_config() before the function that needs the tags"
-    title: PROMPT-11-3 Develop Tests for `crud`
+    name: Develop Tests for `crud`
     type: PROMPT
-    uuid: 9efbe3ef-e33c-4d4f-8def-e3b0501fb5f1
+    uuid: e05f8e99-a64a-4e89-9092-5f3e5b4437b9
     data:
     content: "### Notes on Updates/Bugs discovered during testing\nBug fixes in shelly_doc_processing.py\n\
       - Missing `tags` argument\n- Off-by-one in heading validation\n- Config ordering,
       we need to call get_config() before the function that needs the tags"
     key: PROMPT-11-3
     parent: PROMPT-11
+    document: prompts\building_unit_tests.md#prompt-11-3-develop-tests-for-crud
+    end_line:
   PROMPT-10:
     start_line: 1
     path: prompts\data_querying.md#prompt-10-data-querying
@@ -388,9 +413,9 @@ items:
       up.\\n```yaml (data)\\nfield3: bruh\\n\\\n      ```\\n\\n\"\n    title: ABC-2
       Hi **`there`**\n    data:\n      field3: bruh\n    key: ABC-2\n    parent:\n\
       \  #...\n```"
-    title: PROMPT-10 Data Querying
+    name: Data Querying
     type: PROMPT
-    uuid: 7020e1b9-d4f0-4242-b069-a3ba80ad0ef5
+    uuid: d34a9141-4046-45d0-92c8-af76b87f067b
     data:
     content: "## `Role`\nYou are a Senior Python Developer with experience making
       CLI apps that allow users to query data.\n## `Background`\nYou are working on
@@ -422,6 +447,8 @@ items:
       \  #...\n```"
     key: PROMPT-10
     parent:
+    document: prompts\data_querying.md#prompt-10-data-querying
+    end_line:
   PROMPT-1:
     start_line: 1
     path: prompts\item_crud.md#prompt-1-reading-item-content
@@ -449,9 +476,9 @@ items:
       is no parent `Item`\n}\n```\n## ``Claude Plan``\n- Recursive traversal should
       be replaced with a linear scan approach\n- Add a `node_to_markdown` helper\n\
       - Cleaning up debug prints\n\n"
-    title: PROMPT-1 Reading Item Content
+    name: Reading Item Content
     type: PROMPT
-    uuid: 7557735d-7490-4311-a9d1-741820b849b4
+    uuid: 50b204fb-768c-4277-8825-cfa3a6124254
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive experience
       parsing and extending markdown. You are familiar with the `mistletoe` library
@@ -476,6 +503,7 @@ items:
       - Add a `node_to_markdown` helper\n- Cleaning up debug prints"
     key: PROMPT-1
     parent:
+    document: prompts\item_crud.md#prompt-1-reading-item-content
   PROMPT-2:
     start_line: 40
     path: prompts\item_crud.md#prompt-2-put-items
@@ -490,9 +518,9 @@ items:
       config\n## `Summary of Claude's Plan`\n- replace `update_item()` stub with `put_item()`\n\
       - add validation logic\n  - type\n  - key uniqueness\n- write to markdown file,
       have to use raw text\n\n"
-    title: PROMPT-2 Put Items
+    name: Put Items
     type: PROMPT
-    uuid: acdba38d-49a8-40a3-9789-658e1ab6d54c
+    uuid: d16731e0-21e1-4fda-88d0-1f2eccf45aaa
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive experience
       parsing and extending markdown. You are familiar with the `mistletoe` library
@@ -505,6 +533,7 @@ items:
       have to use raw text"
     key: PROMPT-2
     parent:
+    document: prompts\item_crud.md#prompt-2-put-items
   PROMPT-3:
     start_line: 56
     path: 
@@ -518,10 +547,9 @@ items:
       the generation of `Item.path` so that it presents a path directly to the markdown
       (includes the anchors, ex. [Link to DESIGN-2 Item](../design/item.md#design-2-item'))\n\
       \n"
-    title: PROMPT-3 Update `Item.path` so that it represents the path to the 
-      `Item`
+    name: Update `Item.path` so that it represents the path to the `Item`
     type: PROMPT
-    uuid: b60034a0-b7d0-4fe9-b068-38fe9e6784ae
+    uuid: 0cf289a1-7c91-4179-af77-a2606bb6270e
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive experience
       parsing and extending markdown. You are familiar with the `mistletoe` library
@@ -530,6 +558,8 @@ items:
       (includes the anchors, ex. [Link to DESIGN-2 Item](../design/item.md#design-2-item'))"
     key: PROMPT-3
     parent:
+    document: 
+      prompts\item_crud.md#prompt-3-update-itempath-so-that-it-represents-the-path-to-the-item
   PROMPT-4:
     start_line: 62
     path: prompts\item_crud.md#prompt-4-delete-item
@@ -540,9 +570,9 @@ items:
       the `mistletoe` library for parsing and manipulating the AST of Markdown Documents.\n\
       ## `Goal`\nAdd a `delete_item()` method that removes an Item from a Markdown
       Document.\n\n"
-    title: PROMPT-4 Delete Item
+    name: Delete Item
     type: PROMPT
-    uuid: 04c4f239-8a89-482a-a684-fc209403e756
+    uuid: 20087b84-3d13-4bae-88c2-0467ea256b09
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive experience
       parsing and extending markdown. You are familiar with the `mistletoe` library
@@ -550,6 +580,7 @@ items:
       a `delete_item()` method that removes an Item from a Markdown Document."
     key: PROMPT-4
     parent:
+    document: prompts\item_crud.md#prompt-4-delete-item
   PROMPT-5:
     start_line: 68
     path: prompts\item_crud.md#prompt-5-convert-new_item_md-objects-into-item
@@ -573,9 +604,9 @@ items:
       helper `parse_md_text()`\n  - extracts the first heading as `title`, everything
       after it as content\n  - if the target file already exists, reads it to detect
       the last heading that would be a parent\n\n"
-    title: PROMPT-5 Convert `new_item_md` objects into `item`
+    name: Convert `new_item_md` objects into `item`
     type: PROMPT
-    uuid: 399f50e3-88bb-4e53-bd86-534236d6b163
+    uuid: 1bfc6934-767a-478b-96b5-10acb1962fcc
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive experience
       parsing and extending markdown. You are familiar with the `mistletoe` library
@@ -596,6 +627,8 @@ items:
       it to detect the last heading that would be a parent"
     key: PROMPT-5
     parent:
+    document: 
+      prompts\item_crud.md#prompt-5-convert-new_item_md-objects-into-item
   PROMPT-6:
     start_line: 100
     path: prompts\item_crud.md#prompt-6-better-handling-of-item-hierarchies
@@ -612,9 +645,9 @@ items:
       - replace `rsplit('-', 1)` with a loop checking if the item_key starts with
       any configured tag followed by `-`.\n- this correctly identifies the item types.\n\
       \n"
-    title: PROMPT-6 Better Handling of Item Hierarchies
+    name: Better Handling of Item Hierarchies
     type: PROMPT
-    uuid: 7f2edb57-4045-40f7-9715-769ff20eb81a
+    uuid: 3def0e4f-0fe0-4bb5-a41e-35bcd30754f2
     data:
     content: "## `Role`\nYou are a Senior Python developer working on Shelly Docs.
       A TUI/CLI tool for managing documentation items using markdown.\n## `Background
@@ -628,6 +661,7 @@ items:
       types."
     key: PROMPT-6
     parent:
+    document: prompts\item_crud.md#prompt-6-better-handling-of-item-hierarchies
   PROMPT-7:
     start_line: 117
     path: 
@@ -647,10 +681,10 @@ items:
       `level` in each item dict\n- `put_item` now uses `item.get()` to generate the
       correct heading prefix\n- `convert_new_item` captures the `level` from the parsed
       heading node and includes it in the returned dict\n\n\n"
-    title: PROMPT-7 - Items are written as Heading 2s, even if they are set at a
-      different level.
+    name: '- Items are written as Heading 2s, even if they are set at a different
+      level.'
     type: PROMPT
-    uuid: f305ed50-ccc8-4615-a3ce-fa0e830ee186
+    uuid: ccb2ef7d-f3c0-4592-afb8-8e6726ad42ce
     data:
     content: "## `Role`\nYou are a Senior Python developer working on Shelly Docs.
       A TUI/CLI tool for managing documentation items using markdown.\n\nYou have
@@ -667,6 +701,9 @@ items:
       node and includes it in the returned dict"
     key: PROMPT-7
     parent:
+    document: 
+      prompts\item_crud.md#prompt-7---items-are-written-as-heading-2s-even-if-they-are-set-at-a-different-level
+    end_line:
   PROMPT-8:
     start_line: 1
     path: prompts\tui.md#prompt-8-allow-user-to-delete-item-via-tui
@@ -682,9 +719,9 @@ items:
       ### DeleteItemScreen\nAdd a Screen that lets the user confirm if they want to
       delete the item. On confirmation, extract the `item_key` and use it to make
       a call to be.crud.delete_item()\n\n"
-    title: PROMPT-8 Allow user to Delete Item via TUI
+    name: Allow user to Delete Item via TUI
     type: PROMPT
-    uuid: 9673a379-a4a0-4146-b914-922b51555250
+    uuid: 45d8923b-1eec-4aaf-88e3-e4d9a891a4bb
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive expertise
       using the `textual` python library to create Terminal User Interfaces (TUIs).\n\
@@ -697,6 +734,7 @@ items:
       `item_key` and use it to make a call to be.crud.delete_item()"
     key: PROMPT-8
     parent:
+    document: prompts\tui.md#prompt-8-allow-user-to-delete-item-via-tui
   PROMPT-9:
     start_line: 15
     path: prompts\tui.md#prompt-9-allow-user-to-update-item-via-tui
@@ -715,9 +753,9 @@ items:
       filepath.\nAfter making an update, convert yields a `raw_item_md` that can be
       converted to an `item` dict taht can be passed to `put_item()`, similarly to
       how the the `CreateNewItemScreen()` handles new items. \n\n"
-    title: PROMPT-9 Allow user to Update Item via TUI
+    name: Allow user to Update Item via TUI
     type: PROMPT
-    uuid: 7b4b2ae3-70a6-4ae4-8573-2fa2801c6901
+    uuid: 15879915-9933-4c2e-b038-5e53bbcb78bd
     data:
     content: "## `Role`\nYou are a Senior Python Developer with extensive expertise
       using the `textual` python library to create Terminal User Interfaces (TUIs).\n\
@@ -734,6 +772,7 @@ items:
       items."
     key: PROMPT-9
     parent:
+    document: prompts\tui.md#prompt-9-allow-user-to-update-item-via-tui
   PROMPT-9-1:
     start_line: 32
     path: prompts\tui.md#prompt-9-1-follow-up-path-not-calculating-correctly
@@ -746,9 +785,9 @@ items:
       ```\n\nIT seems that the path being collected for us to make the updates isn't
       correct. as it shows as `'path': '../mgmt_docs/..\\\\mgmt_docs\\\\reqs\\\\new.md',`.\n\
       \nPlease fix the issue so the Path calculates correctly.\n\n"
-    title: PROMPT-9-1 Follow-up, Path not calculating correctly
+    name: Follow-up, Path not calculating correctly
     type: PROMPT
-    uuid: a178224f-5735-4b08-8aef-a844617d6719
+    uuid: 3aa87be8-1185-4eea-9995-2dba3d4ce69a
     data:
     content: "After attempting to edit `USECASE-77-1`, `put_item()` raised a ValueError
       for it already existing in a different file.\n\n```\nValueError: Item 'USECASE-77-1'
@@ -758,6 +797,7 @@ items:
       \nPlease fix the issue so the Path calculates correctly."
     key: PROMPT-9-1
     parent: PROMPT-9
+    document: prompts\tui.md#prompt-9-1-follow-up-path-not-calculating-correctly
   PROMPT-9-2:
     start_line: 43
     path: prompts\tui.md#prompt-9-2-path-still-broken
@@ -766,9 +806,9 @@ items:
       of the paths. seems like the paths aren't matching due to the anchors.\n\n```\n\
       ValueError: Item 'USECASE-77-1' already exists in a different file: ..\\mgmt_docs\\\
       reqs\\new.md#usecase-77-1-child-item-being-added\n```\n"
-    title: PROMPT-9-2 Path still broken
+    name: Path still broken
     type: PROMPT
-    uuid: 5c710cc2-081a-4c73-aa5c-50bca6f0aeda
+    uuid: da39930d-52c7-4bda-827b-9c84b9f1d369
     data:
     content: "Path still broken, need a better check of the paths. seems like the
       paths aren't matching due to the anchors.\n\n```\nValueError: Item 'USECASE-77-1'
@@ -776,6 +816,8 @@ items:
       ```"
     key: PROMPT-9-2
     parent: PROMPT-9
+    document: prompts\tui.md#prompt-9-2-path-still-broken
+    end_line:
   PROMPT-12:
     start_line: 1
     path: prompts\updated_paths.md#prompt-12-update-stateyaml-paths
@@ -802,9 +844,9 @@ items:
       \ - ``config['kb_path']`` doesn't exist\n  - use `new_item_obj['kb_path']` instead\n\
       - tests\n  - tests need updating to pass relative paths, rather than absolute
       ones.\n\n"
-    title: PROMPT-12 Update `state.yaml` Paths
+    name: Update `state.yaml` Paths
     type: PROMPT
-    uuid: bc70b6e8-6985-43d2-8733-61258df805c3
+    uuid: 26de68f9-5e99-428f-b41c-50c2f1c6b15b
     data:
     content: "## `Role`\nYou are a Senior Python Engineer with expertise in creating
       markdown-based dev tools.\n## `Background`\nWe updated the way `Item.path` is
@@ -830,21 +872,23 @@ items:
       ones."
     key: PROMPT-12
     parent:
+    document: prompts\updated_paths.md#prompt-12-update-stateyaml-paths
+    end_line:
   SYSTEM-3:
     start_line: 1
     path: system\be.md#system-3-backend-be
     level: 1
     end_line: 4
     markdown: "# SYSTEM-3 Backend (`be/`)\n```yaml (data)\nstatus: done\n```\n"
-    title: SYSTEM-3 Backend (`be/`)
+    name: Backend (`be/`)
     type: SYSTEM
-    uuid: 26b9bb88-b43c-48f0-a008-a28ff47667eb
+    uuid: a36bdf69-8e66-4a0c-a835-f6ba94b45455
     data:
       status: done
-      type: SYSTEM
     content: ''
     key: SYSTEM-3
     parent:
+    document: system\be.md#system-3-backend-be
   SYSTEM-3-1:
     start_line: 5
     path: system\be.md#system-3-1-crud-crudcrudpy
@@ -853,29 +897,30 @@ items:
     markdown: "## SYSTEM-3-1 CRUD (`crud/crud.py`)\n```yaml (data)\ndepends_on:\n\
       \  - SYSTEM-3-3\n```\nModule for making updates to items and keeping the state
       updated.\n"
-    title: SYSTEM-3-1 CRUD (`crud/crud.py`)
+    name: CRUD (`crud/crud.py`)
     type: SYSTEM
-    uuid: d1156ac4-9996-4f38-b48e-cf7cfdbc28d3
+    uuid: ad671ca7-03b2-4095-a302-d4a6a868e917
     data:
       depends_on:
       - SYSTEM-3-3
-      type: SYSTEM
     content: Module for making updates to items and keeping the state updated.
     key: SYSTEM-3-1
     parent: SYSTEM-3
+    document: system\be.md#system-3-1-crud-crudcrudpy
   SYSTEM-3-1-1:
     start_line: 11
     path: system\be.md#system-3-1-1-get_items
     level: 3
     end_line: 12
     markdown: "### SYSTEM-3-1-1 `get_items()`\nGet a List of items\n"
-    title: SYSTEM-3-1-1 `get_items()`
+    name: '`get_items()`'
     type: SYSTEM
-    uuid: 42c791aa-2093-4e74-8b07-93186d4a55f6
+    uuid: 3bbb48a8-c219-49ff-a529-b239070a39ff
     data:
     content: Get a List of items
     key: SYSTEM-3-1-1
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-1-get_items
   SYSTEM-3-1-2:
     start_line: 13
     path: system\be.md#system-3-1-2-write_items_to_state
@@ -884,18 +929,18 @@ items:
     markdown: "### SYSTEM-3-1-2 `write_items_to_state()`\n```yaml (data)\ndepends_on:\n\
       \  - SYSTEM-3-1-1\nrelates_to:\n  - SYSTEM-5-2\n```\nGet the Items and then
       write the updates to `state.yaml`\n"
-    title: SYSTEM-3-1-2 `write_items_to_state()`
+    name: '`write_items_to_state()`'
     type: SYSTEM
-    uuid: 8a14dc0f-a10e-4a0d-9270-2b8b02772968
+    uuid: 24e6a413-4e8f-46d7-a85c-b33636d2ef96
     data:
       depends_on:
       - SYSTEM-3-1-1
       relates_to:
       - SYSTEM-5-2
-      type: SYSTEM
     content: Get the Items and then write the updates to `state.yaml`
     key: SYSTEM-3-1-2
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-2-write_items_to_state
   SYSTEM-3-1-2-1:
     start_line: 21
     path: system\be.md#system-3-1-2-1-add_item_id
@@ -909,15 +954,14 @@ items:
       ID into the `state.yaml::ids` object\n  - creates a `next` field for prospective
       children\n- Updates the appropriate `next`:\n  - if top level, within `state.yaml::ids.{item_type}.next`\n\
       \  - else, within `state.yaml::ids.{item_type}.{item_parent}.next`\n\n"
-    title: SYSTEM-3-1-2-1 `add_item_id()`
+    name: '`add_item_id()`'
     type: SYSTEM
-    uuid: 5f3b10a8-26ce-44b2-8e61-ba00c3c1dec5
+    uuid: 33a26d7b-22b6-40b9-8f79-9a1ddb50b307
     data:
       component_type: function
       scope: crud.py::write_items_to_state
       depends_on:
       - SYSTEM-4-2
-      type: SYSTEM
     content: "Add an Item to the `ids` in `state.yaml` based on availability of IDs.\n\
       \nItems must bring their own IDs (within their `title`)\n- example title: `ABC-1
       Alpha`\n\nThis function:\n- checks IDs for availability\n- inserts the Item
@@ -926,6 +970,7 @@ items:
       \  - else, within `state.yaml::ids.{item_type}.{item_parent}.next`"
     key: SYSTEM-3-1-2-1
     parent: SYSTEM-3-1-2
+    document: system\be.md#system-3-1-2-1-add_item_id
   SYSTEM-3-1-3:
     start_line: 41
     path: system\be.md#system-3-1-3-get_state
@@ -933,13 +978,14 @@ items:
     end_line: 42
     markdown: "### SYSTEM-3-1-3 `get_state()`\nRead the state file to get a python
       dict of the item state\n"
-    title: SYSTEM-3-1-3 `get_state()`
+    name: '`get_state()`'
     type: SYSTEM
-    uuid: ec983159-d15f-4864-b983-ca3a61d79471
+    uuid: 71dc352c-fc75-4c11-972f-28ceb926e3fa
     data:
     content: Read the state file to get a python dict of the item state
     key: SYSTEM-3-1-3
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-3-get_state
   SYSTEM-3-1-4:
     start_line: 43
     path: system\be.md#system-3-1-4-get_item
@@ -947,16 +993,16 @@ items:
     end_line: 48
     markdown: "### SYSTEM-3-1-4 `get_item()`\n```yaml (data)\ndepends_on:\n  - SYSTEM-3-1-4\n\
       ```\n\n"
-    title: SYSTEM-3-1-4 `get_item()`
+    name: '`get_item()`'
     type: SYSTEM
-    uuid: 31bdf62e-c7a5-4b6b-a1ed-99d4fc9873dd
+    uuid: c0caddc5-79ad-48b2-a821-8cbc7f211c20
     data:
       depends_on:
       - SYSTEM-3-1-4
-      type: SYSTEM
     content: ''
     key: SYSTEM-3-1-4
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-4-get_item
   SYSTEM-3-1-5:
     start_line: 49
     path: system\be.md#system-3-1-5-put_item
@@ -965,18 +1011,18 @@ items:
     markdown: "### SYSTEM-3-1-5 `put_item()`\n```yaml (data)\ndepends_on:\n  - SYSTEM-3-1-3\n\
       \  - SYSTEM-3-1-1\n  - SYSTEM-3-1-6\n```\nCreate or Update Items, intended to
       be idempotent.\n\n"
-    title: SYSTEM-3-1-5 `put_item()`
+    name: '`put_item()`'
     type: SYSTEM
-    uuid: 9f46d144-2b6a-40e0-a74f-7dd6ecee2386
+    uuid: 04f66072-83e5-463d-9225-c487cc1e4fe3
     data:
       depends_on:
       - SYSTEM-3-1-3
       - SYSTEM-3-1-1
       - SYSTEM-3-1-6
-      type: SYSTEM
     content: Create or Update Items, intended to be idempotent.
     key: SYSTEM-3-1-5
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-5-put_item
   SYSTEM-3-1-6:
     start_line: 58
     path: system\be.md#system-3-1-6-get_sibling_positioning
@@ -984,13 +1030,14 @@ items:
     end_line: 60
     markdown: "### SYSTEM-3-1-6 `get_sibling_positioning()`\nDetermine where exactly
       to put an it\n\n"
-    title: SYSTEM-3-1-6 `get_sibling_positioning()`
+    name: '`get_sibling_positioning()`'
     type: SYSTEM
-    uuid: df715d53-831f-46f3-9bf9-4475aa05a095
+    uuid: 1b098441-2154-4ca4-9198-d5ec5e421bfa
     data:
     content: Determine where exactly to put an it
     key: SYSTEM-3-1-6
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-6-get_sibling_positioning
   SYSTEM-3-1-7:
     start_line: 61
     path: system\be.md#system-3-1-7-delete_item
@@ -998,13 +1045,14 @@ items:
     end_line: 63
     markdown: "### SYSTEM-3-1-7 `delete_item()`\nDelete a given item from the markdown
       docs and state\n\n"
-    title: SYSTEM-3-1-7 `delete_item()`
+    name: '`delete_item()`'
     type: SYSTEM
-    uuid: d5a62162-dba6-408d-8583-f52d1787ec6c
+    uuid: 4e0dba2c-f36c-4a71-a446-d45ea0366f70
     data:
     content: Delete a given item from the markdown docs and state
     key: SYSTEM-3-1-7
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-7-delete_item
   SYSTEM-3-1-8:
     start_line: 64
     path: system\be.md#system-3-1-8-get_md_docs_in_dir
@@ -1012,13 +1060,14 @@ items:
     end_line: 67
     markdown: "### SYSTEM-3-1-8 `get_md_docs_in_dir()`\nRecursively detect Markdown
       DOcuments to check for `Item`s\n\n\n"
-    title: SYSTEM-3-1-8 `get_md_docs_in_dir()`
+    name: '`get_md_docs_in_dir()`'
     type: SYSTEM
-    uuid: b2b3094e-5544-4507-b35d-d6a6bf8cdc67
+    uuid: dbc3edbb-093a-449a-9f48-f83b0767d6c4
     data:
     content: Recursively detect Markdown DOcuments to check for `Item`s
     key: SYSTEM-3-1-8
     parent: SYSTEM-3-1
+    document: system\be.md#system-3-1-8-get_md_docs_in_dir
   SYSTEM-3-2:
     start_line: 68
     path: system\be.md#system-3-2-query-crudquerypy
@@ -1026,14 +1075,15 @@ items:
     end_line: 70
     markdown: "## SYSTEM-3-2 Query (`crud/query.py`)\nQuery Engine/Module for filtering
       and/or aggregating `Item`s by their `data` field.\n\n"
-    title: SYSTEM-3-2 Query (`crud/query.py`)
+    name: Query (`crud/query.py`)
     type: SYSTEM
-    uuid: dd42f707-5031-4150-99eb-c10436cd3a3d
+    uuid: bf70b882-a6f2-4773-8572-14b3f5b9c2eb
     data:
     content: Query Engine/Module for filtering and/or aggregating `Item`s by 
       their `data` field.
     key: SYSTEM-3-2
     parent: SYSTEM-3
+    document: system\be.md#system-3-2-query-crudquerypy
   SYSTEM-3-2-1:
     start_line: 71
     path: system\be.md#system-3-2-1-query_items
@@ -1042,17 +1092,17 @@ items:
     markdown: "### SYSTEM-3-2-1 `query_items()`\n```yaml (data)\ndepends_on:\n  -
       SYSTEM-3-2-3\n  - SYSTEM-3-2-4\n```\nApply a query step to the items against
       their `data` field.\n\n"
-    title: SYSTEM-3-2-1 `query_items()`
+    name: '`query_items()`'
     type: SYSTEM
-    uuid: 68d46db7-d6b1-41e2-b7f3-d865602ca1c9
+    uuid: 9ae17db1-ef74-43c3-a93a-ae6152d45336
     data:
       depends_on:
       - SYSTEM-3-2-3
       - SYSTEM-3-2-4
-      type: SYSTEM
     content: Apply a query step to the items against their `data` field.
     key: SYSTEM-3-2-1
     parent: SYSTEM-3-2
+    document: system\be.md#system-3-2-1-query_items
   SYSTEM-3-2-2:
     start_line: 79
     path: system\be.md#system-3-2-2-query_pipeline
@@ -1061,17 +1111,17 @@ items:
     markdown: "### SYSTEM-3-2-2 `query_pipeline()`\n```yaml (data)\ndepends_on:\n\
       \  - SYSTEM-3-2-1\n```\nEvaluate a list (AKA YAML sequence, AKA JSON array)
       of queries on the Items based on the order the query steps are declared.\n\n"
-    title: SYSTEM-3-2-2 `query_pipeline()`
+    name: '`query_pipeline()`'
     type: SYSTEM
-    uuid: ca2b3dce-d735-489c-b93d-e9efae17750f
+    uuid: 61b5b57b-4bc8-484b-b7d2-3b057f253444
     data:
       depends_on:
       - SYSTEM-3-2-1
-      type: SYSTEM
     content: Evaluate a list (AKA YAML sequence, AKA JSON array) of queries on 
       the Items based on the order the query steps are declared.
     key: SYSTEM-3-2-2
     parent: SYSTEM-3-2
+    document: system\be.md#system-3-2-2-query_pipeline
   SYSTEM-3-2-3:
     start_line: 86
     path: system\be.md#system-3-2-3-match_item
@@ -1080,14 +1130,15 @@ items:
     markdown: "### SYSTEM-3-2-3 `match_item()`\nEvaluates Logical Conditions to filter
       Items\n\nImportant Query logical keywords:\n- `$ne`\n- `$gt`\n- `$gte`\n- `$lt`\n\
       - `$lte`\n- `$in`\n\n"
-    title: SYSTEM-3-2-3 `match_item()`
+    name: '`match_item()`'
     type: SYSTEM
-    uuid: c8777ca0-50e2-45e8-85eb-8412a9204a7a
+    uuid: 1911a0ef-a7d2-43c6-950a-23d8bd79f60e
     data:
     content: "Evaluates Logical Conditions to filter Items\n\nImportant Query logical
       keywords:\n- `$ne`\n- `$gt`\n- `$gte`\n- `$lt`\n- `$lte`\n- `$in`"
     key: SYSTEM-3-2-3
     parent: SYSTEM-3-2
+    document: system\be.md#system-3-2-3-match_item
   SYSTEM-3-2-4:
     start_line: 97
     path: system\be.md#system-3-2-4-aggregate_items
@@ -1096,27 +1147,30 @@ items:
     markdown: "### SYSTEM-3-2-4 `aggregate_items()`\nEvaluates a list of Items to
       return a scalar result.\n\nImportant Query aggregating keywords:\n- `$count`\n\
       - `$sum`\n- `$concat`\n"
-    title: SYSTEM-3-2-4 `aggregate_items()`
+    name: '`aggregate_items()`'
     type: SYSTEM
-    uuid: 3fdecbb6-e0be-4820-8ebc-fe2671b5a765
+    uuid: 02874af1-4bf5-4a99-9b21-55801666f7e0
     data:
     content: "Evaluates a list of Items to return a scalar result.\n\nImportant Query
       aggregating keywords:\n- `$count`\n- `$sum`\n- `$concat`"
     key: SYSTEM-3-2-4
     parent: SYSTEM-3-2
+    document: system\be.md#system-3-2-4-aggregate_items
   SYSTEM-3-3:
     start_line: 104
     path: system\be.md#system-3-3-docs-processing-crudshelly_doc_processingpy
     level: 2
     end_line: 104
     markdown: "## SYSTEM-3-3 Docs Processing (`crud/shelly_doc_processing.py`)\n"
-    title: SYSTEM-3-3 Docs Processing (`crud/shelly_doc_processing.py`)
+    name: Docs Processing (`crud/shelly_doc_processing.py`)
     type: SYSTEM
-    uuid: 0160843a-87fc-48cf-84a3-229d85c608bc
+    uuid: 073e1adb-216d-42a5-86f6-3058b4c68730
     data:
     content: ''
     key: SYSTEM-3-3
     parent: SYSTEM-3
+    document: 
+      system\be.md#system-3-3-docs-processing-crudshelly_doc_processingpy
   SYSTEM-3-3-1:
     start_line: 105
     path: system\be.md#system-3-3-1-process_shelly_docs_items
@@ -1124,15 +1178,15 @@ items:
     end_line: 110
     markdown: "### SYSTEM-3-3-1 `process_shelly_docs_items()`\n```yaml (data)\nsubject_to_future_refactor:
       true\n```\nGiven a file path process the `Item`s within a file.\n\n"
-    title: SYSTEM-3-3-1 `process_shelly_docs_items()`
+    name: '`process_shelly_docs_items()`'
     type: SYSTEM
-    uuid: 3fa8bb75-2c58-4438-ba21-7e73a6b77318
+    uuid: f60eac51-c371-47fd-ac40-b8d2405a16ca
     data:
       subject_to_future_refactor: true
-      type: SYSTEM
     content: Given a file path process the `Item`s within a file.
     key: SYSTEM-3-3-1
     parent: SYSTEM-3-3
+    document: system\be.md#system-3-3-1-process_shelly_docs_items
   SYSTEM-3-3-2:
     start_line: 111
     path: 
@@ -1143,18 +1197,19 @@ items:
       ```yaml (data)\nrelated_to:\n  - SYSTEM-3-3-1\nsubject_to_future_refactor: true\n\
       ```\nUsed to convert a New Item object, which holds a kb path, filepath, and
       the raw markdown, into fully processable items.\n"
-    title: SYSTEM-3-3-2 `prep_new_shelly_doc_items_from_document_update()`
+    name: '`prep_new_shelly_doc_items_from_document_update()`'
     type: SYSTEM
-    uuid: c4aa609a-6d83-4608-b36b-602d5979f378
+    uuid: 2cdbd351-4142-4e98-bd66-183839b306ba
     data:
       related_to:
       - SYSTEM-3-3-1
       subject_to_future_refactor: true
-      type: SYSTEM
     content: Used to convert a New Item object, which holds a kb path, filepath,
       and the raw markdown, into fully processable items.
     key: SYSTEM-3-3-2
     parent: SYSTEM-3-3
+    document: 
+      system\be.md#system-3-3-2-prep_new_shelly_doc_items_from_document_update
   SYSTEM-3-3-3:
     start_line: 118
     path: system\be.md#system-3-3-3-get_item_content
@@ -1162,14 +1217,16 @@ items:
     markdown: "### SYSTEM-3-3-3 `get_item_content()`\n```yaml (data)\n```\nUsed to
       extract `Item.content`, which is everything in the Item except for the Item's
       `data` block and the Item's `title`\n\n"
-    title: SYSTEM-3-3-3 `get_item_content()`
+    name: '`get_item_content()`'
     type: SYSTEM
-    uuid: 9982a226-bead-48ec-9bdf-a9bb9a213d1f
+    uuid: 97f2dc9c-1a1b-43ee-9759-805f4b7c2b81
     data:
     content: Used to extract `Item.content`, which is everything in the Item 
       except for the Item's `data` block and the Item's `title`
     key: SYSTEM-3-3-3
     parent: SYSTEM-3-3
+    document: system\be.md#system-3-3-3-get_item_content
+    end_line:
   SYSTEM-1:
     start_line: 1
     path: system\cli.md#system-1-shelly-docs-cli
@@ -1179,9 +1236,9 @@ items:
       \  - ACTOR-1\n  - ACTOR-2\ndepends_on:\n  - SYSTEM-3\n```\nUse a `typer` CLI,
       so that Users can work with docs from the command-line, enabling scripting,
       and automation with structured output.\n\n"
-    title: SYSTEM-1 `shelly-docs` CLI
+    name: '`shelly-docs` CLI'
     type: SYSTEM
-    uuid: 636e932e-7e08-46b4-b13e-dcae0ed51259
+    uuid: 5ee5e8d0-0f83-4c62-8f9f-f3f8800b807b
     data:
       status: done
       relates_to:
@@ -1189,11 +1246,11 @@ items:
       - ACTOR-2
       depends_on:
       - SYSTEM-3
-      type: SYSTEM
     content: Use a `typer` CLI, so that Users can work with docs from the 
       command-line, enabling scripting, and automation with structured output.
     key: SYSTEM-1
     parent:
+    document: system\cli.md#system-1-shelly-docs-cli
   SYSTEM-1-1:
     start_line: 12
     path: system\cli.md#system-1-1-shelly-docs-kb
@@ -1203,17 +1260,17 @@ items:
       For working with the Knowledge Base\n- Setting the Knowledge Base Path (`kb
       set`)\n- Getting the current Knowledge Base Path (`kb get`)\n- Updating the
       state of the Knowledge base (`kb update`)\n"
-    title: SYSTEM-1-1 `shelly-docs kb`
+    name: '`shelly-docs kb`'
     type: SYSTEM
-    uuid: eb22847f-b33c-469c-aefa-768b273c5983
+    uuid: 5e53886c-dc97-4a61-8f52-5d2d4cbf0b6c
     data:
       status: done
-      type: SYSTEM
     content: "For working with the Knowledge Base\n- Setting the Knowledge Base Path
       (`kb set`)\n- Getting the current Knowledge Base Path (`kb get`)\n- Updating
       the state of the Knowledge base (`kb update`)"
     key: SYSTEM-1-1
     parent: SYSTEM-1
+    document: system\cli.md#system-1-1-shelly-docs-kb
   SYSTEM-1-2:
     start_line: 20
     path: system\cli.md#system-1-2-shelly-docs-items
@@ -1222,16 +1279,16 @@ items:
     markdown: "## SYSTEM-1-2 `shelly-docs items`\n```yaml (data)\nstatus: done\n```\n\
       For viewing Data of multiple items\n- Getting a List of All items (`items list`)\n\
       - Querying the items (`items query`)\n"
-    title: SYSTEM-1-2 `shelly-docs items`
+    name: '`shelly-docs items`'
     type: SYSTEM
-    uuid: 295b4b9c-4544-42c8-abd2-e72ca4ad5b0e
+    uuid: f6ef4fc0-682e-4530-a412-f88d8b27b49d
     data:
       status: done
-      type: SYSTEM
     content: "For viewing Data of multiple items\n- Getting a List of All items (`items
       list`)\n- Querying the items (`items query`)"
     key: SYSTEM-1-2
     parent: SYSTEM-1
+    document: system\cli.md#system-1-2-shelly-docs-items
   SYSTEM-1-2-1:
     start_line: 27
     path: system\cli.md#system-1-2-1-items-query
@@ -1250,12 +1307,11 @@ items:
       \nCan make individual queries (a mapping) or can make query pipelines ( a sequence).\n\
       \nAggregations are kinds of keywords used to get scalar results (number or string).\n\
       \nAggregation Keywords include:\n- `$count`\n- `$sum`\n- `$concat`\n\n"
-    title: SYSTEM-1-2-1 `items query`
+    name: '`items query`'
     type: SYSTEM
-    uuid: 072e4dc6-abe4-43c5-b66a-3ea192b0ce49
+    uuid: 8839e32d-cd82-4587-8009-0d11bbc6e2c4
     data:
       status: done
-      type: SYSTEM
     content: "Recall from DESIGN-2-1 that each item has a data field for saving structured
       data.\n\nWe can query the items based on that structure data with `shelly-docs
       items query` with a Mongo-DB inspired syntax, written as YAML (and therefore,
@@ -1270,6 +1326,7 @@ items:
       \nAggregation Keywords include:\n- `$count`\n- `$sum`\n- `$concat`"
     key: SYSTEM-1-2-1
     parent: SYSTEM-1-2
+    document: system\cli.md#system-1-2-1-items-query
   SYSTEM-1-3:
     start_line: 64
     path: system\cli.md#system-1-3-shelly-docs-item
@@ -1278,15 +1335,17 @@ items:
       given its item key\n- get an item (`item get`)\n- put an item (`item put`)\n\
       \  - Still recommended to write files directly, but can write them programmatically.\n\
       - delete an item (`item delete`)\n"
-    title: SYSTEM-1-3 `shelly-docs item`
+    name: '`shelly-docs item`'
     type: SYSTEM
-    uuid: b729c022-6513-455a-81e9-5654e91f68cf
+    uuid: c1726f0d-4dc5-46fc-94a3-f794e0742223
     data:
     content: "For working with a specific item, given its item key\n- get an item
       (`item get`)\n- put an item (`item put`)\n  - Still recommended to write files
       directly, but can write them programmatically.\n- delete an item (`item delete`)"
     key: SYSTEM-1-3
     parent: SYSTEM-1
+    document: system\cli.md#system-1-3-shelly-docs-item
+    end_line:
   SYSTEM-4:
     start_line: 1
     path: system\kb.md#system-4-knowledge-base-module-kbknowledge_basepy
@@ -1295,16 +1354,16 @@ items:
     markdown: "# SYSTEM-4 Knowledge Base Module (`kb/knowledge_base.py`)\n```yaml
       (data)\ndepends_on:\n- SYSTEM-3\n```\nModule for interacting with a Knowledge
       Base and Items.\n\n"
-    title: SYSTEM-4 Knowledge Base Module (`kb/knowledge_base.py`)
+    name: Knowledge Base Module (`kb/knowledge_base.py`)
     type: SYSTEM
-    uuid: d7733b1c-9ef9-4ed0-a003-918935bdc408
+    uuid: 7294533c-141e-453d-a480-b1fe8356a7ed
     data:
       depends_on:
       - SYSTEM-3
-      type: SYSTEM
     content: Module for interacting with a Knowledge Base and Items.
     key: SYSTEM-4
     parent:
+    document: system\kb.md#system-4-knowledge-base-module-kbknowledge_basepy
   SYSTEM-4-1:
     start_line: 8
     path: system\kb.md#system-4-1-knowledgebase
@@ -1315,9 +1374,9 @@ items:
       - shelly_docs_obj\n- state_file\n- state\nmethods:\n- create_item()\n- get_item()\n\
       - update_state()\n- update_item()\n- delete_item()\n- run_jobs()\n- run_job()\n\
       - query()\n```\nClass for working with a Shelly Docs Knowledge Base\n\n\n"
-    title: SYSTEM-4-1 `KnowledgeBase`
+    name: '`KnowledgeBase`'
     type: SYSTEM
-    uuid: bcf9fa98-58e4-4c44-ad00-11afab665ed6
+    uuid: 3fc93ce5-5bd4-4b34-b72b-e3e17a499a29
     data:
       depends_on:
       - SYSTEM-4-3
@@ -1340,10 +1399,10 @@ items:
       - run_jobs()
       - run_job()
       - query()
-      type: SYSTEM
     content: Class for working with a Shelly Docs Knowledge Base
     key: SYSTEM-4-1
     parent: SYSTEM-4
+    document: system\kb.md#system-4-1-knowledgebase
   SYSTEM-4-2:
     start_line: 35
     path: system\kb.md#system-4-2-item
@@ -1354,9 +1413,9 @@ items:
       - markdown\n- title\n- file\n- parent_key\n- kb\nmethods:\n- set_data()\n- set_content()\n\
       - set_file()\n- reparent()\n- rename()\n```\nClass for working with Shelly Docs
       Items\n\n\n"
-    title: SYSTEM-4-2 `Item`
+    name: '`Item`'
     type: SYSTEM
-    uuid: c4e021ef-6053-400c-b66b-75d0ade9eb81
+    uuid: 20d68135-214f-405b-a91a-11e7c8a1b91d
     data:
       component_type: class
       depends_on:
@@ -1378,10 +1437,10 @@ items:
       - set_file()
       - reparent()
       - rename()
-      type: SYSTEM
     content: Class for working with Shelly Docs Items
     key: SYSTEM-4-2
     parent: SYSTEM-4
+    document: system\kb.md#system-4-2-item
   SYSTEM-4-3:
     start_line: 61
     path: system\kb.md#system-4-3-make_item_key
@@ -1394,14 +1453,13 @@ items:
       (`state.yaml::ids`), and then returns the next available ID\n- If an Item has
       a parent, we check for the next available key under that parent\n- else, we
       check for the next available key under that item type.\n\n\n"
-    title: SYSTEM-4-3 `make_item_key()`
+    name: '`make_item_key()`'
     type: SYSTEM
-    uuid: 2aaea435-31ce-4791-b2c5-b87f38f85ddf
+    uuid: e1c00ac4-1be7-4410-9281-0a11cc44a1f7
     data:
       component_type: function
       related_to:
       - SYSTEM-5
-      type: SYSTEM
     content: "Function used to read a knowledge base and determine the correct key
       for a new item being created that does not yet have one (i.e. if an item is
       being creaetd via kb.create_item())\n\nReads from the `KnowledgeBase.state`
@@ -1410,6 +1468,7 @@ items:
       check for the next available key under that item type."
     key: SYSTEM-4-3
     parent: SYSTEM-4
+    document: system\kb.md#system-4-3-make_item_key
   SYSTEM-5:
     start_line: 74
     path: system\kb.md#system-5-knowledge-base-kb_path
@@ -1423,12 +1482,11 @@ items:
       \  - after running `shelly-docs kb update` or `KnowledgeBase.update_state()`,
       a `state.yaml` file is created in the Knowledge Base\n  - holds data on the
       `items` and `ids`\n\n"
-    title: SYSTEM-5 Knowledge Base (`{kb_path}/`)
+    name: Knowledge Base (`{kb_path}/`)
     type: SYSTEM
-    uuid: 953c85b0-e214-42e7-b801-cd040e81d666
+    uuid: 6255166e-18bb-4603-9cab-325f9fd84495
     data:
       component_type: data # data per user
-      type: SYSTEM
     content: "A Shelly Docs Knowledge Base is a file folder that has:\n- [`{kb_path}/shellydocs.yaml`](#system-5-1-shellydocsyaml)\n\
       \  - acts as the root of the knowledge base folder\n  - specifies the item types
       and jobs available in that knowledge base\n- [`{kb_path}/state.yaml`](#system-5-2-stateyaml)\n\
@@ -1437,31 +1495,35 @@ items:
       `items` and `ids`"
     key: SYSTEM-5
     parent:
+    document: system\kb.md#system-5-knowledge-base-kb_path
   SYSTEM-5-1:
     start_line: 86
     path: system\kb.md#system-5-1-shellydocsyaml
     level: 2
     end_line: 87
     markdown: "## SYSTEM-5-1 `shellydocs.yaml`\n\n"
-    title: SYSTEM-5-1 `shellydocs.yaml`
+    name: '`shellydocs.yaml`'
     type: SYSTEM
-    uuid: 80411340-0ff0-4dce-9b9e-c1200d41ba12
+    uuid: 269a3828-1c98-4261-9154-bfbe1b10d82b
     data:
     content: ''
     key: SYSTEM-5-1
     parent: SYSTEM-5
+    document: system\kb.md#system-5-1-shellydocsyaml
   SYSTEM-5-2:
     start_line: 88
     path: system\kb.md#system-5-2-stateyaml
     level: 2
     markdown: "## SYSTEM-5-2 `state.yaml`\n"
-    title: SYSTEM-5-2 `state.yaml`
+    name: '`state.yaml`'
     type: SYSTEM
-    uuid: d5a8687c-13d6-4822-8a77-ddc6f86a03ec
+    uuid: c13433dd-748a-4601-a99a-3e40f9655852
     data:
     content: ''
     key: SYSTEM-5-2
     parent: SYSTEM-5
+    document: system\kb.md#system-5-2-stateyaml
+    end_line:
   SYSTEM-2:
     start_line: 1
     path: system\tui.md#system-2-tui
@@ -1472,22 +1534,22 @@ items:
       with.\n\nPrimarily intended for HUmans, since Agents will be more efficient
       interacting with Shelly Docs via the CLI (`shelly-docs`)\n\nAllows user to view
       and edit the items in the knowledge base.\n\n"
-    title: SYSTEM-2 TUI
+    name: TUI
     type: SYSTEM
-    uuid: baa347a8-e7bd-45e9-96bc-5d9db63d0873
+    uuid: 8bdfedfd-fcf6-4110-9fa4-1d2d4c565fe3
     data:
       status: done
       relates_to:
       - ACTOR-1
       depends_on:
       - SYSTEM-3
-      type: SYSTEM
     content: "Provides a `textual` TUI for the user to interact with.\n\nPrimarily
       intended for HUmans, since Agents will be more efficient interacting with Shelly
       Docs via the CLI (`shelly-docs`)\n\nAllows user to view and edit the items in
       the knowledge base."
     key: SYSTEM-2
     parent:
+    document: system\tui.md#system-2-tui
   SYSTEM-2-1:
     start_line: 15
     path: system\tui.md#system-2-1-home-screen
@@ -1495,14 +1557,15 @@ items:
     end_line: 17
     markdown: "## SYSTEM-2-1 Home Screen\nLets the user specify a Knowledge Base Path
       to open the app with respect to.\n\n"
-    title: SYSTEM-2-1 Home Screen
+    name: Home Screen
     type: SYSTEM
-    uuid: de668193-0063-40b7-b4f3-2be377ea63cb
+    uuid: ff9c19dc-f0b0-4c8c-b4b2-cbed801d65a7
     data:
     content: Lets the user specify a Knowledge Base Path to open the app with 
       respect to.
     key: SYSTEM-2-1
     parent: SYSTEM-2
+    document: system\tui.md#system-2-1-home-screen
   SYSTEM-2-2:
     start_line: 18
     path: system\tui.md#system-2-2-knowledge-base-screen
@@ -1511,15 +1574,16 @@ items:
     markdown: "## SYSTEM-2-2 Knowledge Base Screen\nLets the user view their Items
       in the Knowledge Base, see the current config of the Knowledge Base, as well
       as select items to update/delete, or create New Items.\n\n"
-    title: SYSTEM-2-2 Knowledge Base Screen
+    name: Knowledge Base Screen
     type: SYSTEM
-    uuid: b013e1ef-6519-4c24-9317-fabd72cfbb1b
+    uuid: 4c0f472e-5c11-4c7d-a2ea-9ea79aaedf6f
     data:
     content: Lets the user view their Items in the Knowledge Base, see the 
       current config of the Knowledge Base, as well as select items to 
       update/delete, or create New Items.
     key: SYSTEM-2-2
     parent: SYSTEM-2
+    document: system\tui.md#system-2-2-knowledge-base-screen
   SYSTEM-2-3:
     start_line: 21
     path: system\tui.md#system-2-3-create-new-item-screen
@@ -1529,15 +1593,16 @@ items:
       a basic markdown editor and specify a filepath to locate the item. \n- if the
       path is an existing file, then SHelly DOcs tries to place it in order amongst
       its siblings.\n"
-    title: SYSTEM-2-3 Create New Item Screen
+    name: Create New Item Screen
     type: SYSTEM
-    uuid: 19357d47-f740-42e7-bd4d-d27f1845a14a
+    uuid: cd128262-c1af-41da-a376-c446d110ff66
     data:
     content: "Lets user write A new item with a basic markdown editor and specify
       a filepath to locate the item. \n- if the path is an existing file, then SHelly
       DOcs tries to place it in order amongst its siblings."
     key: SYSTEM-2-3
     parent: SYSTEM-2
+    document: system\tui.md#system-2-3-create-new-item-screen
   SYSTEM-2-4:
     start_line: 24
     path: system\tui.md#system-2-4-delete-item-screen
@@ -1545,43 +1610,47 @@ items:
     end_line: 25
     markdown: "## SYSTEM-2-4 Delete Item Screen\nGives the User a confirmation screen
       asking them to confirm if they want to delete an item.\n"
-    title: SYSTEM-2-4 Delete Item Screen
+    name: Delete Item Screen
     type: SYSTEM
-    uuid: 1bf43ec4-b791-49fd-ab76-7fcf2b23ff87
+    uuid: 729c899e-3171-4a8a-a3a0-46e3385c7724
     data:
     content: Gives the User a confirmation screen asking them to confirm if they
       want to delete an item.
     key: SYSTEM-2-4
     parent: SYSTEM-2
+    document: system\tui.md#system-2-4-delete-item-screen
   SYSTEM-2-5:
     start_line: 26
     path: system\tui.md#system-2-5-update-item-screen
     level: 2
     markdown: "## SYSTEM-2-5 Update Item Screen\nGives the User a basic markdown editor
       to update the contents of a specific item.\n"
-    title: SYSTEM-2-5 Update Item Screen
+    name: Update Item Screen
     type: SYSTEM
-    uuid: ea1e04e0-caca-4bcf-a180-0d96d75379d0
+    uuid: a7e98c43-35d4-4dd3-87db-a777b4c1119e
     data:
     content: Gives the User a basic markdown editor to update the contents of a 
       specific item.
     key: SYSTEM-2-5
     parent: SYSTEM-2
+    document: system\tui.md#system-2-5-update-item-screen
+    end_line:
   ACTOR-3:
     start_line: 2
     path: test_a.md#actor-3-making-stuff
     level: 1
     markdown: "# ACTOR-3 Making stuff\n```yaml (data)\nstatus: todo\n```\nI have some
       content here\n"
-    title: ACTOR-3 Making stuff
+    name: Making stuff
     type: ACTOR
-    uuid: 7b13d8f6-7a61-4251-998e-4e4482e2aacf
+    uuid: d509a6a5-69c3-4619-a1f0-e70723e1e164
     data:
       status: todo
-      type: ACTOR
     content: I have some content here
     key: ACTOR-3
     parent:
+    document: test_a.md#actor-3-making-stuff
+    end_line:
   ACTOR-1:
     start_line: 1
     path: use_cases\actors.md#actor-1-human
@@ -1589,26 +1658,29 @@ items:
     end_line: 2
     markdown: "# ACTOR-1 `Human`\nA Human user. Primarily expected to use the TUI,
       but can also use CLI commands.\n"
-    title: ACTOR-1 `Human`
+    name: '`Human`'
     type: ACTOR
-    uuid: f76d8d26-bf13-4ee1-a482-37a96e413e45
+    uuid: c61fa576-9d12-43e9-9170-735aacaf12cb
     data:
     content: A Human user. Primarily expected to use the TUI, but can also use 
       CLI commands.
     key: ACTOR-1
     parent:
+    document: use_cases\actors.md#actor-1-human
   ACTOR-2:
     start_line: 3
     path: use_cases\actors.md#actor-2-agent
     level: 1
     markdown: "# ACTOR-2 `Agent`\nAn AI Agent. Primarily expected to use the CLI.\n"
-    title: ACTOR-2 `Agent`
+    name: '`Agent`'
     type: ACTOR
-    uuid: 71dd4608-43a3-402f-b87e-ccc148b3b074
+    uuid: cc62492a-a414-4714-980d-d5ff3a255015
     data:
     content: An AI Agent. Primarily expected to use the CLI.
     key: ACTOR-2
     parent:
+    document: use_cases\actors.md#actor-2-agent
+    end_line:
   USECASE-18:
     start_line: 1
     path: use_cases\py_library.md#usecase-18-shelly_docs-python-library
@@ -1617,29 +1689,30 @@ items:
     markdown: "# USECASE-18 `shelly_docs` Python Library\nMake a `shelly_docs` Python
       library so people can programmatically work with items outside of just the CLI.\n\
       \n"
-    title: USECASE-18 `shelly_docs` Python Library
+    name: '`shelly_docs` Python Library'
     type: USECASE
-    uuid: adf2e2b7-0cd9-4a5c-ab69-66a3cafc5a48
+    uuid: 115e48e0-66cd-4f20-9a1a-5532f1253780
     data:
     content: Make a `shelly_docs` Python library so people can programmatically 
       work with items outside of just the CLI.
     key: USECASE-18
     parent:
+    document: use_cases\py_library.md#usecase-18-shelly_docs-python-library
   USECASE-18-1:
     start_line: 4
     path: use_cases\py_library.md#usecase-18-1-knowledgebase
     level: 2
     end_line: 7
     markdown: "## USECASE-18-1 `KnowledgeBase`\n```yaml (data)\nstatus: done\n```\n"
-    title: USECASE-18-1 `KnowledgeBase`
+    name: '`KnowledgeBase`'
     type: USECASE
-    uuid: 3dbd7b13-5abc-46c3-ad6f-45cffac27af0
+    uuid: 7457ed03-c876-46df-b47e-a69691185f79
     data:
       status: done
-      type: USECASE
     content: ''
     key: USECASE-18-1
     parent: USECASE-18
+    document: use_cases\py_library.md#usecase-18-1-knowledgebase
   USECASE-18-1-1:
     start_line: 8
     path: use_cases\py_library.md#usecase-18-1-1-create-an-item
@@ -1647,119 +1720,127 @@ items:
     end_line: 11
     markdown: "### USECASE-18-1-1 Create an Item\nCreate an Item in the KnowledgeBase.\n\
       \n\n"
-    title: USECASE-18-1-1 Create an Item
+    name: Create an Item
     type: USECASE
-    uuid: c9c06877-a0cc-4bf6-88ff-f1b16219e2b1
+    uuid: f3db6bf4-7e69-4027-ae9d-8756ced80041
     data:
     content: Create an Item in the KnowledgeBase.
     key: USECASE-18-1-1
     parent: USECASE-18-1
+    document: use_cases\py_library.md#usecase-18-1-1-create-an-item
   USECASE-18-1-2:
     start_line: 12
     path: use_cases\py_library.md#usecase-18-1-2-readget-an-item
     level: 3
     end_line: 13
     markdown: "### USECASE-18-1-2 Read/Get an Item\n\n"
-    title: USECASE-18-1-2 Read/Get an Item
+    name: Read/Get an Item
     type: USECASE
-    uuid: 8f60a161-1c4d-4103-b810-84543284b9e6
+    uuid: 5898c3a7-105f-4359-9082-379045512692
     data:
     content: ''
     key: USECASE-18-1-2
     parent: USECASE-18-1
+    document: use_cases\py_library.md#usecase-18-1-2-readget-an-item
   USECASE-18-1-3:
     start_line: 14
     path: use_cases\py_library.md#usecase-18-1-3-update-an-item
     level: 3
     end_line: 14
     markdown: "### USECASE-18-1-3 Update an Item\n"
-    title: USECASE-18-1-3 Update an Item
+    name: Update an Item
     type: USECASE
-    uuid: 5534514b-54a3-434e-aaa9-cd1c864ff18c
+    uuid: c9314cd7-31b8-47c6-88dd-acf050e0cdc7
     data:
     content: ''
     key: USECASE-18-1-3
     parent: USECASE-18-1
+    document: use_cases\py_library.md#usecase-18-1-3-update-an-item
   USECASE-18-1-4:
     start_line: 15
     path: use_cases\py_library.md#usecase-18-1-4-delete-an-item
     level: 3
     end_line: 15
     markdown: "### USECASE-18-1-4 Delete an Item\n"
-    title: USECASE-18-1-4 Delete an Item
+    name: Delete an Item
     type: USECASE
-    uuid: 147b1641-f11d-487f-adc1-2e8173949e00
+    uuid: 8ff97a34-26fd-420f-aae7-2e973d422d96
     data:
     content: ''
     key: USECASE-18-1-4
     parent: USECASE-18-1
+    document: use_cases\py_library.md#usecase-18-1-4-delete-an-item
   USECASE-18-1-5:
     start_line: 16
     path: use_cases\py_library.md#usecase-18-1-5-reparent-an-item
     level: 3
     end_line: 16
     markdown: "### USECASE-18-1-5 Reparent an Item\n"
-    title: USECASE-18-1-5 Reparent an Item
+    name: Reparent an Item
     type: USECASE
-    uuid: 8d1f322a-d90e-4cd2-8a6a-a53c60d00443
+    uuid: 0f299725-0f08-4b4d-ad5a-1cab8c8512c2
     data:
     content: ''
     key: USECASE-18-1-5
     parent: USECASE-18-1
+    document: use_cases\py_library.md#usecase-18-1-5-reparent-an-item
   USECASE-18-1-6:
     start_line: 17
     path: use_cases\py_library.md#usecase-18-1-6-query-the-knowledgebase
     level: 3
     end_line: 17
     markdown: "### USECASE-18-1-6 Query the KnowledgeBase\n"
-    title: USECASE-18-1-6 Query the KnowledgeBase
+    name: Query the KnowledgeBase
     type: USECASE
-    uuid: 8830ff2b-73b6-4286-9ed2-b9b7e3660b5b
+    uuid: 2a7f8f7d-259f-4e75-b46f-b58345c3dcd2
     data:
     content: ''
     key: USECASE-18-1-6
     parent: USECASE-18-1
+    document: use_cases\py_library.md#usecase-18-1-6-query-the-knowledgebase
   USECASE-18-2:
     start_line: 18
     path: use_cases\py_library.md#usecase-18-2-item
     level: 2
     end_line: 21
     markdown: "## USECASE-18-2 `Item`\n```yaml (data)\nstatus: done\n```\n"
-    title: USECASE-18-2 `Item`
+    name: '`Item`'
     type: USECASE
-    uuid: 9f1e19da-3e2b-4029-95f6-32d30b955caa
+    uuid: a5fb7f46-7e53-4367-920c-77ec80fe03a1
     data:
       status: done
-      type: USECASE
     content: ''
     key: USECASE-18-2
     parent: USECASE-18
+    document: use_cases\py_library.md#usecase-18-2-item
   USECASE-18-2-1:
     start_line: 22
     path: use_cases\py_library.md#usecase-18-2-1-read-itemdata
     level: 3
     end_line: 22
     markdown: "### USECASE-18-2-1 Read `Item.data`\n"
-    title: USECASE-18-2-1 Read `Item.data`
+    name: Read `Item.data`
     type: USECASE
-    uuid: 93f9f26f-4d4b-45eb-967f-2dbc27ae01de
+    uuid: 1fa59082-e793-47f7-9e08-cb8d5b91f032
     data:
     content: ''
     key: USECASE-18-2-1
     parent: USECASE-18-2
+    document: use_cases\py_library.md#usecase-18-2-1-read-itemdata
   USECASE-18-2-2:
     start_line: 23
     path: use_cases\py_library.md#usecase-18-2-2-read-itemcontent
     level: 3
     end_line: 23
     markdown: "### USECASE-18-2-2 Read `Item.content`\n"
-    title: USECASE-18-2-2 Read `Item.content`
+    name: Read `Item.content`
     type: USECASE
-    uuid: f2ec167b-2259-4952-91d0-c725d9d0a64a
+    uuid: 846b6055-590b-4beb-8c3e-6e9f9a483b1f
     data:
     content: ''
     key: USECASE-18-2-2
     parent: USECASE-18-2
+    document: use_cases\py_library.md#usecase-18-2-2-read-itemcontent
   USECASE-18-2-3:
     start_line: 24
     path: use_cases\py_library.md#usecase-18-2-3-read-all-other-item-metadata
@@ -1767,38 +1848,43 @@ items:
     end_line: 25
     markdown: "### USECASE-18-2-3 Read All other Item Metadata\n- All other fields
       of an item aside from `data` and `content`\n"
-    title: USECASE-18-2-3 Read All other Item Metadata
+    name: Read All other Item Metadata
     type: USECASE
-    uuid: 45d06dfb-b7b2-40ec-b6de-70eab4ea36f5
+    uuid: 0d241df2-d273-4940-9d73-13bc6318dc6d
     data:
     content: '- All other fields of an item aside from `data` and `content`'
     key: USECASE-18-2-3
     parent: USECASE-18-2
+    document: 
+      use_cases\py_library.md#usecase-18-2-3-read-all-other-item-metadata
   USECASE-18-2-4:
     start_line: 26
     path: use_cases\py_library.md#usecase-18-2-4-set-itemdata
     level: 3
     end_line: 26
     markdown: "### USECASE-18-2-4 Set `Item.data`\n"
-    title: USECASE-18-2-4 Set `Item.data`
+    name: Set `Item.data`
     type: USECASE
-    uuid: 8588600c-b75e-4079-80e9-5ffe93010c57
+    uuid: 2bccd054-8c46-4d1d-bdef-61e1ccf9736c
     data:
     content: ''
     key: USECASE-18-2-4
     parent: USECASE-18-2
+    document: use_cases\py_library.md#usecase-18-2-4-set-itemdata
   USECASE-18-2-5:
     start_line: 27
     path: use_cases\py_library.md#usecase-18-2-5-set-itemcontent
     level: 3
     markdown: '### USECASE-18-2-5 Set `Item.content`'
-    title: USECASE-18-2-5 Set `Item.content`
+    name: Set `Item.content`
     type: USECASE
-    uuid: 99f339bd-f8fe-4aa7-888e-55555ab8e477
+    uuid: cc71d710-b2d6-428f-82d6-5ea8aa695016
     data:
     content: ''
     key: USECASE-18-2-5
     parent: USECASE-18-2
+    document: use_cases\py_library.md#usecase-18-2-5-set-itemcontent
+    end_line:
   USECASE-1:
     start_line: 1
     path: use_cases\use_cases.md#usecase-1-human-gets-list-of-items
@@ -1806,15 +1892,15 @@ items:
     end_line: 5
     markdown: "# USECASE-1 Human gets list of Items\nHuman uses the TUI to view the
       Items in their Knowledge Base.\n```yaml (data)\nstatus: done\n```\n"
-    title: USECASE-1 Human gets list of Items
+    name: Human gets list of Items
     type: USECASE
-    uuid: 23b1c289-e3c5-4a05-9c90-ee00123c13dd
+    uuid: 9625aa96-8e0a-4725-a1fe-8410abd3ea2d
     data:
       status: done
-      type: USECASE
     content: Human uses the TUI to view the Items in their Knowledge Base.
     key: USECASE-1
     parent:
+    document: use_cases\use_cases.md#usecase-1-human-gets-list-of-items
   USECASE-2:
     start_line: 6
     path: use_cases\use_cases.md#usecase-2-human-reads-an-item
@@ -1822,15 +1908,15 @@ items:
     end_line: 10
     markdown: "# USECASE-2 Human reads an Item\nHuman uses the TUI to view a specific
       Item in the Knowledge Base.\n```yaml (data)\nstatus: done\n```\n"
-    title: USECASE-2 Human reads an Item
+    name: Human reads an Item
     type: USECASE
-    uuid: ee2cc956-7f2f-494d-b3fe-32f289b39941
+    uuid: f282057c-2ae8-43c2-a966-c90decd3c404
     data:
       status: done
-      type: USECASE
     content: Human uses the TUI to view a specific Item in the Knowledge Base.
     key: USECASE-2
     parent:
+    document: use_cases\use_cases.md#usecase-2-human-reads-an-item
   USECASE-3:
     start_line: 11
     path: use_cases\use_cases.md#usecase-3-human-sets-the-knowledge-base-config
@@ -1841,18 +1927,19 @@ items:
       status: done\n```\nHuman sets the configuration for the Knowledge base using
       a `shellydocs.yaml` file.\n```yaml\nitem_tags: # tags to recognize as items\n\
       \  - INPUT\n  - DESIGN\n  - REQ\n```\nItem Tags are used to detect items.\n\n"
-    title: USECASE-3 Human sets the Knowledge Base Config
+    name: Human sets the Knowledge Base Config
     type: USECASE
-    uuid: 7fc82081-78a4-4e16-9d94-d90b00be92d9
+    uuid: fb894a7e-68ae-4e75-8e37-6b11931b02c4
     data:
       status: done
-      type: USECASE
     content: "Human opens a project in the TUI by specifying the directory for the
       Knowledge Base.\nHuman sets the configuration for the Knowledge base using a
       `shellydocs.yaml` file.\n```yaml\nitem_tags: # tags to recognize as items\n\
       \  - INPUT\n  - DESIGN\n  - REQ\n```\nItem Tags are used to detect items."
     key: USECASE-3
     parent:
+    document: 
+      use_cases\use_cases.md#usecase-3-human-sets-the-knowledge-base-config
   USECASE-4:
     start_line: 25
     path: use_cases\use_cases.md#usecase-4-human-adds-a-new-item
@@ -1860,15 +1947,15 @@ items:
     end_line: 29
     markdown: "# USECASE-4 Human adds a new Item\nHuman uses the TUI to create a new
       Item\n```yaml (data)\nstatus: done\n```\n"
-    title: USECASE-4 Human adds a new Item
+    name: Human adds a new Item
     type: USECASE
-    uuid: de8dddd5-d7f1-4979-9599-01c4f6a3efde
+    uuid: 47a8a6ba-e61b-4021-a816-b433fb82c0f0
     data:
       status: done
-      type: USECASE
     content: Human uses the TUI to create a new Item
     key: USECASE-4
     parent:
+    document: use_cases\use_cases.md#usecase-4-human-adds-a-new-item
   USECASE-5:
     start_line: 30
     path: use_cases\use_cases.md#usecase-5-human-updates-an-item
@@ -1876,15 +1963,15 @@ items:
     end_line: 34
     markdown: "# USECASE-5 Human updates an Item\nHuman uses the TUI to update an
       existing Item\n```yaml (data)\nstatus: done\n```\n"
-    title: USECASE-5 Human updates an Item
+    name: Human updates an Item
     type: USECASE
-    uuid: 59fe037b-3836-430d-93cc-547a5a7746bd
+    uuid: 2c756b15-1593-4645-8170-20c23fcab815
     data:
       status: done
-      type: USECASE
     content: Human uses the TUI to update an existing Item
     key: USECASE-5
     parent:
+    document: use_cases\use_cases.md#usecase-5-human-updates-an-item
   USECASE-6:
     start_line: 35
     path: use_cases\use_cases.md#usecase-6-human-deletes-an-item
@@ -1892,15 +1979,15 @@ items:
     end_line: 40
     markdown: "# USECASE-6 Human deletes an Item\nHuman uses TUI to delete an Item\n\
       ```yaml (data)\nstatus: done\n```\n\n"
-    title: USECASE-6 Human deletes an Item
+    name: Human deletes an Item
     type: USECASE
-    uuid: 03b419c4-a4a2-4ffa-857c-aaeb35ef8f52
+    uuid: e7f87225-d1ab-4b48-a6d7-f99ecc600041
     data:
       status: done
-      type: USECASE
     content: Human uses TUI to delete an Item
     key: USECASE-6
     parent:
+    document: use_cases\use_cases.md#usecase-6-human-deletes-an-item
   USECASE-7:
     start_line: 41
     path: use_cases\use_cases.md#usecase-7-get-list-of-items-via-cli
@@ -1908,15 +1995,15 @@ items:
     end_line: 47
     markdown: "# USECASE-7 Get List of Items via CLI\n```yaml (data)\nstatus: done\n\
       ```\n```bash\nshelly-docs items list --path \"path\"\n```\n"
-    title: USECASE-7 Get List of Items via CLI
+    name: Get List of Items via CLI
     type: USECASE
-    uuid: dade5a22-0ac1-40eb-8f73-b73984f92bc9
+    uuid: 749789c6-2e78-4bac-866f-e80d15711134
     data:
       status: done
-      type: USECASE
     content: "```bash\nshelly-docs items list --path \"path\"\n```"
     key: USECASE-7
     parent:
+    document: use_cases\use_cases.md#usecase-7-get-list-of-items-via-cli
   USECASE-8:
     start_line: 48
     path: use_cases\use_cases.md#usecase-8-get-an-item-via-cli
@@ -1924,15 +2011,15 @@ items:
     end_line: 54
     markdown: "# USECASE-8 Get an Item via CLI\n```yaml (data)\nstatus: done\n```\n\
       ```bash\nshelly-docs item get \"item_key\"\n```\n"
-    title: USECASE-8 Get an Item via CLI
+    name: Get an Item via CLI
     type: USECASE
-    uuid: 49798728-23f0-4ebd-8bf3-536570c21a61
+    uuid: 4e6c388a-1510-446a-8b51-5510c4d69168
     data:
       status: done
-      type: USECASE
     content: "```bash\nshelly-docs item get \"item_key\"\n```"
     key: USECASE-8
     parent:
+    document: use_cases\use_cases.md#usecase-8-get-an-item-via-cli
   USECASE-9:
     start_line: 55
     path: use_cases\use_cases.md#usecase-9-set-knowledge-base-config-via-cli
@@ -1942,17 +2029,17 @@ items:
       done\n```\n```bash\nshelly-docs kb set --path \"path_to_kb_directory\" # reads
       the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base
       config\n# defaults to the current directory if no directory is provided\n```\n"
-    title: USECASE-9 Set Knowledge Base Config via CLI
+    name: Set Knowledge Base Config via CLI
     type: USECASE
-    uuid: 19a49e2b-1657-451c-8715-6c9e2ea53d44
+    uuid: eb60745f-d307-4361-8e1f-5c2f4b619a7e
     data:
       status: done
-      type: USECASE
     content: "```bash\nshelly-docs kb set --path \"path_to_kb_directory\" # reads
       the `shellydocs.yaml` file at the directory pathto setup the Knowledge Base
       config\n# defaults to the current directory if no directory is provided\n```"
     key: USECASE-9
     parent:
+    document: use_cases\use_cases.md#usecase-9-set-knowledge-base-config-via-cli
   USECASE-10:
     start_line: 63
     path: use_cases\use_cases.md#usecase-10-addupdate-an-item-via-cli
@@ -1965,12 +2052,11 @@ items:
       # put an item to the KB using JSON\n```\nFormat of an item\n- filepath is relative
       to the Knowledge Base Path\n```json\n{\n  \"filepath\": \"file.md\",\n  \"markdown\"\
       : \"# DESIGN-3 Capture Data \\n Capture Data from user input\"\n}\n```\n\n"
-    title: USECASE-10 Add/Update an Item via CLI
+    name: Add/Update an Item via CLI
     type: USECASE
-    uuid: bcfc9c12-4a37-4b94-9c5b-96ad2bc091d1
+    uuid: e815c037-d8d0-4707-b5a0-b9101707a27d
     data:
       status: done
-      type: USECASE
     content: "Generally, we'd expect an agent to write Items by using markdown, but
       we should also allow a way to update items using json. \n```bash\nshelly-docs
       item put \"file.md\" \"# DESIGN-3 Capture Data\nCapture Data from user input\"\
@@ -1980,6 +2066,7 @@ items:
       \n}\n```"
     key: USECASE-10
     parent:
+    document: use_cases\use_cases.md#usecase-10-addupdate-an-item-via-cli
   USECASE-11:
     start_line: 82
     path: use_cases\use_cases.md#usecase-11-delete-an-item-via-cli
@@ -1988,16 +2075,16 @@ items:
     markdown: "# USECASE-11 Delete an Item via CLI\n```yaml (data)\nstatus: done\n\
       depends_on: USECASE-15\n```\n```bash\nshelly-docs item delete \"item_key\"\n\
       ```\n\n"
-    title: USECASE-11 Delete an Item via CLI
+    name: Delete an Item via CLI
     type: USECASE
-    uuid: 667ed49a-ccbd-4195-8b72-21a5af67f431
+    uuid: 8f791cea-ffcb-4ec5-8018-b94db67b885e
     data:
       status: done
       depends_on: USECASE-15
-      type: USECASE
     content: "```bash\nshelly-docs item delete \"item_key\"\n```"
     key: USECASE-11
     parent:
+    document: use_cases\use_cases.md#usecase-11-delete-an-item-via-cli
   USECASE-12:
     start_line: 91
     path: use_cases\use_cases.md#usecase-12-add-data-to-items
@@ -2011,13 +2098,12 @@ items:
       the yaml code block.\n\nBy default, at least the 'type' will be added to the
       data object, but it can be overwritten by a type specified in the code fence.\n\
       \n\n"
-    title: USECASE-12 Add Data to Items
+    name: Add Data to Items
     type: USECASE
-    uuid: 00f9242d-c68d-413e-a47d-0732922f12c5
+    uuid: c1d93258-9827-43d8-8123-bed910d93eee
     data:
       status: done
       related_to: DESIGN-2-2
-      type: USECASE
     content: "As seen above, allow Items to have structured data that can be analyzed
       and queried.\n\nData on a given item is provided using a yaml `data` code block.\n\
       \nData is then saved in the state of the knowledge base, where the item has
@@ -2026,26 +2112,26 @@ items:
       but it can be overwritten by a type specified in the code fence."
     key: USECASE-12
     parent:
+    document: use_cases\use_cases.md#usecase-12-add-data-to-items
   USECASE-13:
     start_line: 105
     path: use_cases\use_cases.md#usecase-13-query-items-based-on-itemdata
     level: 1
     end_line: 130
     markdown: "# USECASE-13 Query Items based on `Item.data`\n```yaml (data)\nstatus:
-      in_progress\n```\nSearch for Items based on their `data` field.\nAn Item object
-      has data from codefences stored in the 'data' object in the state file.\n\n\
-      We can then query that data from the state file by iterating through the items
-      and checking logical conditions\n\nA query can be formatted with mongodb-like
-      objects\n```yaml\n# format\n<field>: <query_obj> # scalar for a single value,
-      or a mapping for checking several conditions\n\n# query for status of done\n\
-      status: done\n# ...\n# query conditionals\npoints:\n  $gte: 3\n  $lte: 8\n$or:\n\
-      \  - status: drafting\n  - winner: true\n```\n\n"
-    title: USECASE-13 Query Items based on `Item.data`
+      done\n```\nSearch for Items based on their `data` field.\nAn Item object has
+      data from codefences stored in the 'data' object in the state file.\n\nWe can
+      then query that data from the state file by iterating through the items and
+      checking logical conditions\n\nA query can be formatted with mongodb-like objects\n\
+      ```yaml\n# format\n<field>: <query_obj> # scalar for a single value, or a mapping
+      for checking several conditions\n\n# query for status of done\nstatus: done\n\
+      # ...\n# query conditionals\npoints:\n  $gte: 3\n  $lte: 8\n$or:\n  - status:
+      drafting\n  - winner: true\n```\n\n"
+    name: Query Items based on `Item.data`
     type: USECASE
-    uuid: b4bf06d6-935e-4a2a-8a6b-a42c273dbc4e
+    uuid: a73da498-b3de-486a-b740-5d63f3d02c39
     data:
-      status: in_progress
-      type: USECASE
+      status: done
     content: "Search for Items based on their `data` field.\nAn Item object has data
       from codefences stored in the 'data' object in the state file.\n\nWe can then
       query that data from the state file by iterating through the items and checking
@@ -2056,6 +2142,7 @@ items:
       \  - winner: true\n```"
     key: USECASE-13
     parent:
+    document: use_cases\use_cases.md#usecase-13-query-items-based-on-itemdata
   USECASE-13-1:
     start_line: 131
     path: use_cases\use_cases.md#usecase-13-1-querying-item-collections
@@ -2070,12 +2157,11 @@ items:
       we're checking for is not an array, then we search return items with that 'value'
       in the array\n- this makes it so we can still search for exact match arrays,
       AND we can also search for specific values in an array.\n\n\n"
-    title: USECASE-13-1 Querying Item Collections
+    name: Querying Item Collections
     type: USECASE
-    uuid: b43d0be4-725c-41d6-b582-f6e13fc17b8c
+    uuid: 229c80f1-b845-489f-80a1-21cd25d03252
     data:
       status: done
-      type: USECASE
     content: "We allow searching for values in an array\nWhen a query criteria applies
       to an array, it needs to check for the value.\n\n```yaml\n# example 'Item.data'\n\
       days: # days array\n- DAY-19\n- DAY-20\n- DAY-21\n```\n\n```yaml\n# query to
@@ -2086,6 +2172,7 @@ items:
       search for specific values in an array."
     key: USECASE-13-1
     parent: USECASE-13
+    document: use_cases\use_cases.md#usecase-13-1-querying-item-collections
   USECASE-14:
     start_line: 156
     path: use_cases\use_cases.md#usecase-14-semantic-search-for-items
@@ -2094,16 +2181,16 @@ items:
     markdown: "# USECASE-14 Semantic Search for Items\n```yaml (data)\nstatus: future\n\
       ```\nSearch for Items based on semantic similarity to a question. (effectively
       do RAG)\n\n"
-    title: USECASE-14 Semantic Search for Items
+    name: Semantic Search for Items
     type: USECASE
-    uuid: badc9284-4b85-4f2b-bfd2-e277f42d03f6
+    uuid: 30f48834-6c04-481c-b07a-6d90ed981eff
     data:
       status: future
-      type: USECASE
     content: Search for Items based on semantic similarity to a question. 
       (effectively do RAG)
     key: USECASE-14
     parent:
+    document: use_cases\use_cases.md#usecase-14-semantic-search-for-items
   USECASE-15:
     start_line: 162
     path: use_cases\use_cases.md#usecase-15-refresh-knowledge-base-state
@@ -2112,16 +2199,16 @@ items:
     markdown: "# USECASE-15 Refresh Knowledge Base State\n```yaml (data)\nstatus:
       done\n```\nRead all the Items in the Knowledge Base.\n```bash\nshelly-docs kb
       update\n```\n\n"
-    title: USECASE-15 Refresh Knowledge Base State
+    name: Refresh Knowledge Base State
     type: USECASE
-    uuid: 9bf0eed9-9bab-443b-861a-83e3e4c6222f
+    uuid: 815d5f32-3e3b-4dc6-829d-205bc76d76e2
     data:
       status: done
-      type: USECASE
     content: "Read all the Items in the Knowledge Base.\n```bash\nshelly-docs kb update\n\
       ```"
     key: USECASE-15
     parent:
+    document: use_cases\use_cases.md#usecase-15-refresh-knowledge-base-state
   USECASE-16:
     start_line: 171
     path: use_cases\use_cases.md#usecase-16-enter-tui
@@ -2129,15 +2216,15 @@ items:
     end_line: 181
     markdown: "# USECASE-16 Enter TUI\n```yaml (data)\nstatus: done\n```\nEnter the
       TUI from a CLI Command\n\n\n```bash\nshelly-docs tui\n```\n\n"
-    title: USECASE-16 Enter TUI
+    name: Enter TUI
     type: USECASE
-    uuid: 8b787e74-d2fb-494d-b6d1-a7c126198d9b
+    uuid: 2a061a70-fe02-4718-9415-5d07dc767e0c
     data:
       status: done
-      type: USECASE
     content: "Enter the TUI from a CLI Command\n\n\n```bash\nshelly-docs tui\n```"
     key: USECASE-16
     parent:
+    document: use_cases\use_cases.md#usecase-16-enter-tui
   USECASE-17:
     start_line: 182
     path: use_cases\use_cases.md#usecase-17-aggregate-queried-items
@@ -2150,13 +2237,12 @@ items:
       done # gets the items that have a status done\n- $count # then, counts those
       items\n```\n\n```bash\n# query the items\nshelly-docs items query --query \"\
       $(cat status_query.yaml)\"\n\n```"
-    title: USECASE-17 Aggregate Queried Items
+    name: Aggregate Queried Items
     type: USECASE
-    uuid: eb9b80ba-749d-4593-bf29-b1ec35267003
+    uuid: 555f307d-8dbb-43eb-9983-0046858421fc
     data:
       status: done
       related_to: DESIGN-2-2
-      type: USECASE
     content: "Given a user has queried some items, let them aggregate that data.\n\
       \nFor example, if the user wants to know how many items are of a certain \"\
       status\" value.\n\nHow about we enable \"pipelines\", where each part of the
@@ -2166,6 +2252,8 @@ items:
       \n\n```"
     key: USECASE-17
     parent:
+    document: use_cases\use_cases.md#usecase-17-aggregate-queried-items
+    end_line:
 ids:
   USECASE:
     next: USECASE-19
