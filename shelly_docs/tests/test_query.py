@@ -89,3 +89,18 @@ class TestQueryPipeline:
     query = [{"status": "done"}, {"$concat":"trace"}]
     actual_results = query_pipeline(items, query)
     assert actual_results == "hithere"
+
+class TestSQLQuery:
+  def test_one_value_condition(self, kb_e):
+    """
+    Confirm that we can use SQL to run queries
+    """
+    pass
+  def test_multiple_value_conditions(self, kb_e):
+    pass
+  def test_val_in_array(self, kb_e):
+    pass
+  def test_sum(self, kb_e):
+    pass
+  def test_concat(self, kb_e):
+    pass

@@ -167,3 +167,6 @@ class TestStateUpdateETL:
   def test_key_already_exists(self, request):
     with pytest.raises(ValueError):
       request.getfixturevalue("kb_d")
+
+  def test_json_adapter(self, kb_a):
+    pass
